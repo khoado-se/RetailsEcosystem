@@ -1,0 +1,6 @@
+@RetailsEcosystem.Customer.API_HostAddress = https://localhost:7000
+
+GET {{RetailsEcosystem.Customer.API_HostAddress}}/api/products
+Accept: application/json
+
+###

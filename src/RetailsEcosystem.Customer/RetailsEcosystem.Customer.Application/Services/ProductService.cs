@@ -1,0 +1,135 @@
+﻿using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Domain.Entities;
+using RetailsEcosystem.Customer.Domain.Interface;
+using RetailsEcosystem.Customer.Shared;
+using RetailsEcosystem.Customer.Shared.DTOs;
+using RetailsEcosystem.Customer.Shared.DTOs.Product;
+
+namespace RetailsEcosystem.Customer.Application.Service
+{
+    public class ProductService : IProductService
+    {
+        private readonly IProductRepository _productRepo;
+        private readonly ICategoryRepository _categoryRepo;
+
+        public ProductService(
+            IProductRepository productRepo,
+            ICategoryRepository categoryRepo)
+        {
+            _productRepo = productRepo;
+            _categoryRepo = categoryRepo;
+        }
+
+        public async Task<int> CreateProductAsync(CreateProductDto productDto)
+        {
+            Category category = await _categoryRepo.GetCategoryByIdAsync(productDto.CategoryId);
+
+            var createProduct = new Product
+            {
+                Name = productDto.Name,
+                CreatedDate = productDto.CreatedDate,
+                Description = productDto.Description,
+                UpdatedDate = productDto.UpdatedDate,
+                Price = productDto.Price,
+                Category = category
+            };
+
+            var productId = await _productRepo.AddProductAsync(createProduct);
+
+            return productId;
+        }
+
+        public async Task DeleteProductAsync(int productId)
+        {
+            var isExist = await _productRepo.CheckExist(productId);
+
+            if (!isExist)
+            {
+                throw new Exception("Product is not found!");
+            }
+
+            await _productRepo.RemoveProductAsync(productId);
+        }
+
+        public async Task<ProductDto?> FindProductByIdAsync(int productId)
+        {
+            var product = await _productRepo.GetProductByIdAsync(productId);
+
+            if (product == null)
+                return null;
+
+            var categoryDto = new CategoryDto
+            {
+                Id = product.Category.Id,
+                CategoryName = product.Category.Name,
+            };
+
+            return new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                CreatedDate = product.CreatedDate,
+                Description = product.Description,
+                UpdatedDate = product.UpdatedDate,
+                Price = product.Price,
+                Category = categoryDto
+            };
+        }
+
+        public async Task<PageResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest)
+        {
+            var products = await _productRepo
+                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
+
+            var productDtos = products.Select(product => new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                CreatedDate = product.CreatedDate,
+                Description = product.Description,
+                UpdatedDate = product.UpdatedDate,
+                Price = product.Price,
+                Category = new CategoryDto
+                {
+                    Id = product.Category.Id,
+                    CategoryName = product.Category.Name,
+                }
+            });
+
+            var productCount = await _productRepo.GetProductCountAsync();
+
+            return new PageResult<ProductDto>
+            {
+                Items = productDtos,
+                PageNumber = pagedRequest.PageNumber,
+                PageSize = pagedRequest.PageSize,
+                TotalPage = (int) Math.Ceiling((double)productCount / pagedRequest.PageSize)
+            };
+        }
+
+        public async Task UpdateProductAsync(UpdateProductDto productDto)
+        {
+            var isExist = await _productRepo.CheckExist(productDto.Id);
+
+            if (!isExist)
+            {
+                throw new Exception("Product is not found!");
+            }
+
+            Category category = await _categoryRepo.GetCategoryByIdAsync(productDto.CategoryId);
+
+            var updateProduct = new Product
+            {
+                Id = productDto.Id,
+                Name = productDto.Name,
+                CreatedDate = productDto.CreatedDate,
+                Description = productDto.Description,
+                UpdatedDate = productDto.UpdatedDate,
+                Price = productDto.Price,
+                Category = category
+            };
+
+            await _productRepo.EditProductAsync(updateProduct);
+        }
+    }
+}

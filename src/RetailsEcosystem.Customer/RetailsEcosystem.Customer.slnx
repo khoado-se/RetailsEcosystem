@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/ApplicationLayer/">
+    <Project Path="RetailsEcosystem.Customer.Application/RetailsEcosystem.Customer.Application.csproj" Id="c9c3795e-4bdc-4252-a5bc-42836eeee486" />
+  </Folder>
+  <Folder Name="/DomainLayer/">
+    <Project Path="RetailsEcosystem.Customer.Domain/RetailsEcosystem.Customer.Domain.csproj" Id="1c0057ff-fd68-4235-a47b-1429b6010d64" />
+  </Folder>
+  <Folder Name="/InfrastructureLayer/">
+    <Project Path="RetailsEcosystem.Customer.Infrastructure/RetailsEcosystem.Customer.Infrastructure.csproj" Id="fbaceb3d-93bb-4ab7-917e-47e23330571f" />
+  </Folder>
+  <Folder Name="/PresentationLayer/">
+    <Project Path="RetailsEcosystem.Customer.API/RetailsEcosystem.Customer.API.csproj" Id="c4e40573-3d3c-4091-be45-e1758e4083da" />
+    <Project Path="RetailsEcosystem.Customer.Web/RetailsEcosystem.Customer.Web.csproj" Id="964e0077-5231-4c40-8475-ab4b6e67dcd7" />
+  </Folder>
+  <Folder Name="/SharedLibraries/">
+    <Project Path="RetailsEcosystem.Customer.Shared/RetailsEcosystem.Customer.Shared.csproj" Id="df84f28b-d1b9-40a8-bb5f-f4318b23fbcb" />
+  </Folder>
+</Solution>
