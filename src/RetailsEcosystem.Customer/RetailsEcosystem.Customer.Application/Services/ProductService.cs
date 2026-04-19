@@ -76,7 +76,7 @@ namespace RetailsEcosystem.Customer.Application.Service
             };
         }
 
-        public async Task<PageResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest)
+        public async Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest)
         {
             var products = await _productRepo
                 .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
@@ -98,7 +98,7 @@ namespace RetailsEcosystem.Customer.Application.Service
 
             var productCount = await _productRepo.GetProductCountAsync();
 
-            return new PageResult<ProductDto>
+            return new PagedResult<ProductDto>
             {
                 Items = productDtos,
                 PageNumber = pagedRequest.PageNumber,

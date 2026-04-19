@@ -1,0 +1,38 @@
+﻿.product-card {
+    --primary-color: #0d6efd;
+}
+
+.product-card #addToCard {
+    text-align: center;
+    border-radius: 1.5rem;
+    border: none;
+    border-width: 0.5rem;
+    background-color: var(--primary-color);
+    box-shadow: 1px 3px #ccc;
+}
+
+.product-card .btn-success:hover {
+    color: #fff;
+    background-color: #ffa807f1;
+    border-color: var(--primary-color);
+}
+
+.product-card i {
+    background-color: var(--primary-color);
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.product-card button.carousel-control-prev,
+.product-card button.carousel-control-next {
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--primary-color);
+    margin-top: 14rem;
+}
+
+.product-card .card {
+    margin: 0 auto;
+    box-shadow: 2px 2px 10px 0px #ccc;
+}

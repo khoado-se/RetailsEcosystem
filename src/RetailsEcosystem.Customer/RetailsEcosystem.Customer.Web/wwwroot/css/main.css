@@ -1203,66 +1203,6 @@ top: -1px;
   z-index: -1;
 }
 
-/* Pagination CSS */
-.pagination {
-  text-align: left;
-  margin: 40px 0 0 0;
-  display: block;
-}
-
-.pagination.center {
-  text-align: center;
-}
-
-.pagination.right {
-  text-align: right;
-}
-
-.pagination.left {
-  text-align: left;
-}
-
-.pagination .pagination-list {
-  display: inline-block;
-  overflow: hidden;
-}
-
-.pagination .pagination-list li {
-  margin-right: 5px;
-  display: inline-block;
-  margin-top: 10px;
-}
-
-.pagination .pagination-list li:last-child {
-  margin-right: 0px;
-}
-
-.pagination .pagination-list li a {
-  background: #fff;
-  color: #081828;
-  font-weight: 500;
-  font-size: 14px;
-  border-radius: 4px;
-  padding: 6px 18px;
-  text-align: center;
-  border: 1px solid #eee;
-}
-
-.pagination .pagination-list li.active a,
-.pagination .pagination-list li:hover a {
-  background: #0167F3;
-  color: #fff;
-  border-color: transparent;
-}
-
-.pagination .pagination-list li a i {
-  font-size: 12px;
-}
-
-.blog-grids.pagination {
-  margin-top: 50px;
-  text-align: center;
-}
 
 .button .btn {
   display: inline-block;

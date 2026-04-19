@@ -23,7 +23,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PageResult<ProductDto>>> GetProducts([FromQuery] PagedRequest pagedRequest)
+        public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] PagedRequest pagedRequest)
         {
             try
             {
