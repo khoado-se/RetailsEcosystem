@@ -96,7 +96,7 @@ namespace RetailsEcosystem.Customer.Application.Service
                 }
             });
 
-            var productCount = await _productRepo.GetProductCountAsync();
+            var productCount = await _productRepo.GetProductCountAsync(categoryId);
 
             return new PagedResult<ProductDto>(
                 productDtos,

@@ -18,15 +18,15 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             _productService = productService;
         }
         [Breadcrumb("Shop")]
-        public async Task<IActionResult> Index([FromQuery] PagedRequest pagedRequest, [FromQuery] int? categoryId = null)
+        public async Task<IActionResult> ProductIndex([FromQuery] PagedRequest pagedRequest, [FromQuery] int? categoryId = null)
         {
             var productsDto = await _productService.GetAllAsync(pagedRequest, categoryId);
 
-            return View(viewName: "ProductIndex", model: productsDto);
+            return View(model: productsDto);
         }
 
-        [Breadcrumb("Product Details","Shop","/products")]
-        public async Task<IActionResult> Details(int productId)
+        [Breadcrumb("Product Details",parentName: "Shop", parentAction: nameof(ProductIndex))]
+        public async Task<IActionResult> ProductDetails(int productId)
         {
             var productDto = await _productService.GetByIdAsync(productId);
             if (productDto == null)
@@ -37,7 +37,7 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             // Set the dynamic title for the view using ViewData
             ViewData["DynamicTitle"] = productDto.Name;
 
-            return View(viewName: "ProductDetails", model: productDto);
+            return View(model: productDto);
         }
     }
 }

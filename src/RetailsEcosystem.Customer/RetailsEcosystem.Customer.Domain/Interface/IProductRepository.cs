@@ -10,7 +10,7 @@ namespace RetailsEcosystem.Customer.Domain.Interface
         Task EditProductAsync(Product product);
         Task RemoveProductAsync(int productId);
 
-        Task<int> GetProductCountAsync();
+        Task<int> GetProductCountAsync(int? categoryId);
         Task<bool> CheckExist(int productId);
     }
 }

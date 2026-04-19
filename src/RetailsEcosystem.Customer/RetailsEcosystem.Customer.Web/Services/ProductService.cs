@@ -11,10 +11,16 @@ namespace RetailsEcosystem.Customer.Web.Services
 
         public async Task<PagedResult<ProductDto>> GetAllAsync(PagedRequest pagedRequest, int? categoryId)
         {
-            var request = new HttpRequestMessage(
-                HttpMethod.Get, 
-                $"{ProductUrl}?pageNumber={pagedRequest.PageNumber}&pageSize={pagedRequest.PageSize}&categoryId={categoryId}"
-            );
+
+            var url = $"{ProductUrl}?pageNumber={pagedRequest.PageNumber}&pageSize={pagedRequest.PageSize}";
+
+            if (categoryId.HasValue)
+            {
+                url += $"&categoryId={categoryId.Value}";
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+
             return await SendAsync<PagedResult<ProductDto>>(request);
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 
@@ -46,9 +47,14 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .FirstOrDefaultAsync(p=> p.Id == productId);
         }
 
-        public async Task<int> GetProductCountAsync()
+        public async Task<int> GetProductCountAsync(int? categoryId)
         {
-            return await _context.Products.CountAsync();
+            var query = _context.Products.AsQueryable();
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.Category.Id == categoryId.Value);
+            }
+            return await query.CountAsync();
         }
 
         public async Task RemoveProductAsync(int productId)
