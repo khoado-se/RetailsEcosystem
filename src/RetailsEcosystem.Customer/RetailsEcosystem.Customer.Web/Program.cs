@@ -1,7 +1,17 @@
+using RetailsEcosystem.Customer.Web.Interfaces;
+using RetailsEcosystem.Customer.Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient("MyApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7035/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 

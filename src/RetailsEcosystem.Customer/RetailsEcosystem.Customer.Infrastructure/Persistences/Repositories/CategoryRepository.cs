@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
+using RetailsEcosystem.Customer.Domain.Interface;
 
 namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 {
@@ -11,12 +11,29 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         {
             _context = context;
         }
+
+        public async Task<IEnumerable<Category>> GetAllAsync(int pageNumber, int pageSize)
+        {
+            var categories = await _context.Categories
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return categories;
+        }
+
         public async Task<Category?> GetCategoryByIdAsync(int categoryId)
         {
             var category = await _context.Categories
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
 
             return category;
+        }
+
+        public async Task<int> GetTotalCategoriesAsync()
+        {
+            return await _context.Categories.CountAsync();
         }
     }
 }

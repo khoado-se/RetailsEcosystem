@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 
@@ -25,10 +26,12 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             return _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId)
         {
+            var query = _context.Products.Include(p => p.Category);
             IEnumerable<Product> products = await _context.Products
                     .Include(p => p.Category)
+                    .Where(p => !categogyId.HasValue || p.Category.Id == categogyId.Value) // no category or filter by category
                     .AsNoTracking()
                     .Skip(pageSize * (pageNumber - 1))
                     .Take(pageSize)
@@ -44,9 +47,18 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .FirstOrDefaultAsync(p=> p.Id == productId);
         }
 
-        public async Task<int> GetProductCountAsync()
+        public async Task<int> GetProductCountAsync(int? categoryId, bool isFeature)
         {
-            return await _context.Products.CountAsync();
+            if (isFeature)
+            {
+                return 4; // TODO: hard code for feature product, since we only have 4 feature products
+            }
+            var query = _context.Products.AsQueryable();
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.Category.Id == categoryId.Value);
+            }
+            return await query.CountAsync();
         }
 
         public async Task RemoveProductAsync(int productId)
@@ -59,6 +71,16 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         public async Task<bool> CheckExist(int productId)
         {
             return _context.Products.Any(p => p.Id == productId);
+        }
+
+        public async Task<IEnumerable<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize)
+        {
+            return await _context.Products
+                .Include(p => p.Category)
+                .AsNoTracking()
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
         }
     }
 }

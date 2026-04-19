@@ -41,6 +41,38 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Mobile phones",
+                            Name = "Smartphone"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Personal computers",
+                            Name = "Laptop"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Tablets and iPads",
+                            Name = "Tablet"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Accessories",
+                            Name = "Accessory"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Wearable devices",
+                            Name = "Smartwatch"
+                        });
                 });
 
             modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Product", b =>
@@ -66,6 +98,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -76,6 +109,108 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Apple flagship phone",
+                            Name = "iPhone 15 Pro",
+                            Price = 999m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Samsung flagship phone",
+                            Name = "Samsung Galaxy S24",
+                            Price = 899m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 1,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "High performance phone",
+                            Name = "Xiaomi 14",
+                            Price = 699m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 2,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Apple laptop",
+                            Name = "MacBook Pro M3",
+                            Price = 1999m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 2,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Premium ultrabook",
+                            Name = "Dell XPS 13",
+                            Price = 1499m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 2,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Gaming laptop",
+                            Name = "Asus ROG Strix",
+                            Price = 1799m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 3,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Apple tablet",
+                            Name = "iPad Pro M2",
+                            Price = 1099m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 3,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Android tablet",
+                            Name = "Samsung Galaxy Tab S9",
+                            Price = 899m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 4,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Wireless earbuds",
+                            Name = "AirPods Pro",
+                            Price = 249m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategoryId = 5,
+                            CreatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Smartwatch",
+                            Name = "Apple Watch Series 9",
+                            Price = 399m,
+                            UpdatedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.ProductImage", b =>

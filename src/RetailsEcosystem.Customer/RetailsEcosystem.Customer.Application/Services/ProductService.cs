@@ -76,10 +76,10 @@ namespace RetailsEcosystem.Customer.Application.Service
             };
         }
 
-        public async Task<PageResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest)
+        public async Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest,int? categoryId)
         {
             var products = await _productRepo
-                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
+                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize, categoryId);
 
             var productDtos = products.Select(product => new ProductDto
             {
@@ -96,15 +96,40 @@ namespace RetailsEcosystem.Customer.Application.Service
                 }
             });
 
-            var productCount = await _productRepo.GetProductCountAsync();
+            var productCount = await _productRepo.GetProductCountAsync(categoryId);
 
-            return new PageResult<ProductDto>
+            return new PagedResult<ProductDto>(
+                productDtos,
+                pagedRequest,
+                productCount);
+        }
+
+        public async Task<PagedResult<ProductDto>> GetFeaturedProductsAsync(PagedRequest pagedRequest)
+        {
+            var products = await _productRepo
+                .GetFeaturedProductsAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
+
+            var productDtos = products.Select(product => new ProductDto
             {
-                Items = productDtos,
-                PageNumber = pagedRequest.PageNumber,
-                PageSize = pagedRequest.PageSize,
-                TotalPage = (int) Math.Ceiling((double)productCount / pagedRequest.PageSize)
-            };
+                Id = product.Id,
+                Name = product.Name,
+                CreatedDate = product.CreatedDate,
+                Description = product.Description,
+                UpdatedDate = product.UpdatedDate,
+                Price = product.Price,
+                Category = new CategoryDto
+                {
+                    Id = product.Category.Id,
+                    CategoryName = product.Category.Name,
+                }
+            });
+
+            var productCount = await _productRepo.GetProductCountAsync(isFeature: true);
+
+            return new PagedResult<ProductDto>(
+                productDtos,
+                pagedRequest,
+                productCount);
         }
 
         public async Task UpdateProductAsync(UpdateProductDto productDto)

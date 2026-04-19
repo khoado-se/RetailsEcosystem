@@ -6,10 +6,11 @@ namespace RetailsEcosystem.Customer.Application.Interfaces
 {
     public interface IProductService
     {
-        Task<PageResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest);
+        Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest, int? categoryId);
         Task<ProductDto?> FindProductByIdAsync(int productId);
         Task<int> CreateProductAsync(CreateProductDto product);
         Task UpdateProductAsync(UpdateProductDto product);
         Task DeleteProductAsync(int productId);
+        Task<PagedResult<ProductDto>> GetFeaturedProductsAsync(PagedRequest pagedRequest);
     }
 }
