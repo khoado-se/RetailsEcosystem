@@ -33,5 +33,15 @@ namespace RetailsEcosystem.Customer.Web.Services
 
             return await SendAsync<ProductDto>(request);
         }
+
+        public async Task<PagedResult<ProductDto>> GetFeaturedProductsAsync(PagedRequest pagedRequest)
+        {
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"{ProductUrl}/featured"
+            );
+
+            return await SendAsync<PagedResult<ProductDto>>(request);
+        }
     }
 }

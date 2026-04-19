@@ -1,4 +1,5 @@
-﻿@{
+﻿@using RetailsEcosystem.Customer.Shared
+@{
     ViewData["Title"] = "Home Page";
 
     // Hero images
@@ -9,6 +10,8 @@
     // Banner images
     var banner1 = Url.Content("~/images/banner/banner-1-bg.jpg");
     var banner2 = Url.Content("~/images/banner/banner-2-bg.jpg");
+
+    var featureProducts = ViewBag.FeatureProducts as List<ProductDto>;
 }
 
 <!-- Start Hero Area -->
@@ -124,3 +127,46 @@
     </div>
 </section>
 <!-- End Banner Area -->
+@if (featureProducts != null)
+{
+    @* Featured Product  *@
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Featured Product</h2>
+            <a asp-controller="Products" asp-action="ProductIndex">
+                <span class="custom-badge text-uppercase">See More</span>
+            </a>
+        </div>
+
+        <div class="row">
+            @foreach (var product in featureProducts)
+            {
+                <div class="col-md-3">
+                    <a class="card" asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@product.Id">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-row align-items-center time">
+                                <i class="fa fa-clock-o"></i>
+                                <small class="ml-1">3 Days</small>
+                            </div>
+
+                            <img src="https://i.imgur.com/suuFVrQ.png" width="20">
+                        </div>
+
+                        <div class="text-center">
+                            <img src="https://i.imgur.com/TbtwkyW.jpg" width="250">
+                        </div>
+
+                        <div class="text-center">
+                            <h5>@product.Name</h5>
+                            <span class="text-success">@product.Price.ToString("C")</span>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@section Styles {
+    <link href="~/css/home/featuredProducts.css" rel="stylesheet" />
+}

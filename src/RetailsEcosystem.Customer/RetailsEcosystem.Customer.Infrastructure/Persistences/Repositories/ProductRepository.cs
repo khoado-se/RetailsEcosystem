@@ -47,8 +47,12 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .FirstOrDefaultAsync(p=> p.Id == productId);
         }
 
-        public async Task<int> GetProductCountAsync(int? categoryId)
+        public async Task<int> GetProductCountAsync(int? categoryId, bool isFeature)
         {
+            if (isFeature)
+            {
+                return 4; // TODO: hard code for feature product, since we only have 4 feature products
+            }
             var query = _context.Products.AsQueryable();
             if (categoryId.HasValue)
             {
@@ -67,6 +71,16 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         public async Task<bool> CheckExist(int productId)
         {
             return _context.Products.Any(p => p.Id == productId);
+        }
+
+        public async Task<IEnumerable<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize)
+        {
+            return await _context.Products
+                .Include(p => p.Category)
+                .AsNoTracking()
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
         }
     }
 }

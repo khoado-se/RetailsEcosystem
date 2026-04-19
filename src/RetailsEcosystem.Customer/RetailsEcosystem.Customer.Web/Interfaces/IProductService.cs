@@ -7,5 +7,7 @@ namespace RetailsEcosystem.Customer.Web.Interfaces
     {
         Task<PagedResult<ProductDto>> GetAllAsync(PagedRequest pagedRequest, int? categoryId);
         Task<ProductDto> GetByIdAsync(int productId);
+
+        Task<PagedResult<ProductDto>> GetFeaturedProductsAsync(PagedRequest request);
     }
 }

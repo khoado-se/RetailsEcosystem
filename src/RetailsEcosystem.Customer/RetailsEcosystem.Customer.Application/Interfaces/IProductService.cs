@@ -11,5 +11,6 @@ namespace RetailsEcosystem.Customer.Application.Interfaces
         Task<int> CreateProductAsync(CreateProductDto product);
         Task UpdateProductAsync(UpdateProductDto product);
         Task DeleteProductAsync(int productId);
+        Task<PagedResult<ProductDto>> GetFeaturedProductsAsync(PagedRequest pagedRequest);
     }
 }

@@ -77,5 +77,25 @@ namespace RetailsEcosystem.Customer.API.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("featured")]
+        public async Task<ActionResult<PagedResult<ProductDto>>> GetFeatureProducts(int pageNumber = 1, int pageSize = 4)
+        {
+            try
+            {
+                var result = await _productService.GetFeaturedProductsAsync(new PagedRequest
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                });
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
