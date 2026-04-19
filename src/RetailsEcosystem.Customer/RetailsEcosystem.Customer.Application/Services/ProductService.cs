@@ -76,10 +76,10 @@ namespace RetailsEcosystem.Customer.Application.Service
             };
         }
 
-        public async Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest)
+        public async Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest,int? categoryId)
         {
             var products = await _productRepo
-                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
+                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize, categoryId);
 
             var productDtos = products.Select(product => new ProductDto
             {
@@ -98,13 +98,10 @@ namespace RetailsEcosystem.Customer.Application.Service
 
             var productCount = await _productRepo.GetProductCountAsync();
 
-            return new PagedResult<ProductDto>
-            {
-                Items = productDtos,
-                PageNumber = pagedRequest.PageNumber,
-                PageSize = pagedRequest.PageSize,
-                TotalPage = (int) Math.Ceiling((double)productCount / pagedRequest.PageSize)
-            };
+            return new PagedResult<ProductDto>(
+                productDtos,
+                pagedRequest,
+                productCount);
         }
 
         public async Task UpdateProductAsync(UpdateProductDto productDto)

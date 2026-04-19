@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
-using RetailsEcosystem.Customer.Infrastructure.Persistences;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Product;
@@ -14,21 +12,22 @@ namespace RetailsEcosystem.Customer.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
-        private readonly AppDbContext _context;
-        public ProductsController(AppDbContext context,
-            IProductService productService)
+        public ProductsController(IProductService productService)
         {
-            _context = context;
             _productService = productService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] PagedRequest pagedRequest)
+        public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(int pageNumber = 1, int pageSize = 8, int? categoryId = null)
         {
             try
             {
-                var result = await _productService
-                    .GetAllProductAsync(pagedRequest);
+                var result = await _productService.GetAllProductAsync(new PagedRequest
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }, categoryId);
+
                 return result;
             }
             catch (Exception ex)

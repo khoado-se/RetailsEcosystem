@@ -4,7 +4,7 @@ namespace RetailsEcosystem.Customer.Domain.Interface
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categoryId);
         Task<Product?> GetProductByIdAsync(int productId);
         Task<int> AddProductAsync(Product product);
         Task EditProductAsync(Product product);

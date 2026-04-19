@@ -1,4 +1,6 @@
-﻿namespace RetailsEcosystem.Customer.Shared
+﻿using RetailsEcosystem.Customer.Shared.DTOs;
+
+namespace RetailsEcosystem.Customer.Shared
 {
     public class PagedResult<T> where T : class
     {
@@ -6,5 +8,14 @@
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
         public int TotalPage { get; set; }
+
+        public PagedResult() { }
+        public PagedResult(IEnumerable<T> Items, PagedRequest pagedRequest, int totalItems)
+        {
+            this.Items = Items;
+            PageNumber = pagedRequest.PageNumber;
+            PageSize = pagedRequest.PageSize;
+            TotalPage = (int)Math.Ceiling((double)totalItems / pagedRequest.PageSize);
+        }
     }
 }

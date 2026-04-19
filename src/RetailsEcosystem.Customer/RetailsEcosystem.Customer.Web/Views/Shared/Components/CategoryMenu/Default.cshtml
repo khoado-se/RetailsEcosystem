@@ -1,0 +1,29 @@
+﻿@using RetailsEcosystem.Customer.Shared
+@model IEnumerable<CategoryDto>
+
+<div class="mega-category-menu">
+    <span class="cat-button"><i class="lni lni-menu"></i>All Categories</span>
+    <ul class="sub-category">
+        @* Category
+        <li>
+            <a href="product-grids.html">Electronics <i class="lni lni-chevron-right"></i></a>
+            Sub Category
+            <ul class="inner-sub-category">
+                <li><a href="product-grids.html">Digital Cameras</a></li>
+                <li><a href="product-grids.html">Camcorders</a></li>
+            </ul>
+        </li>
+        *@
+
+        @foreach (CategoryDto category in Model)
+        {
+            <li>
+                <a asp-controller="Products"
+                       asp-action="Index"
+                       asp-route-categoryId="@category.Id">
+                    @category.CategoryName
+                </a>
+            </li>
+        }
+    </ul>
+</div>

@@ -25,10 +25,12 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             return _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId)
         {
+            var query = _context.Products.Include(p => p.Category);
             IEnumerable<Product> products = await _context.Products
                     .Include(p => p.Category)
+                    .Where(p => !categogyId.HasValue || p.Category.Id == categogyId.Value) // no category or filter by category
                     .AsNoTracking()
                     .Skip(pageSize * (pageNumber - 1))
                     .Take(pageSize)

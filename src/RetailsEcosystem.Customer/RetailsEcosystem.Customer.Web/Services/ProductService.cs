@@ -1,34 +1,31 @@
 using RetailsEcosystem.Customer.Shared;
+using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Web.Interfaces;
-using System.Text.Json;
 
 namespace RetailsEcosystem.Customer.Web.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : BaseService, IProductService
     {
-        private readonly HttpClient _httpClient;
-        private readonly string PRODUCTS_BASEURL = $"https://localhost:7035/api/Products";
+        private readonly string ProductUrl = "api/Products";
+        public ProductService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-        public ProductService(HttpClient httpClient)
+        public async Task<PagedResult<ProductDto>> GetAllAsync(PagedRequest pagedRequest, int? categoryId)
         {
-            _httpClient = httpClient;
+            var request = new HttpRequestMessage(
+                HttpMethod.Get, 
+                $"{ProductUrl}?pageNumber={pagedRequest.PageNumber}&pageSize={pagedRequest.PageSize}&categoryId={categoryId}"
+            );
+            return await SendAsync<PagedResult<ProductDto>>(request);
         }
 
-        public async Task<PagedResult<ProductDto>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<ProductDto> GetByIdAsync(int productId)
         {
-            var response = await _httpClient.GetAsync(PRODUCTS_BASEURL + $"?pageNumber={pageNumber}&pageSize={pageSize}");
+            var request = new HttpRequestMessage(
+                HttpMethod.Get, 
+                $"{ProductUrl}/{productId}"
+            );
 
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            return JsonSerializer
-                .Deserialize<PagedResult<ProductDto>>(
-                    json,
-                    new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+            return await SendAsync<ProductDto>(request);
         }
     }
 }

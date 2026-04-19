@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RetailsEcosystem.Customer.Web.Attributes;
 using RetailsEcosystem.Customer.Web.Models;
 using System.Diagnostics;
 
@@ -6,7 +7,11 @@ namespace RetailsEcosystem.Customer.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public HomeController()
+        {
+        }
+        [Breadcrumb]
+        public async Task<IActionResult> Index()
         {
             return View();
         }
