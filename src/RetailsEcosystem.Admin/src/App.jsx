@@ -1,9 +1,9 @@
 import './App.css'
+import AdminLayout from './layouts/AdminLayout'
 
 function App() {
-
   return (
-    <></>
+    <AdminLayout/>
   )
 }
 
