@@ -1,11 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import DashboardPage from "./pages/dashboard/DashboardPage.jsx";
 import OrdersPage from "./pages/order/OrdersPage.jsx";
+import ProductsPage from "./pages/products/ProductsPage.jsx";
+import CustomerListPage from "./pages/customers/CustomerListPage.jsx";
+import NotFoundPage from "./pages/notfound/NotFoundPage.jsx";
+
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import DashboardPage from "./pages/dashboard/DashboardPage.jsx";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -15,6 +19,9 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />}>
           <Route index element={<DashboardPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/customers" element={<CustomerListPage />} />
+          <Route path="**" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
