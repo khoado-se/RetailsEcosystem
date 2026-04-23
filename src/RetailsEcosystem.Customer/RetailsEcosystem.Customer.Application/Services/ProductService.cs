@@ -93,7 +93,13 @@ namespace RetailsEcosystem.Customer.Application.Service
                 {
                     Id = product.Category.Id,
                     CategoryName = product.Category.Name,
-                }
+                },
+                Image = product.Images
+                .Select(image => new ProductImageDto
+                {
+                    Id = image.Id,
+                    Url = image.Url
+                }).FirstOrDefault()!
             });
 
             var productCount = await _productRepo.GetProductCountAsync(categoryId);

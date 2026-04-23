@@ -10,6 +10,6 @@
         public DateTime UpdatedDate { get; set; }
 
         public CategoryDto Category { get; set; }
-        public ICollection<ProductImageDto> Images { get; set; }
+        public ProductImageDto Image { get; set; }
     }
 }

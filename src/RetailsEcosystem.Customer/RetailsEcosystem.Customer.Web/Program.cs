@@ -1,10 +1,13 @@
 using RetailsEcosystem.Customer.Web.Interfaces;
+using RetailsEcosystem.Customer.Web.Options;
 using RetailsEcosystem.Customer.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<ApiSettings>(
+    builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddHttpClient("MyApi", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7035/");

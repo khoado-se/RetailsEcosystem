@@ -28,9 +28,9 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId)
         {
-            var query = _context.Products.Include(p => p.Category);
             IEnumerable<Product> products = await _context.Products
                     .Include(p => p.Category)
+                    .Include(p => p.Images)
                     .Where(p => !categogyId.HasValue || p.Category.Id == categogyId.Value) // no category or filter by category
                     .AsNoTracking()
                     .Skip(pageSize * (pageNumber - 1))
@@ -43,8 +43,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         public async Task<Product?> GetProductByIdAsync(int productId)
         {
             return await _context.Products
-                .Include(p=>p.Category)
-                .FirstOrDefaultAsync(p=> p.Id == productId);
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
         public async Task<int> GetProductCountAsync(int? categoryId, bool isFeature)
