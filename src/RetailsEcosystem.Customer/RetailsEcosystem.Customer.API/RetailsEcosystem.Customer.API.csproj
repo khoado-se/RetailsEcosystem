@@ -29,4 +29,8 @@
     <ProjectReference Include="..\RetailsEcosystem.Customer.Shared\RetailsEcosystem.Customer.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\products\" />
+  </ItemGroup>
+
 </Project>

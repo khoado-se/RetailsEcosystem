@@ -1,9 +1,14 @@
+using RetailsEcosystem.Customer.API.Options;
+using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.Configure<FileStorageOptions>(
+    builder.Configuration.GetSection("FileStorage"));
+builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddCors();
 
 builder.Services.AddControllers();
@@ -24,7 +29,7 @@ if (app.Environment.IsDevelopment())
     );
     //app.MapOpenApi();
 }
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

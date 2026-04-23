@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Service;
+using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Infrastructure.Persistences;
 using RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories;
@@ -25,7 +26,11 @@ namespace RetailsEcosystem.Customer.Infrastructure
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
 
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            services.AddScoped<IProductImageService, ProductImageService>();
+
             return services;
         }
     }
 }
+    
