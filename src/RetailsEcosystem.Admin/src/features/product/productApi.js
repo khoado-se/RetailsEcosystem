@@ -1,8 +1,8 @@
 import apiClient from "../../app/apiClient";
 
 // GET
-export const getProducts = () => {
-  return apiClient.get("/products");
+export const getProducts = (pageNumber) => {
+  return apiClient.get("/products?pageNumber="+pageNumber);
 };
 
 // GET by id

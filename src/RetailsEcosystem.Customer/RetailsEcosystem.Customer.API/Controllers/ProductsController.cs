@@ -63,7 +63,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(CreateProductDto product)
+        public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto product)
         {
             var createdProductId = await _productService.CreateProductAsync(product);
 
