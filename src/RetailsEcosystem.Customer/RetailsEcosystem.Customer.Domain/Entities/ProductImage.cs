@@ -9,6 +9,7 @@ namespace RetailsEcosystem.Customer.Domain.Entities
         public int Id { get; set; }
         public string Url { get; set; }
 
-        public Product Product { get; set; }
+        public Product Product { get; set; } = null!;
+        public int ProductId { get; set; }
     }
 }

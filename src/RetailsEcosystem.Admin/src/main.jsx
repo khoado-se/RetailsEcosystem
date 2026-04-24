@@ -6,7 +6,6 @@ import ProductsPage from "./pages/products/ProductsPage.jsx";
 import CategoriesPage from "./pages/categories/CategoriesPage.jsx";
 import CustomerListPage from "./pages/customers/CustomerListPage.jsx";
 import NotFoundPage from "./pages/notfound/NotFoundPage.jsx";
-import CreateProductPage from "./pages/products/CreateProductPage.jsx";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import "./index.css";
@@ -22,12 +21,10 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />}>
           <Route index element={<DashboardPage />} />
           <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/products" element={<ProductsPage />} >
-            <Route path="create" element={<CreateProductPage />} />
-          </Route>
+          <Route path="/products" element={<ProductsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/customers" element={<CustomerListPage />} />
-          <Route path="**" element={<NotFoundPage />} />
+          <Route path="*/*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

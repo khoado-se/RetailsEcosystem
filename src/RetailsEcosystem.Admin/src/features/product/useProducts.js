@@ -20,8 +20,6 @@ export const useProducts = (pageNumber) => {
     fetchData();
   }, [pageNumber]);
 
-  
-
   return {
     products: data.items,
     totalPage: data.totalPage,

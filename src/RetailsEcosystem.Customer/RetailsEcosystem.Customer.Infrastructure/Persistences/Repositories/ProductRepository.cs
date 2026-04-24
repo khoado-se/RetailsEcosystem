@@ -33,6 +33,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                     .Include(p => p.Images)
                     .Where(p => !categogyId.HasValue || p.Category.Id == categogyId.Value) // no category or filter by category
                     .AsNoTracking()
+                    .OrderByDescending(p => p.CreatedDate)
+                    .ThenByDescending(p => p.Id)
                     .Skip(pageSize * (pageNumber - 1))
                     .Take(pageSize)
                     .ToListAsync();
