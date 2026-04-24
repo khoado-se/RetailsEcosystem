@@ -7,7 +7,7 @@ import ProductTable from "../../features/product/ProductTable.jsx";
 
 export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(1);
-  const { products, totalPage, refetch } = useProducts(pageNumber);
+  const { products, totalPage, fetchProducts } = useProducts(pageNumber);
 
   return (
     <>
@@ -17,7 +17,12 @@ export default function ProductsPage() {
         setPageNumber={setPageNumber}
         totalPage={totalPage}
       />
-      <CreateProductModal onSuccess={() => refetch()} />
+      <CreateProductModal
+        onSuccess={() => {
+          fetchProducts();
+          setPageNumber(1);
+        }}
+      />
     </>
   );
 }

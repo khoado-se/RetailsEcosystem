@@ -30,6 +30,13 @@ export default function CreateProductModal({ onSuccess }) {
 
     await createProduct(payload);
 
+    setForm({
+      name: "",
+      description: "",
+      price: "",
+      categoryId: "",
+    });
+
     onSuccess(); // reload list
   };
 

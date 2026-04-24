@@ -2,7 +2,6 @@ import apiClient from "../../app/apiClient";
 
 // GET
 export const getProducts = async ({ pageNumber, pageSize = 8, categoryId }) => {
-  console.log("CALL API WITH:", { pageNumber, pageSize, categoryId });
   const res = await apiClient.get("/products", {
     params: {
       pageNumber,

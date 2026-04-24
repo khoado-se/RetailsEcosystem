@@ -26,6 +26,6 @@ export const useProducts = (pageNumber, categoryId) => {
   return {
     products: data.items,
     totalPage: data.totalPage,
-    refetch: fetchProducts,
+    fetchProducts: fetchProducts,
   };
 };
