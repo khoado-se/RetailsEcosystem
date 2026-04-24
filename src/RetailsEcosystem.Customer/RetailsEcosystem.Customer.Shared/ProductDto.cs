@@ -10,6 +10,6 @@
         public DateTime UpdatedDate { get; set; }
 
         public CategoryDto Category { get; set; }
-        public ProductImageDto Image { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

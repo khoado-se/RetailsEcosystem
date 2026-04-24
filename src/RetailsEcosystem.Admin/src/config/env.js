@@ -1,0 +1,3 @@
+export const ENV = {
+  PRODUCT_PLACEHOLDER_IMAGE: import.meta.env.VITE_PRODUCT_PLACEHOLDER_IMAGE,
+};

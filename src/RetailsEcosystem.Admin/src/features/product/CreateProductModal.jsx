@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { createProduct } from "../../features/product/productApi";
-import ProductForm from "../../features/product/ProductForm";
+import { createProduct } from "./productApi";
+import ProductForm from "./ProductForm";
 
 export default function CreateProductModal({ onSuccess }) {
 

@@ -17,10 +17,9 @@
                         <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@item.Id">
                             @{
                                 var baseUrl = ApiOptions.Value.BaseUrl;
-                                var imageUrl = item.Image?.Url ?? "/images/products/product-placeholder-image.jpg";
-                                var fullImageUrl = $"{baseUrl}{imageUrl}";
+                                var imageUrl = item.ImageUrl != null ? $"{item.ImageUrl}" : $"{baseUrl}/images/products/product-placeholder-image.jpg";
                             }
-                            <img src="@fullImageUrl"
+                            <img src="@imageUrl"
                             alt="product image" 
                             class="d-block card-img-top img-fluid mx-auto d-block img-rounded" 
                             style="width:100%">

@@ -1,27 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getProducts } from "./productApi";
 
-export const useProducts = (pageNumber) => {
-  const [data, setDatas] = useState({
+export const useProducts = (pageNumber, categoryId) => {
+  const [data, setData] = useState({
     items: [],
-    totalPage: 1,
+    totalPage: 0,
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getProducts(pageNumber);
-        setDatas(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  const fetchProducts = useCallback(async () => {
+    try {
+      const res = await getProducts({pageNumber, categoryId });
+      setData({
+        items: res.items ?? [],
+        totalPage: res.totalPage ?? 0,
+      });
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  }, [pageNumber, categoryId]); // Only changes when these params change
 
-    fetchData();
-  }, [pageNumber]);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   return {
     products: data.items,
     totalPage: data.totalPage,
+    refetch: fetchProducts,
   };
 };

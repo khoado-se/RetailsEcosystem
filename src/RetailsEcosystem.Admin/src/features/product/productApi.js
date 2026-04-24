@@ -1,8 +1,17 @@
 import apiClient from "../../app/apiClient";
 
 // GET
-export const getProducts = (pageNumber) => {
-  return apiClient.get("/products?pageNumber="+pageNumber);
+export const getProducts = async ({ pageNumber, pageSize = 8, categoryId }) => {
+  console.log("CALL API WITH:", { pageNumber, pageSize, categoryId });
+  const res = await apiClient.get("/products", {
+    params: {
+      pageNumber,
+      pageSize,
+      categoryId,
+    },
+  });
+
+  return res.data;
 };
 
 // GET by id

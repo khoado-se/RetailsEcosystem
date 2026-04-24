@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../pages/products/Pagination";
+import { ENV } from "../../config/env";
 
-export default function ProductTable({products, page , setPage, totalPage}) {
+export default function ProductTable({products, pageNumber , setPageNumber, totalPage}) {
     const navigate = useNavigate();
 
     return (<>
@@ -33,7 +34,7 @@ export default function ProductTable({products, page , setPage, totalPage}) {
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
-                <td><img src={product.image.url} alt="Product Image" width={50} /></td>
+                <td><img src={product.imageUrl || ENV.PRODUCT_PLACEHOLDER_IMAGE} alt="Product Image" width={50} /></td>
                 <td>{product.createdDate}</td>
                 <td>
                   <button
@@ -56,7 +57,7 @@ export default function ProductTable({products, page , setPage, totalPage}) {
         </table>
 
         {/* PAGINATION */}
-        <Pagination page={page} setPage={setPage} totalPage={totalPage} />
+        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
       </div>
     </>)
 

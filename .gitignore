@@ -575,3 +575,4 @@ FodyWeavers.xsd
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,visualstudio,visualstudiocode,react,windows
 /src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.API/appsettings.Development.json
 /src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.Web/appsettings.Development.json
+src/RetailsEcosystem.Admin/.env

@@ -1,28 +1,28 @@
 import { shouldShowLeftDots, shouldShowRightDots } from "../../utils/getPaginationPages.js";
 import { getPaginationPages } from "../../utils/getPaginationPages.js";
 
-export default function Pagination({page, setPage, totalPage}) {
-    const pages = getPaginationPages(page, totalPage);
+export default function Pagination({pageNumber, setPageNumber, totalPage}) {
+    const pages = getPaginationPages(pageNumber, totalPage);
     
     return (
         <nav>
         <ul className="pagination justify-content-center">
           {/* PREVIOUS */}
-          <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
+          <li className={`page-item ${pageNumber === 1 ? "disabled" : ""}`}>
             <button
               className="page-link"
-              onClick={() => setPage(page - 1)}
-              disabled={page === 1}
+              onClick={() => setPageNumber(pageNumber - 1)}
+              disabled={pageNumber === 1}
             >
               &laquo;
             </button>
           </li>
 
           {/* LEFT DOTS */}
-          {shouldShowLeftDots(page) && (
+          {shouldShowLeftDots(pageNumber) && (
             <>
               <li className="page-item">
-                <button className="page-link" onClick={() => setPage(1)}>
+                <button className="page-link" onClick={() => setPageNumber(1)}>
                   1
                 </button>
               </li>
@@ -35,15 +35,15 @@ export default function Pagination({page, setPage, totalPage}) {
 
           {/* PAGE NUMBERS */}
           {pages.map((p) => (
-            <li key={p} className={`page-item ${page === p ? "active" : ""}`}>
-              <button className="page-link" onClick={() => setPage(p)}>
+            <li key={p} className={`page-item ${pageNumber === p ? "active" : ""}`}>
+              <button className="page-link" onClick={() => setPageNumber(p)}>
                 {p}
               </button>
             </li>
           ))}
 
           {/* RIGHT DOTS */}
-          {shouldShowRightDots(page, totalPage) && (
+          {shouldShowRightDots(pageNumber, totalPage) && (
             <>
               <li className="page-item disabled">
                 <span className="page-link">...</span>
@@ -52,7 +52,7 @@ export default function Pagination({page, setPage, totalPage}) {
               <li className="page-item">
                 <button
                   className="page-link"
-                  onClick={() => setPage(totalPage)}
+                  onClick={() => setPageNumber(totalPage)}
                 >
                   {totalPage}
                 </button>
@@ -61,11 +61,11 @@ export default function Pagination({page, setPage, totalPage}) {
           )}
 
           {/* NEXT */}
-          <li className={`page-item ${page === totalPage ? "disabled" : ""}`}>
+          <li className={`page-item ${pageNumber === totalPage ? "disabled" : ""}`}>
             <button
               className="page-link"
-              onClick={() => setPage(page + 1)}
-              disabled={page === totalPage}
+              onClick={() => setPageNumber(pageNumber + 1)}
+              disabled={pageNumber === totalPage}
             >
               &raquo;
             </button>
