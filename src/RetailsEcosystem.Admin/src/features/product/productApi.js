@@ -1,4 +1,4 @@
-import apiClient from "../../app/apiClient";
+import apiClient from "../../services/apiClient";
 
 // GET
 export const getProducts = async ({ pageNumber, pageSize = 8, categoryId }) => {

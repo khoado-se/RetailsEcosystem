@@ -1,5 +1,6 @@
 import axios from "axios";
-import { ENV } from "../config/env";
+
+import { ENV } from "../configs/env";
 
 const apiClient = axios.create({
   baseURL: ENV.VITE_HOST_URL,

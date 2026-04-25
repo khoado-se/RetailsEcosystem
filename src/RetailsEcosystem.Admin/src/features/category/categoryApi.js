@@ -1,4 +1,4 @@
-import apiClient from "../../app/apiClient";
+import apiClient from "../../services/apiClient";
 
 // GET
 export const getCategories = () => {

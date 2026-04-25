@@ -1,34 +1,60 @@
-export function getPaginationPages(page, totalPage, maxVisible = 5) {
-  if (totalPage <= 0) return [];
+export function getPaginationPages(
+  currentPage,
+  totalPages,
+  maxVisiblePages = 5
+) {
+  if (totalPages <= 0) return [];
 
   const pages = [];
 
-  let start = Math.max(1, page - Math.floor(maxVisible / 2));
-  let end = Math.min(totalPage, page + Math.floor(maxVisible / 2));
+  const halfLeft = Math.floor(maxVisiblePages / 2);
+  const halfRight = Math.floor(maxVisiblePages / 2);
+  const nearStartLimit = Math.ceil(maxVisiblePages / 2);
+  const nearEndLimit = totalPages - halfRight;
 
-  // fix first
-  if (page <= Math.ceil(maxVisible / 2)) {
-    start = 1;
-    end = Math.min(totalPage, maxVisible);
+  let startPage = currentPage - halfLeft;
+  let endPage = currentPage + halfRight;
+
+  // Near the beginning: show first pages
+  if (currentPage <= nearStartLimit) {
+    startPage = 1;
+    endPage = Math.min(totalPages, maxVisiblePages);
   }
 
-  // fix last
-  if (page > totalPage - Math.floor(maxVisible / 2)) {
-    start = Math.max(1, totalPage - maxVisible + 1);
-    end = totalPage;
+  // Near the end: show last pages
+  else if (currentPage > nearEndLimit) {
+    startPage = Math.max(1, totalPages - maxVisiblePages + 1);
+    endPage = totalPages;
   }
 
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
+  // Middle range
+  else {
+    startPage = currentPage - halfLeft;
+    endPage = currentPage + halfRight;
+  }
+
+  for (let page = startPage; page <= endPage; page++) {
+    pages.push(page);
   }
 
   return pages;
 }
 
-export function shouldShowLeftDots(page, maxVisible = 5) {
-  return page > Math.ceil(maxVisible / 2);
+export function shouldShowLeftDots(
+  currentPage,
+  maxVisiblePages = 5
+) {
+  const nearStartLimit = Math.ceil(maxVisiblePages / 2);
+  return currentPage > nearStartLimit;
 }
 
-export function shouldShowRightDots(page, totalPage, maxVisible = 5) {
-  return page < totalPage - Math.floor(maxVisible / 2);
+export function shouldShowRightDots(
+  currentPage,
+  totalPages,
+  maxVisiblePages = 5
+) {
+  const halfRight = Math.floor(maxVisiblePages / 2);
+  const nearEndLimit = totalPages - halfRight;
+
+  return currentPage < nearEndLimit;
 }

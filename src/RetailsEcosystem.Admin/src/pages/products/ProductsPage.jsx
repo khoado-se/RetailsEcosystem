@@ -1,7 +1,7 @@
 import { useProducts } from "../../features/product/useProducts.js";
 import { Link, Outlet } from "react-router-dom";
 import { useState } from "react";
-import Pagination from "./Pagination.jsx";
+import Pagination from "../../components/ui/Pagination.jsx";
 import CreateProductModal from "../../features/product/CreateProductModal.jsx";
 import ProductTable from "../../features/product/ProductTable.jsx";
 

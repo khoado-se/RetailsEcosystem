@@ -1,6 +1,6 @@
-import apiClient from "../../app/apiClient";
+import apiClient from "../../services/apiClient";
 
 // POST
-export const updateProduct = (productId, data) => {
+export const uploadProductImage = (productId, data) => {
   return apiClient.post(`/productImages/upload?productId=${productId}`, data);
 };

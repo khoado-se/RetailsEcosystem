@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Pagination from "../../pages/products/Pagination";
-import { ENV } from "../../config/env";
+import Pagination from "../../components/ui/Pagination";
+import { ENV } from "../../configs/env";
 
 export default function ProductTable({products, pageNumber , setPageNumber, totalPage}) {
     const navigate = useNavigate();
