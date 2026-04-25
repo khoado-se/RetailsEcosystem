@@ -576,3 +576,5 @@ FodyWeavers.xsd
 /src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.API/appsettings.Development.json
 /src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.Web/appsettings.Development.json
 src/RetailsEcosystem.Admin/.env
+
+documents/

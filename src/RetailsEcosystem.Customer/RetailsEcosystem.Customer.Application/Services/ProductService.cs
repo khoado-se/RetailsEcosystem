@@ -61,7 +61,7 @@ namespace RetailsEcosystem.Customer.Application.Service
             var categoryDto = new CategoryDto
             {
                 Id = product.Category.Id,
-                CategoryName = product.Category.Name,
+                Name = product.Category.Name,
             };
 
             return new ProductDto
@@ -92,7 +92,7 @@ namespace RetailsEcosystem.Customer.Application.Service
                 Category = new CategoryDto
                 {
                     Id = product.Category.Id,
-                    CategoryName = product.Category.Name,
+                    Name = product.Category.Name,
                 },
                 ImageUrl = product.Images.FirstOrDefault()?.Url
             });
@@ -121,7 +121,7 @@ namespace RetailsEcosystem.Customer.Application.Service
                 Category = new CategoryDto
                 {
                     Id = product.Category.Id,
-                    CategoryName = product.Category.Name,
+                    Name = product.Category.Name,
                 }
             });
 

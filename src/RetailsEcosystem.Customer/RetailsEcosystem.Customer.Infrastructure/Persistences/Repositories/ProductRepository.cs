@@ -65,14 +65,15 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public async Task RemoveProductAsync(int productId)
         {
-            var product = await _context.Products.FindAsync(productId);
+            var product = await _context.Products.FindAsync(productId)
+                ?? throw new KeyNotFoundException($"Product {productId} not found.");
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
         }
 
         public async Task<bool> CheckExist(int productId)
         {
-            return _context.Products.Any(p => p.Id == productId);
+            return await _context.Products.AnyAsync(p => p.Id == productId);
         }
 
         public async Task<IEnumerable<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize)

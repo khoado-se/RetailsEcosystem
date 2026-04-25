@@ -20,7 +20,7 @@ namespace RetailsEcosystem.Customer.Application.Service
             var categoryDtos = categories.Select(c => new CategoryDto
             {
                 Id = c.Id,
-                CategoryName = c.Name
+                Name = c.Name
             }).ToList();
 
             int totalCategories = await _categoryRepository.GetTotalCategoriesAsync();
