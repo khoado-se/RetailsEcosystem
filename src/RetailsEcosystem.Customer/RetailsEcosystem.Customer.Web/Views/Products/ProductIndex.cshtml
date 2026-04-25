@@ -1,12 +1,14 @@
-﻿
-@using Microsoft.Extensions.Options
+﻿@using Microsoft.Extensions.Options
 @using RetailsEcosystem.Customer.Shared
 @using RetailsEcosystem.Customer.Web.Options
 @model PagedResult<ProductDto>
 @inject IOptions<ApiSettings> ApiOptions
+@{
+    int? categoryId = ViewBag.CategoryId as int?;
+}
 
 <div class="container product-card row">
-     @foreach (var item in Model.Items)
+    @foreach (var item in Model.Items)
     {
         <div class="card col-xl-3 col-lg-4 col-md-6 col-sm-1 my-3">
             <!-- Carousel -->
@@ -20,9 +22,9 @@
                                 var imageUrl = item.ImageUrl != null ? $"{item.ImageUrl}" : $"{baseUrl}/images/products/product-placeholder-image.jpg";
                             }
                             <img src="@imageUrl"
-                            alt="product image" 
-                            class="d-block card-img-top img-fluid mx-auto d-block img-rounded" 
-                            style="width:100%">
+                                 alt="product image"
+                                 class="d-block card-img-top img-fluid mx-auto d-block img-rounded"
+                                 style="width:100%">
                         </a>
                     </div>
                 </div>
@@ -45,19 +47,18 @@
             <a class="page-link" tabindex="-1" aria-disabled="true"
                asp-controller="Products"
                asp-action="ProductIndex"
-               asp-route-pageNumber="@(Model.PageNumber - 1)"
-            >Previous</a>
+               asp-route-pageNumber="@(Model.PageNumber - 1)">Previous</a>
         </li>
         @if (Model.PageNumber - 1 > 0)
         {
-           <li class="page-item">
+            <li class="page-item">
                 <a class="page-link"
-                    asp-controller="Products" 
+                       asp-controller="Products"
                        asp-action="ProductIndex"
-                    asp-route-pageNumber="@(Model.PageNumber - 1)" 
-                    >@(Model.PageNumber - 1)
-               </a>
-           </li>
+                       asp-route-pageNumber="@(Model.PageNumber - 1)">
+                    @(Model.PageNumber - 1)
+                </a>
+            </li>
         }
         <li class="page-item active" aria-current="page">
             <a class="page-link" href="#">@Model.PageNumber</a>
@@ -65,20 +66,21 @@
         @if (Model.PageNumber + 1 <= Model.TotalPage)
         {
             <li class="page-item">
-                <a class="page-link" 
-                    asp-controller="Products" 
+                <a class="page-link"
+                       asp-controller="Products"
                        asp-action="ProductIndex"
-                    asp-route-pageNumber="@(Model.PageNumber + 1)" 
-                    >@(Model.PageNumber + 1)
+                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                       asp-route-categoryId="@categoryId">
+                    @(Model.PageNumber + 1)
                 </a>
             </li>
         }
         <li class="page-item @(Model.PageNumber + 1 <= Model.TotalPage ? "" : "disabled")">
-            <a class="page-link" 
-            asp-controller="Products" 
-            asp-action="ProductIndex" 
-            asp-route-pageNumber="@(Model.PageNumber + 1)" 
-            >Next</a>
+            <a class="page-link"
+               asp-controller="Products"
+               asp-action="ProductIndex"
+               asp-route-pageNumber="@(Model.PageNumber + 1)"
+               asp-route-categoryId="@categoryId">Next</a>
         </li>
     </ul>
 </nav>

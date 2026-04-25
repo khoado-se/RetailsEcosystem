@@ -22,6 +22,8 @@ namespace RetailsEcosystem.Customer.Web.Controllers
         {
             var productsDto = await _productService.GetAllAsync(pagedRequest, categoryId);
 
+            ViewBag.CategoryId = categoryId;
+
             return View(model: productsDto);
         }
 

@@ -9,11 +9,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.Configure<FileStorageOptions>(
     builder.Configuration.GetSection("FileStorage"));
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ProductionPolicy", policy =>
+        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()!)
+              .AllowAnyMethod()
+              .AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -23,12 +28,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    app.UseCors(policy =>
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-    );
-    //app.MapOpenApi();
 }
+app.UseCors("ProductionPolicy");
+
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 
