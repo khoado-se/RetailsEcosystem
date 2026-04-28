@@ -1,4 +1,14 @@
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+
 export default function Header() {
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout();
+  };
+
   return (
     <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
       <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
@@ -26,7 +36,7 @@ export default function Header() {
 
       <div className="navbar-nav">
         <div className="nav-item text-nowrap">
-          <a className="nav-link px-3" href="#">
+          <a className="nav-link px-3" href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>
             Sign out
           </a>
         </div>

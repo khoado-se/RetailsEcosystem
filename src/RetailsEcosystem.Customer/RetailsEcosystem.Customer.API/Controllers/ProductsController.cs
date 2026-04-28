@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.Application.Interfaces;
-using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Product;
@@ -18,25 +18,20 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(int pageNumber = 1, int pageSize = 8, int? categoryId = null)
         {
-            try
+            var result = await _productService.GetAllProductAsync(new PagedRequest
             {
-                var result = await _productService.GetAllProductAsync(new PagedRequest
-                {
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-                }, categoryId);
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }, categoryId);
 
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(result);
         }
 
         [HttpGet("{productId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ProductDto>> GetProduct(int productId)
         {
             var productDto = await _productService.FindProductByIdAsync(productId);
@@ -50,6 +45,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutProduct(int id, UpdateProductDto productDto)
         {
             if (id != productDto.Id)
@@ -63,6 +59,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto product)
         {
             var createdProductId = await _productService.CreateProductAsync(product);
@@ -71,6 +68,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpDelete("{productId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
             await _productService.DeleteProductAsync(productId);
@@ -79,22 +77,16 @@ namespace RetailsEcosystem.Customer.API.Controllers
         }
 
         [HttpGet("featured")]
+        [AllowAnonymous]
         public async Task<ActionResult<PagedResult<ProductDto>>> GetFeatureProducts(int pageNumber = 1, int pageSize = 4)
         {
-            try
+            var result = await _productService.GetFeaturedProductsAsync(new PagedRequest
             {
-                var result = await _productService.GetFeaturedProductsAsync(new PagedRequest
-                {
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-                });
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            });
 
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(result);
         }
 
     }

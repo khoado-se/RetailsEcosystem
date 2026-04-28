@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import AppRoute from "./routes/AppRoute.jsx";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 import "./index.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -11,8 +12,10 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <AppRoute />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoute />
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 );

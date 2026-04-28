@@ -11,4 +11,8 @@
     <ProjectReference Include="..\RetailsEcosystem.Customer.Shared\RetailsEcosystem.Customer.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+  </ItemGroup>
+
 </Project>

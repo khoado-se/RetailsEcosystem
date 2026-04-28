@@ -29,7 +29,7 @@ export default function CategoryListPage() {
           {categories.map((category) => (
             <tr key={category.id}>
               <th scope="row">{category.id}</th>
-              <td>{category.categoryName}</td>
+              <td>{category.name}</td>
               <td>
                 <button
                   onClick={() => navigate(`/categories/edit/${category.id}`)}

@@ -47,7 +47,8 @@
             <a class="page-link" tabindex="-1" aria-disabled="true"
                asp-controller="Products"
                asp-action="ProductIndex"
-               asp-route-pageNumber="@(Model.PageNumber - 1)">Previous</a>
+               asp-route-pageNumber="@(Model.PageNumber - 1)"
+               asp-route-categoryId="@categoryId">Previous</a>
         </li>
         @if (Model.PageNumber - 1 > 0)
         {
@@ -55,7 +56,8 @@
                 <a class="page-link"
                        asp-controller="Products"
                        asp-action="ProductIndex"
-                       asp-route-pageNumber="@(Model.PageNumber - 1)">
+                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                       asp-route-categoryId="@categoryId">
                     @(Model.PageNumber - 1)
                 </a>
             </li>
