@@ -1,3 +1,5 @@
+@import './styles/design-tokens.css';
+
 *,
 *::before,
 *::after {
@@ -7,6 +9,9 @@
 body {
   margin: 0;
   line-height: 1.5;
+  font-family: var(--font-sans);
+  color: var(--clr-neutral-800);
+  background-color: var(--clr-neutral-50);
 }
 
 img, picture {

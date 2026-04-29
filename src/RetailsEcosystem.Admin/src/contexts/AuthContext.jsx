@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 import { tokenService } from "../services/tokenService";
-import { login as loginApi, logout as logoutApi, getMe } from "../features/auth/authApi";
+import { login as loginApi, logout as logoutApi } from "../features/auth/authApi";
+import { ENV } from "../configs/env";
 
 export const AuthContext = createContext();
 
@@ -11,18 +13,22 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = tokenService.getToken();
-      if (token) {
-        try {
-          const userData = await getMe();
-          setUser(userData);
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error("Failed to fetch user", error);
-          tokenService.clearToken();
-        }
+      try {
+        // Use raw axios to bypass the apiClient response interceptor (avoids retry loop).
+        // The httpOnly refresh-token cookie is sent automatically via withCredentials.
+        const res = await axios.post(
+          `${ENV.VITE_HOST_URL}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+        tokenService.setToken(res.data.accessToken);
+        setUser(res.data.user);
+        setIsAuthenticated(true);
+      } catch {
+        // No valid refresh token — user must log in.
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initAuth();

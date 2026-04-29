@@ -1,0 +1,132 @@
+/* RetailsEcosystem Admin — Design Tokens
+   Single source of truth for all visual variables.
+   Import this file once in index.css. */
+
+:root {
+  /* ── Primary: Calm Blue ───────────────────────── */
+  --clr-primary-50:  #EBF3FB;
+  --clr-primary-100: #D4E8F7;
+  --clr-primary-200: #A9D2EF;
+  --clr-primary-300: #7EBAE6;
+  --clr-primary-400: #5AA4DC;
+  --clr-primary-500: #4A90D9;   /* primary */
+  --clr-primary-600: #3A7BC4;   /* hover   */
+  --clr-primary-700: #2E68AE;
+  --clr-primary-800: #235597;
+  --clr-primary-900: #1A4080;   /* branding panel bg */
+
+  /* ── Neutrals ─────────────────────────────────── */
+  --clr-neutral-0:   #FFFFFF;
+  --clr-neutral-50:  #F8F9FA;
+  --clr-neutral-100: #F1F3F5;
+  --clr-neutral-200: #E9ECEF;
+  --clr-neutral-400: #ADB5BD;
+  --clr-neutral-600: #6C757D;
+  --clr-neutral-800: #343A40;
+  --clr-neutral-900: #212529;
+
+  /* ── Semantic ─────────────────────────────────── */
+  --clr-success: #2E9E6B;
+  --clr-warning: #E0973A;
+  --clr-danger:  #D94F4F;
+  --clr-info:    var(--clr-primary-500);
+
+  /* ── Bootstrap overrides ──────────────────────── */
+  --bs-primary:       var(--clr-primary-500);
+  --bs-primary-rgb:   74, 144, 217;
+  --bs-link-color:    var(--clr-primary-600);
+  --bs-focus-ring-color: rgba(74, 144, 217, 0.25);
+
+  /* ── Radius ───────────────────────────────────── */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  16px;
+
+  /* ── Shadows ──────────────────────────────────── */
+  --shadow-card:    0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-primary: 0 4px 15px rgba(74, 144, 217, 0.35);
+  --shadow-focus:   0 0 0 3px rgba(74, 144, 217, 0.25);
+
+  /* ── Typography ───────────────────────────────── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Override Bootstrap's primary button to Calm Blue */
+.btn-primary {
+  --bs-btn-bg:           var(--clr-primary-500);
+  --bs-btn-border-color: var(--clr-primary-500);
+  --bs-btn-hover-bg:           var(--clr-primary-600);
+  --bs-btn-hover-border-color: var(--clr-primary-600);
+  --bs-btn-active-bg:           var(--clr-primary-700);
+  --bs-btn-active-border-color: var(--clr-primary-700);
+  --bs-btn-disabled-bg:           var(--clr-primary-300);
+  --bs-btn-disabled-border-color: var(--clr-primary-300);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  box-shadow: none;
+}
+
+.btn-outline-primary {
+  --bs-btn-color:        var(--clr-primary-500);
+  --bs-btn-border-color: var(--clr-primary-500);
+  --bs-btn-hover-bg:           var(--clr-primary-500);
+  --bs-btn-hover-border-color: var(--clr-primary-500);
+  border-radius: var(--radius-md);
+}
+
+.btn-danger  { border-radius: var(--radius-sm); }
+.btn-success { border-radius: var(--radius-md); }
+.btn-warning { border-radius: var(--radius-md); }
+
+/* Form controls */
+.form-control,
+.form-select {
+  border-radius: var(--radius-md);
+  background-color: var(--clr-neutral-100);
+  border-color: var(--clr-neutral-200);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--clr-primary-300);
+  box-shadow: var(--shadow-focus);
+  background-color: var(--clr-neutral-0);
+}
+
+.input-group .form-control { border-radius: 0; }
+.input-group .form-control:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.input-group .input-group-text:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+
+/* Standard card */
+.card {
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: var(--shadow-card);
+}
+
+/* Sidebar active link */
+.sidebar .nav-link.active {
+  color: var(--clr-primary-600);
+  background-color: var(--clr-primary-50);
+  border-radius: var(--radius-sm);
+}
+
+.sidebar .nav-link:hover {
+  background-color: var(--clr-neutral-100);
+  border-radius: var(--radius-sm);
+}
+
+/* Table head */
+.table thead th {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--clr-neutral-600);
+  background-color: var(--clr-neutral-100);
+}

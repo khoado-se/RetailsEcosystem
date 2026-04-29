@@ -5,6 +5,11 @@ export const login = async (credentials) => {
   return res.data;
 };
 
+export const refresh = async () => {
+  const res = await apiClient.post("/auth/refresh");
+  return res.data;
+};
+
 export const logout = async () => {
   const res = await apiClient.post("/auth/logout");
   return res.data;
