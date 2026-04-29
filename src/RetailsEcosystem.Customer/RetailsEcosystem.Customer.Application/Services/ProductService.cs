@@ -73,7 +73,11 @@ namespace RetailsEcosystem.Customer.Application.Services
                 UpdatedDate = product.UpdatedDate,
                 Price = product.Price,
                 StockQuantity = product.StockQuantity,
-                Category = categoryDto
+                IsFeatured = product.IsFeatured,
+                SoldCount = product.SoldCount,
+                Category = categoryDto,
+                ImageUrl = product.Images.FirstOrDefault()?.Url,
+                ImageUrls = product.Images.Select(i => i.Url).ToList()
             };
         }
 
@@ -91,6 +95,8 @@ namespace RetailsEcosystem.Customer.Application.Services
                 UpdatedDate = product.UpdatedDate,
                 Price = product.Price,
                 StockQuantity = product.StockQuantity,
+                IsFeatured = product.IsFeatured,
+                SoldCount = product.SoldCount,
                 Category = new CategoryDto
                 {
                     Id = product.Category.Id,
@@ -120,11 +126,15 @@ namespace RetailsEcosystem.Customer.Application.Services
                 Description = product.Description,
                 UpdatedDate = product.UpdatedDate,
                 Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                IsFeatured = product.IsFeatured,
+                SoldCount = product.SoldCount,
                 Category = new CategoryDto
                 {
                     Id = product.Category.Id,
                     Name = product.Category.Name,
-                }
+                },
+                ImageUrl = product.Images.FirstOrDefault()?.Url
             });
 
             var productCount = await _productRepo.GetProductCountAsync(isFeature: true);
@@ -154,6 +164,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 Description = productDto.Description,
                 UpdatedDate = productDto.UpdatedDate,
                 Price = productDto.Price,
+                IsFeatured = productDto.IsFeatured,
                 Category = category
             };
 

@@ -21,7 +21,7 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 .GetFeaturedProductsAsync(new PagedRequest
                 {
                     PageNumber = 1,
-                    PageSize = 4
+                    PageSize = 6
                 });
 
             ViewBag.FeatureProducts = featuredProducts.Items;

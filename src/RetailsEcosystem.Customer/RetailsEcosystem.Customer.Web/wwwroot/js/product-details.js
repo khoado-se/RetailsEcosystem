@@ -4,9 +4,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const current = document.getElementById('current');
     if (!current) return;
-    document.querySelectorAll('.img').forEach(img => {
+    const thumbnails = document.querySelectorAll('.images .img');
+    if (thumbnails.length === 0) return;
+    thumbnails.forEach(img => {
         img.addEventListener('click', e => {
-            document.querySelectorAll('.img').forEach(i => i.style.opacity = '1');
+            thumbnails.forEach(i => i.style.opacity = '1');
             current.src = e.target.src;
             e.target.style.opacity = '0.6';
         });

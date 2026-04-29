@@ -11,6 +11,8 @@ namespace RetailsEcosystem.Customer.Domain.Entities
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; } = 100;
+        public bool IsFeatured { get; set; } = false;
+        public int SoldCount { get; set; } = 0;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedDate { get; set; }
 

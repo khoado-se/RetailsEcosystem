@@ -1,25 +1,5 @@
-﻿@using RetailsEcosystem.Customer.Shared
+@using RetailsEcosystem.Customer.Shared
 @model ProductDto
-<!-- Start Breadcrumbs -->
-@* <div class="breadcrumbs">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 col-md-6 col-12">
-                <div class="breadcrumbs-content">
-                    <h1 class="page-title">@Model.Name</h1>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-12">
-                <ul class="breadcrumb-nav">
-                    <li><a href="index.html"><i class="lni lni-home"></i> Home</a></li>
-                    <li><a href="index.html">Shop</a></li>
-                    <li>@Model.Name</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div> *@
-<!-- End Breadcrumbs -->
 <!-- Start Item Details -->
 <section class="item-details section">
     <div class="container">
@@ -27,16 +7,22 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-12 col-12">
                     <div class="product-images">
-                        <main id="gallery">
+                        <main id="gallery" class="@(Model.ImageUrls.Count <= 1 ? "single-image" : "")">
                             <div class="main-img">
-                                <img src="~/images/product-details/01.jpg" id="current" alt="#">
+                                @if (Model.ImageUrls.Count > 0)
+                                {
+                                    <img src="@Model.ImageUrls[0]" id="current" alt="@Model.Name">
+                                }
+                                else
+                                {
+                                    <img src="~/images/product-placeholder.jpg" id="current" alt="@Model.Name">
+                                }
                             </div>
                             <div class="images">
-                                <img src="~/images/product-details/01.jpg" class="img" alt="#">
-                                <img src="~/images/product-details/02.jpg" class="img" alt="#">
-                                <img src="~/images/product-details/03.jpg" class="img" alt="#">
-                                <img src="~/images/product-details/04.jpg" class="img" alt="#">
-                                <img src="~/images/product-details/05.jpg" class="img" alt="#">
+                                @foreach (var imgUrl in Model.ImageUrls)
+                                {
+                                    <img src="@imgUrl" class="img" alt="@Model.Name">
+                                }
                             </div>
                         </main>
                     </div>
@@ -46,49 +32,34 @@
                         <h2 class="title">@Model.Name</h2>
                         <p class="category">
                             <a asp-controller="Products"
-                               asp-action="Index"
+                               asp-action="ProductIndex"
                                asp-route-categoryId="@Model.Category.Id">@Model.Category.Name</a>
                         </p>
-                        <h3 class="price">
-                            @Model.Price.ToString("c")
-                            @* <span>$945</span> *@
-                        </h3>
-                        <p class="info-text">
-                            @Model.Description
-                        </p>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4 col-12">
-                                <div class="form-group color-option">
-                                    <label class="title-label" for="size">Choose color</label>
-                                    <div class="single-checkbox checkbox-style-1">
-                                        <input type="checkbox" id="checkbox-1" checked>
-                                        <label for="checkbox-1"><span></span></label>
-                                    </div>
-                                    <div class="single-checkbox checkbox-style-2">
-                                        <input type="checkbox" id="checkbox-2">
-                                        <label for="checkbox-2"><span></span></label>
-                                    </div>
-                                    <div class="single-checkbox checkbox-style-3">
-                                        <input type="checkbox" id="checkbox-3">
-                                        <label for="checkbox-3"><span></span></label>
-                                    </div>
-                                    <div class="single-checkbox checkbox-style-4">
-                                        <input type="checkbox" id="checkbox-4">
-                                        <label for="checkbox-4"><span></span></label>
-                                    </div>
-                                </div>
-                            </div>
+                        <h3 class="price">@Model.Price.ToString("N0") ₫</h3>
+                        <p class="info-text">@Model.Description</p>
 
-                            <div class="col-lg-4 col-md-4 col-12">
+                        @if (Model.StockQuantity > 0)
+                        {
+                            <span class="stock-badge in-stock">
+                                <i class="lni lni-checkmark-circle"></i> In Stock (@Model.StockQuantity available)
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="stock-badge out-of-stock">
+                                <i class="lni lni-close"></i> Out of Stock
+                            </span>
+                        }
+
+                        <div class="row mt-3">
+                            <div class="col-lg-5 col-md-5 col-12">
                                 <div class="form-group quantity">
                                     <label for="quantity">Quantity</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary" type="button" data-action="qty-dec">-</button>
                                         </div>
-
-                                        <input style="border: none" type="number" id="quantity" class="form-control text-center" value="1" min="1" max="100">
-
+                                        <input type="number" id="quantity" class="form-control qty-input text-center" value="1" min="1" max="@Model.StockQuantity">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary" type="button" data-action="qty-inc">+</button>
                                         </div>
@@ -96,6 +67,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div id="details-alert" class="alert d-none mb-3"></div>
                         <div class="bottom-content">
                             <div class="row align-items-end">
@@ -103,7 +75,7 @@
                                     <div class="button cart-button">
                                         @if (User.Identity?.IsAuthenticated == true)
                                         {
-                                            <button id="add-to-cart-btn" class="btn" style="width:100%;"
+                                            <button id="add-to-cart-btn" class="btn btn-add-cart-detail"
                                                     data-action="add-to-cart"
                                                     data-product-id="@Model.Id"
                                                     @(Model.StockQuantity == 0 ? "disabled" : "")>
@@ -114,13 +86,13 @@
                                         {
                                             <a asp-controller="Account" asp-action="Login"
                                                asp-route-returnUrl="@Url.Action("ProductDetails", "Products", new { productId = Model.Id })"
-                                               class="btn" style="width:100%;">Add to Cart</a>
+                                               class="btn btn-add-cart-detail">Add to Cart</a>
                                         }
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="wish-button">
-                                        <button class="btn"><i class="lni lni-heart"></i> To Wishlist</button>
+                                        <button class="btn"><i class="lni lni-heart"></i> Wishlist</button>
                                     </div>
                                 </div>
                             </div>
@@ -134,39 +106,29 @@
                 <div class="row">
                     <div class="col-lg-6 col-12">
                         <div class="info-body custom-responsive-margin">
-                            <h4>Details</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.
-                            </p>
-                            <h4>Features</h4>
-                            <ul class="features">
-                                <li>Capture 4K30 Video and 12MP Photos</li>
-                                <li>Game-Style Controller with Touchscreen</li>
-                                <li>View Live Camera Feed</li>
-                                <li>Full Control of HERO6 Black</li>
-                                <li>Use App for Dedicated Camera Operation</li>
-                            </ul>
+                            <h4>Description</h4>
+                            <p>@Model.Description</p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-12">
                         <div class="info-body">
-                            <h4>Specifications</h4>
+                            <h4>Product Information</h4>
                             <ul class="normal-list">
-                                <li><span>Weight:</span> 35.5oz (1006g)</li>
-                                <li><span>Maximum Speed:</span> 35 mph (15 m/s)</li>
-                                <li><span>Maximum Distance:</span> Up to 9,840ft (3,000m)</li>
-                                <li><span>Operating Frequency:</span> 2.4GHz</li>
-                                <li><span>Manufacturer:</span> GoPro, USA</li>
+                                <li><span>Category:</span> @Model.Category.Name</li>
+                                <li><span>SKU:</span> #@Model.Id.ToString("D6")</li>
+                                <li>
+                                    <span>Availability:</span>
+                                    @(Model.StockQuantity > 0
+                                        ? $"In Stock ({Model.StockQuantity} units)"
+                                        : "Out of Stock")
+                                </li>
+                                <li><span>Added:</span> @Model.CreatedDate.ToString("MMMM yyyy")</li>
                             </ul>
-                            <h4>Shipping Options:</h4>
+                            <h4>Shipping Options</h4>
                             <ul class="normal-list">
-                                <li><span>Courier:</span> 2 - 4 days, $22.50</li>
+                                <li><span>Courier:</span> 2–4 days, $22.50</li>
                                 <li><span>Local Shipping:</span> up to one week, $10.00</li>
-                                <li><span>UPS Ground Shipping:</span> 4 - 6 days, $18.00</li>
-                                <li><span>Unishop Global Export:</span> 3 - 4 days, $25.00</li>
+                                <li><span>UPS Ground:</span> 4–6 days, $18.00</li>
                             </ul>
                         </div>
                     </div>
@@ -176,61 +138,11 @@
     </div>
 </section>
 <!-- End Item Details -->
-<!-- Review Modal -->
-<div class="modal fade review-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Leave a Review</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-name">Your Name</label>
-                            <input class="form-control" type="text" id="review-name" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-email">Your Email</label>
-                            <input class="form-control" type="email" id="review-email" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-subject">Subject</label>
-                            <input class="form-control" type="text" id="review-subject" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-rating">Rating</label>
-                            <select class="form-control" id="review-rating">
-                                <option>5 Stars</option>
-                                <option>4 Stars</option>
-                                <option>3 Stars</option>
-                                <option>2 Stars</option>
-                                <option>1 Star</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="review-message">Review</label>
-                    <textarea class="form-control" id="review-message" rows="8" required></textarea>
-                </div>
-            </div>
-            <div class="modal-footer button">
-                <button type="button" class="btn">Submit Review</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Review Modal -->
 
-<script src="~/js/product-details.js" asp-append-version="true"></script>
+@section Styles {
+    <link href="~/css/products/product-details.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/js/product-details.js" asp-append-version="true"></script>
+}

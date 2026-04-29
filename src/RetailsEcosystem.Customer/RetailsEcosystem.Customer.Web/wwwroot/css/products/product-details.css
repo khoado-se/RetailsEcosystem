@@ -1,0 +1,36 @@
+/* ── Quantity input ───────────────────────────────────────────────── */
+.qty-input {
+    border: none;
+}
+
+/* ── Add-to-Cart (detail page) ───────────────────────────────────── */
+.btn-add-cart-detail {
+    width: 100%;
+}
+
+/* ── Stock badge ─────────────────────────────────────────────────── */
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.stock-badge.in-stock {
+    background: #d4edda;
+    color: #155724;
+}
+
+.stock-badge.out-of-stock {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ── Gallery: hide thumbnail strip for single-image products ─────── */
+#gallery.single-image .images {
+    display: none;
+}

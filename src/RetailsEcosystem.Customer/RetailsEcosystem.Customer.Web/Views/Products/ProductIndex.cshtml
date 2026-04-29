@@ -37,7 +37,7 @@
                     <div class="mt-auto pt-2">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <button class="btn btn-primary w-100"
+                            <button class="btn btn-outline-primary w-100"
                                     data-action="add-to-cart"
                                     data-product-id="@item.Id"
                                     @(item.StockQuantity == 0 ? "disabled" : "")>
@@ -49,7 +49,7 @@
                         {
                             <a asp-controller="Account" asp-action="Login"
                                asp-route-returnUrl="@Url.Action("ProductIndex", "Products")"
-                               class="btn btn-primary w-100">
+                               class="btn btn-outline-primary w-100">
                                 <i class="lni lni-cart me-1"></i>Add to Cart
                             </a>
                         }

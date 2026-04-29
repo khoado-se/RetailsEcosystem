@@ -34,14 +34,14 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.DataSeed
         public static void SeedProducts(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "Samsung Galaxy S26 Ultra 12GB 256GB", Price = 29990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 2, Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB", Price = 7990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 3, Name = "HONOR 400 Pro 5G 12GB 512GB", Price = 14990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 4, Name = "Xiaomi 15 5G 12GB 512GB", Price = 19490000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 5, Name = "Xiaomi 15 Ultra 5G 16GB 512GB", Price = 26990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 6, Name = "Xiaomi 15 Ultra 5G 16GB 1TB", Price = 28990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 7, Name = "Nothing Phone 2A Plus 5G 12GB 256GB", Price = 7690000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
-                new Product { Id = 8, Name = "Tecno Pova 7 8GB 128GB", Price = 4490000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
+                new Product { Id = 1, Name = "Samsung Galaxy S26 Ultra 12GB 256GB", Price = 29990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 1240 },
+                new Product { Id = 2, Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB", Price = 7990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 980 },
+                new Product { Id = 3, Name = "HONOR 400 Pro 5G 12GB 512GB", Price = 14990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 760 },
+                new Product { Id = 4, Name = "Xiaomi 15 5G 12GB 512GB", Price = 19490000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 650 },
+                new Product { Id = 5, Name = "Xiaomi 15 Ultra 5G 16GB 512GB", Price = 26990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 520 },
+                new Product { Id = 6, Name = "Xiaomi 15 Ultra 5G 16GB 1TB", Price = 28990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 410 },
+                new Product { Id = 7, Name = "Nothing Phone 2A Plus 5G 12GB 256GB", Price = 7690000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 385 },
+                new Product { Id = 8, Name = "Tecno Pova 7 8GB 128GB", Price = 4490000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24), IsFeatured = true, SoldCount = 310 },
                 new Product { Id = 9, Name = "Tecno Pova 7 8GB 256GB", Price = 4890000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
                 new Product { Id = 10, Name = "iPhone 17 Pro Max 256GB | Chính hãng", Price = 36990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },
                 new Product { Id = 11, Name = "iPhone 17 Pro Max 256GB | Chính hãng", Price = 36990000, CategoryId = 1, CreatedDate = new DateTime(2026, 4, 24) },

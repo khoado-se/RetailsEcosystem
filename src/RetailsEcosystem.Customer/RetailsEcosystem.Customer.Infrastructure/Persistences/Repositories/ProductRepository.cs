@@ -29,6 +29,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             tracked.Description = product.Description;
             tracked.Price = product.Price;
             tracked.StockQuantity = product.StockQuantity;
+            tracked.IsFeatured = product.IsFeatured;
             tracked.UpdatedDate = product.UpdatedDate;
             tracked.CategoryId = product.CategoryId;
 
@@ -55,6 +56,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         {
             return await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
@@ -62,7 +64,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         {
             if (isFeature)
             {
-                return 4; // TODO: hard code for feature product, since we only have 4 feature products
+                var featuredCount = await _context.Products.CountAsync(p => p.IsFeatured);
+                return featuredCount > 0 ? featuredCount : await _context.Products.CountAsync();
             }
             var query = _context.Products.AsQueryable();
             if (categoryId.HasValue)
@@ -87,9 +90,18 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public async Task<IEnumerable<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize)
         {
-            return await _context.Products
+            var hasFeatured = await _context.Products.AnyAsync(p => p.IsFeatured);
+
+            var query = hasFeatured
+                ? _context.Products.Where(p => p.IsFeatured)
+                : _context.Products.AsQueryable();
+
+            return await query
                 .Include(p => p.Category)
+                .Include(p => p.Images)
                 .AsNoTracking()
+                .OrderByDescending(p => p.SoldCount)
+                .ThenByDescending(p => p.CreatedDate)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
