@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using RetailsEcosystem.Customer.Application.Interfaces;
-using RetailsEcosystem.Customer.Application.Service;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -87,6 +86,13 @@ namespace RetailsEcosystem.Customer.Infrastructure
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            // ── Customer services ─────────────────────────────────────────────
+            services.AddScoped<ICustomerService, CustomerService>();
+
+            // ── Cart services ─────────────────────────────────────────────────
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICartService, CartService>();
 
             return services;
         }

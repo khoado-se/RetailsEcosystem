@@ -20,10 +20,19 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             return product.Id;
         }
 
-        public Task EditProductAsync(Product product)
+        public async Task EditProductAsync(Product product)
         {
-            _context.Products.Update(product);
-            return _context.SaveChangesAsync();
+            var tracked = await _context.Products.FindAsync(product.Id)
+                ?? throw new KeyNotFoundException($"Product {product.Id} not found.");
+
+            tracked.Name = product.Name;
+            tracked.Description = product.Description;
+            tracked.Price = product.Price;
+            tracked.StockQuantity = product.StockQuantity;
+            tracked.UpdatedDate = product.UpdatedDate;
+            tracked.CategoryId = product.CategoryId;
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId)

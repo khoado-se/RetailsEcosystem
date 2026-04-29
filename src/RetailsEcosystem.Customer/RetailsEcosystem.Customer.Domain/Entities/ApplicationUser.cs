@@ -11,6 +11,8 @@ namespace RetailsEcosystem.Customer.Domain.Entities
     {
         public string FullName { get; set; } = string.Empty;
         public string? AvatarUrl { get; set; }
+        public string? Address { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         /// <summary>
         /// Soft-disable an account without deleting it.

@@ -1,0 +1,93 @@
+@model RetailsEcosystem.Customer.Web.Models.Account.ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Start Account Section -->
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9 col-12">
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success py-2 small mb-4">@TempData["SuccessMessage"]</div>
+                }
+
+                <!-- Profile Card -->
+                <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+                    <div class="card-body">
+                        <h4 class="fw-bold mb-1">My Profile</h4>
+                        <p class="text-muted small mb-4">Keep your personal information up to date.</p>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger py-2 small">
+                                @Html.ValidationSummary(false)
+                            </div>
+                        }
+
+                        <form asp-action="Profile" asp-controller="Account" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <div class="mb-3">
+                                <label asp-for="FullName" class="form-label fw-semibold small"></label>
+                                <input asp-for="FullName" type="text" class="form-control rounded-3" />
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="PhoneNumber" class="form-label fw-semibold small"></label>
+                                <input asp-for="PhoneNumber" type="tel" class="form-control rounded-3"
+                                       placeholder="+1 234 567 8900" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Address" class="form-label fw-semibold small"></label>
+                                <input asp-for="Address" type="text" class="form-control rounded-3"
+                                       placeholder="123 Main St, City" />
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="DateOfBirth" class="form-label fw-semibold small"></label>
+                                <input asp-for="DateOfBirth" type="date" class="form-control rounded-3" />
+                                <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="AvatarUrl" class="form-label fw-semibold small"></label>
+                                <input asp-for="AvatarUrl" type="url" class="form-control rounded-3"
+                                       placeholder="https://example.com/avatar.jpg" />
+                                <span asp-validation-for="AvatarUrl" class="text-danger small"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 fw-semibold">
+                                Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Change Password Card -->
+                <div class="card shadow-sm border-0 rounded-4 p-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Change Password</h5>
+                        <a asp-action="ChangePassword" asp-controller="Account"
+                           class="btn btn-outline-secondary rounded-pill py-2 px-4 fw-semibold">
+                            Change Password
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Account Section -->
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

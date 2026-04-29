@@ -34,7 +34,23 @@
                 <h2 class="card-title">@item.Name</h2>
                 <p class="price"><h4>@item.Price.ToString("C")</h4></p>
                 <p class="card-text">@item.Description</p>
-                <p><a href="#" id="addToCard" class="btn btn-success">Add To Card</a></p>
+                <p>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <button class="btn btn-success w-100"
+                                data-action="add-to-cart"
+                                data-product-id="@item.Id"
+                                @(item.StockQuantity == 0 ? "disabled" : "")>
+                            @(item.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
+                        </button>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login"
+                           asp-route-returnUrl="@Url.Action("ProductIndex", "Products")"
+                           class="btn btn-success w-100">Add to Cart</a>
+                    }
+                </p>
             </div>
         </div>
     }
@@ -89,4 +105,8 @@
 
 @section Styles {
     <link href="~/css/products/card.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/js/products.js" asp-append-version="true"></script>
 }

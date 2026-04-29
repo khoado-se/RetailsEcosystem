@@ -5,7 +5,7 @@ using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Product;
 
-namespace RetailsEcosystem.Customer.Application.Service
+namespace RetailsEcosystem.Customer.Application.Services
 {
     public class ProductService : IProductService
     {
@@ -72,6 +72,7 @@ namespace RetailsEcosystem.Customer.Application.Service
                 Description = product.Description,
                 UpdatedDate = product.UpdatedDate,
                 Price = product.Price,
+                StockQuantity = product.StockQuantity,
                 Category = categoryDto
             };
         }
@@ -89,6 +90,7 @@ namespace RetailsEcosystem.Customer.Application.Service
                 Description = product.Description,
                 UpdatedDate = product.UpdatedDate,
                 Price = product.Price,
+                StockQuantity = product.StockQuantity,
                 Category = new CategoryDto
                 {
                     Id = product.Category.Id,

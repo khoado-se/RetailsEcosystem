@@ -1,6 +1,7 @@
 /* RetailsEcosystem Admin — Design Tokens
-   Single source of truth for all visual variables.
-   Import this file once in index.css. */
+   Single source of truth for all visual variables and utility classes.
+   Import this file once in index.css.
+   Never use inline styles for values that exist here — use the classes below. */
 
 :root {
   /* ── Primary: Calm Blue ───────────────────────── */
@@ -50,9 +51,19 @@
 
   /* ── Typography ───────────────────────────────── */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* ── Typography scale ─────────────────────────── */
+  --fs-page-title:    1.75rem;
+  --fs-section-title: 1.25rem;
+  --fs-label:         0.875rem;
+  --fs-body:          0.875rem;
+  --fs-caption:       0.75rem;
 }
 
-/* Override Bootstrap's primary button to Calm Blue */
+/* ════════════════════════════════════════════════
+   Bootstrap component overrides (Calm Blue theme)
+   ════════════════════════════════════════════════ */
+
 .btn-primary {
   --bs-btn-bg:           var(--clr-primary-500);
   --bs-btn-border-color: var(--clr-primary-500);
@@ -83,7 +94,6 @@
 .btn-success { border-radius: var(--radius-md); }
 .btn-warning { border-radius: var(--radius-md); }
 
-/* Form controls */
 .form-control,
 .form-select {
   border-radius: var(--radius-md);
@@ -102,14 +112,12 @@
 .input-group .form-control:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
 .input-group .input-group-text:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
 
-/* Standard card */
 .card {
   border-radius: var(--radius-lg);
   border: none;
   box-shadow: var(--shadow-card);
 }
 
-/* Sidebar active link */
 .sidebar .nav-link.active {
   color: var(--clr-primary-600);
   background-color: var(--clr-primary-50);
@@ -121,12 +129,75 @@
   border-radius: var(--radius-sm);
 }
 
-/* Table head */
 .table thead th {
-  font-size: 0.78rem;
+  font-size: var(--fs-caption);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--clr-neutral-600);
   background-color: var(--clr-neutral-100);
+}
+
+/* ════════════════════════════════════════════════
+   Utility classes — use these instead of inline styles
+   ════════════════════════════════════════════════ */
+
+/* -- Typography -- */
+.text-page-title    { font-size: var(--fs-page-title);    font-weight: 700; color: var(--clr-neutral-900); }
+.text-section-title { font-size: var(--fs-section-title); font-weight: 600; color: var(--clr-neutral-900); }
+.text-label         { font-size: var(--fs-label);         font-weight: 600; }
+.text-body-sm       { font-size: var(--fs-body); }
+.text-caption       { font-size: var(--fs-caption); }
+
+/* -- Color -- */
+.text-primary-brand  { color: var(--clr-primary-500); }
+.text-heading        { color: var(--clr-neutral-900); }
+.text-body-color     { color: var(--clr-neutral-800); }
+.text-muted-brand    { color: var(--clr-neutral-600); }
+
+/* -- Background -- */
+.bg-surface          { background-color: var(--clr-neutral-50); }
+.bg-primary-tint     { background-color: var(--clr-primary-50); }
+
+/* -- Border radius (override Bootstrap where needed) -- */
+.rounded-badge  { border-radius: var(--radius-sm) !important; }
+.rounded-input  { border-radius: var(--radius-md) !important; }
+.rounded-card   { border-radius: var(--radius-lg) !important; }
+.rounded-panel  { border-radius: var(--radius-xl) !important; }
+
+/* -- Branding panel (auth / onboarding left panel) -- */
+.brand-panel-bg {
+  background: linear-gradient(135deg,
+    var(--clr-primary-900) 0%,
+    var(--clr-primary-700) 50%,
+    var(--clr-primary-500) 100%);
+}
+
+/* -- Logo badge (circular brand icon) -- */
+.brand-logo-badge {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, var(--clr-primary-500), var(--clr-primary-600));
+  box-shadow: 0 8px 32px rgba(74, 144, 217, 0.4);
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+/* -- Page header -- */
+.page-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--clr-neutral-900);
+}
+
+.page-header-subtitle {
+  font-size: var(--fs-body);
+  color: var(--clr-neutral-600);
+}
+
+/* -- Card panel (xl radius, no border) -- */
+.card-panel {
+  border-radius: var(--radius-xl);
+  border: none;
+  box-shadow: var(--shadow-card);
 }

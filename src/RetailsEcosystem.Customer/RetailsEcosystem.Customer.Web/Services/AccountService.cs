@@ -1,0 +1,80 @@
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using RetailsEcosystem.Customer.Shared.DTOs.Auth;
+using RetailsEcosystem.Customer.Shared.DTOs.Customer;
+using RetailsEcosystem.Customer.Web.Interfaces;
+
+namespace RetailsEcosystem.Customer.Web.Services
+{
+    public class AccountService : IAccountService
+    {
+        private readonly HttpClient _httpClient;
+        private readonly JsonSerializerOptions _jsonOptions;
+
+        public AccountService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClient = httpClientFactory.CreateClient("MyApi");
+            _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        }
+
+        public async Task<AuthResponseDto> LoginAsync(string email, string password)
+        {
+            var body = JsonContent.Create(new { email, password });
+            var response = await _httpClient.PostAsync("api/auth/login", body);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
+        }
+
+        public async Task<AuthResponseDto> RegisterAsync(string fullName, string email, string password, string confirmPassword)
+        {
+            var body = JsonContent.Create(new { fullName, email, password, confirmPassword });
+            var response = await _httpClient.PostAsync("api/auth/register", body);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
+        }
+
+        public async Task LogoutAsync(string accessToken)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/auth/logout");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            await _httpClient.SendAsync(request);
+        }
+
+        public async Task<CustomerDto> GetProfileAsync(string accessToken)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/customers/me");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<CustomerDto>(json, _jsonOptions)!;
+        }
+
+        public async Task UpdateProfileAsync(string accessToken, UpdateProfileDto dto)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, "api/customers/me");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            request.Content = new StringContent(
+                JsonSerializer.Serialize(dto),
+                Encoding.UTF8,
+                "application/json");
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task ChangePasswordAsync(string accessToken, string currentPassword, string newPassword)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, "api/customers/me/password");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            request.Content = new StringContent(
+                JsonSerializer.Serialize(new { currentPassword, newPassword }),
+                Encoding.UTF8,
+                "application/json");
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+        }
+    }
+}

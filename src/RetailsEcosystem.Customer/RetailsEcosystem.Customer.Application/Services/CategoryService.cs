@@ -5,7 +5,7 @@ using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Category;
 
-namespace RetailsEcosystem.Customer.Application.Service
+namespace RetailsEcosystem.Customer.Application.Services
 {
     public class CategoryService : ICategoryService
     {

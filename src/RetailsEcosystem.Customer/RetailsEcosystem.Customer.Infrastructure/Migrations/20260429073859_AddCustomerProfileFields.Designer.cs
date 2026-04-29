@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailsEcosystem.Customer.Infrastructure.Persistences;
 
@@ -11,13 +12,15 @@ using RetailsEcosystem.Customer.Infrastructure.Persistences;
 namespace RetailsEcosystem.Customer.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260429073859_AddCustomerProfileFields")]
+    partial class AddCustomerProfileFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.7")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -236,59 +239,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Carts", (string)null);
-                });
-
-            modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.CartItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CartItems", (string)null);
-                });
-
             modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -307,7 +257,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -463,9 +413,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                         .HasPrecision(18)
                         .HasColumnType("decimal(18,0)");
 
-                    b.Property<int>("StockQuantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -473,7 +420,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -483,7 +430,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -493,7 +439,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -503,7 +448,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -513,7 +457,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -523,7 +466,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -533,7 +475,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 1TB",
                             Price = 28990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -543,7 +484,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nothing Phone 2A Plus 5G 12GB 256GB",
                             Price = 7690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -553,7 +493,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tecno Pova 7 8GB 128GB",
                             Price = 4490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -563,7 +502,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tecno Pova 7 8GB 256GB",
                             Price = 4890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -573,7 +511,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -583,7 +520,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -593,7 +529,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -603,7 +538,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -613,7 +547,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -623,7 +556,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -633,7 +565,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -643,7 +574,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -653,7 +583,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 12GB 256GB",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -663,7 +592,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 12GB 256GB",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -673,7 +601,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -683,7 +610,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -693,7 +619,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -703,7 +628,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -713,7 +637,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 F 5G 8GB 256GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -723,7 +646,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 F 5G 8GB 256GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -733,7 +655,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 17 Ultra 5G 16GB 512GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -743,7 +664,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 17 Ultra 5G 16GB 512GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -753,7 +673,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại Itel P55 Plus NFC 8GB 256GB",
                             Price = 3190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -763,7 +682,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại Itel P55 Plus NFC 8GB 256GB",
                             Price = 3190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -773,7 +691,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A57 5G 8GB 128GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -783,7 +700,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A57 5G 8GB 128GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -793,7 +709,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -803,7 +718,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -813,7 +727,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -823,7 +736,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -833,7 +745,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -843,7 +754,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -853,7 +763,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N6 16GB 512GBHàng mới về",
                             Price = 63990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -863,7 +772,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N6 16GB 512GBHàng mới về",
                             Price = 63990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -873,7 +781,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -883,7 +790,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -893,7 +799,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -903,7 +808,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -913,7 +817,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -923,7 +826,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -933,7 +835,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -943,7 +844,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -953,7 +853,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -963,7 +862,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -973,7 +871,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -983,7 +880,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop MSI Cyborg 15",
                             Price = 33990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -993,7 +889,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS ZenBook 14",
                             Price = 27590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1003,7 +898,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Lenovo LOQ 15ARP10E",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1013,7 +907,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 16 GEN 2",
                             Price = 18790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1023,7 +916,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS VivoBook 14",
                             Price = 21890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1033,7 +925,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop MSI Katana 15 HX",
                             Price = 32490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1043,7 +934,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 14 DC14255",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1053,7 +943,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Vivobook 14",
                             Price = 22290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1063,7 +952,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Vivobook S14",
                             Price = 24890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1073,7 +961,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Vivobook S 14 FLIP",
                             Price = 21490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1083,7 +970,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Vivobook S 14 FLIP",
                             Price = 21490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1093,7 +979,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FK0092AU",
                             Price = 29690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1103,7 +988,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FK0092AU",
                             Price = 29690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1113,7 +997,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop MSI Prestige 13 AI+ Ukiyoe Edition",
                             Price = 50990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1123,7 +1006,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop MSI Prestige 13 AI+ Ukiyoe Edition",
                             Price = 50990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1133,7 +1015,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Air M4 13 inch 2025 10CPU 8GPU 16GB 256GB | Chính hãng Apple Việt Nam",
                             Price = 25590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1143,7 +1024,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Air M4 13 inch 2025 10CPU 8GPU 16GB 256GB | Chính hãng Apple Việt Nam",
                             Price = 25590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1153,7 +1033,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 256GB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 15990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1163,7 +1042,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 256GB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 15990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1173,7 +1051,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1183,7 +1060,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1193,7 +1069,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook 5 AI 16-AF1048TU",
                             Price = 25690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1203,7 +1078,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook 5 AI 16-AF1048TU",
                             Price = 25690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1213,7 +1087,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 512GB Touch ID | Chính hãng Apple Việt NamHàng mới về",
                             Price = 18490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1223,7 +1096,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 512GB Touch ID | Chính hãng Apple Việt NamHàng mới về",
                             Price = 18490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1233,7 +1105,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Air M5 13 inch 2026 10CPU 8GPU 16GB 512GB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 29390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1243,7 +1114,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Air M5 13 inch 2026 10CPU 8GPU 16GB 512GB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 29390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1253,7 +1123,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Lenovo LOQ 15ARP10E",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1263,7 +1132,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Lenovo LOQ 15ARP10E",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1273,7 +1141,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 28490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1283,7 +1150,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 28490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1293,7 +1159,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 15-FD1289TU",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1303,7 +1168,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 15-FD1289TU",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1313,7 +1177,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Gaming V16",
                             Price = 25390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1323,7 +1186,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Gaming V16",
                             Price = 25390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1333,7 +1195,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Vivobook 14",
                             Price = 17290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1343,7 +1204,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Vivobook 14",
                             Price = 17290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1353,7 +1213,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 15490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1363,7 +1222,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 15490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1373,7 +1231,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Pro M5 Pro 14 inch 2026 15CPU 16GPU 24GB 1TB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 59490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1383,7 +1240,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Pro M5 Pro 14 inch 2026 15CPU 16GPU 24GB 1TB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 59490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1393,7 +1249,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Air M4 13 inch 2025 10CPU 8GPU 16GB 256GB Sạc 70W | Chính hãng Apple Việt Nam",
                             Price = 25890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1403,7 +1258,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Air M4 13 inch 2025 10CPU 8GPU 16GB 256GB Sạc 70W | Chính hãng Apple Việt Nam",
                             Price = 25890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1413,7 +1267,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Lenovo LOQ 15IAX9E",
                             Price = 22390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1423,7 +1276,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Lenovo LOQ 15IAX9E",
                             Price = 22390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1433,7 +1285,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Pro 14 M5 10CPU 10GPU 16GB 512GB | Chính hãng Apple Việt Nam",
                             Price = 41490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1443,7 +1294,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Pro 14 M5 10CPU 10GPU 16GB 512GB | Chính hãng Apple Việt Nam",
                             Price = 41490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1453,7 +1303,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Gaming Vivobook 16X",
                             Price = 20490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1463,7 +1312,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop ASUS Gaming Vivobook 16X",
                             Price = 20490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1473,7 +1321,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1483,7 +1330,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1493,7 +1339,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1503,7 +1348,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1513,7 +1357,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1523,7 +1366,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1533,7 +1375,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1543,7 +1384,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1553,7 +1393,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1563,7 +1402,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1573,7 +1411,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1583,7 +1420,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1593,7 +1429,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1603,7 +1438,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1613,7 +1447,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1623,7 +1456,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1633,7 +1465,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1643,7 +1474,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1653,7 +1483,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1663,7 +1492,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1673,7 +1501,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1683,7 +1510,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1693,7 +1519,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1703,7 +1528,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1713,7 +1537,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1723,7 +1546,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1733,7 +1555,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1743,7 +1564,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1753,7 +1573,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1763,7 +1582,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1773,7 +1591,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1783,7 +1600,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1793,7 +1609,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1803,7 +1618,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1813,7 +1627,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1823,7 +1636,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1833,7 +1645,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1843,7 +1654,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1853,7 +1663,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1863,7 +1672,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1873,7 +1681,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1883,7 +1690,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1893,7 +1699,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại Itel P55 Plus NFC 8GB 256GB",
                             Price = 3190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1903,7 +1708,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại Itel P55 Plus NFC 8GB 256GB",
                             Price = 3190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1913,7 +1717,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1923,7 +1726,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1933,7 +1735,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1943,7 +1744,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1953,7 +1753,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1963,7 +1762,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1973,7 +1771,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1983,7 +1780,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -1993,7 +1789,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2003,7 +1798,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2013,7 +1807,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2023,7 +1816,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2033,7 +1825,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2043,7 +1834,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2053,7 +1843,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2063,7 +1852,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2073,7 +1861,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2083,7 +1870,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2093,7 +1879,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2103,7 +1888,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2113,7 +1897,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 5G 8GB 256GB",
                             Price = 6490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2123,7 +1906,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 5G 8GB 256GB",
                             Price = 6490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2133,7 +1915,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2143,7 +1924,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2153,7 +1933,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2163,7 +1942,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2173,7 +1951,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2183,7 +1960,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2193,7 +1969,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2203,7 +1978,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2213,7 +1987,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2223,7 +1996,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2233,7 +2005,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2243,7 +2014,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2253,7 +2023,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "TECNO CAMON 40 8GB 128GB",
                             Price = 4990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2263,7 +2032,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "TECNO CAMON 40 8GB 128GB",
                             Price = 4990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2273,7 +2041,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2283,7 +2050,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2293,7 +2059,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2303,7 +2068,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2313,7 +2077,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2323,7 +2086,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2333,7 +2095,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2343,7 +2104,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2353,7 +2113,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2363,7 +2122,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2373,7 +2131,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2383,7 +2140,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2393,7 +2149,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2403,7 +2158,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2413,7 +2167,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2423,7 +2176,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2433,7 +2185,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2443,7 +2194,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2453,7 +2203,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2463,7 +2212,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2473,7 +2221,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A56 5G 8GB 128GB",
                             Price = 9190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2483,7 +2230,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A56 5G 8GB 128GB",
                             Price = 9190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2493,7 +2239,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2503,7 +2248,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2513,7 +2257,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2523,7 +2266,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HONOR 400 Pro 5G 12GB 512GB",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2533,7 +2275,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2543,7 +2284,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2553,7 +2293,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2563,7 +2302,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2573,7 +2311,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2583,7 +2320,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2593,7 +2329,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2603,7 +2338,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2613,7 +2347,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2623,7 +2356,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2633,7 +2365,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2643,7 +2374,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2653,7 +2383,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2663,7 +2392,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2673,7 +2401,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2683,7 +2410,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2693,7 +2419,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2703,7 +2428,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2713,7 +2437,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2723,7 +2446,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2733,7 +2455,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2743,7 +2464,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2753,7 +2473,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2763,7 +2482,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2773,7 +2491,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2783,7 +2500,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2793,7 +2509,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2803,7 +2518,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2813,7 +2527,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2823,7 +2536,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2833,7 +2545,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2843,7 +2554,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2853,7 +2563,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2863,7 +2572,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2873,7 +2581,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2883,7 +2590,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2893,7 +2599,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2903,7 +2608,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2913,7 +2617,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2923,7 +2626,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2933,7 +2635,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2943,7 +2644,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2953,7 +2653,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2963,7 +2662,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2973,7 +2671,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2983,7 +2680,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2993,7 +2689,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3003,7 +2698,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3013,7 +2707,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3023,7 +2716,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3033,7 +2725,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3043,7 +2734,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3053,7 +2743,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3063,7 +2752,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3073,7 +2761,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nokia HMD 105 4G",
                             Price = 690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3083,7 +2770,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nokia HMD 105 4G",
                             Price = 690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3093,7 +2779,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại trẻ em Masstel Alfa 5",
                             Price = 1050000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3103,7 +2788,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại trẻ em Masstel Alfa 5",
                             Price = 1050000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3113,7 +2797,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nokia 3210 4G",
                             Price = 1450000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3123,7 +2806,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nokia 3210 4G",
                             Price = 1450000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3133,7 +2815,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Izi 15 4G",
                             Price = 420000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3143,7 +2824,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Izi 15 4G",
                             Price = 420000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3153,7 +2833,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Viettel T2 4G",
                             Price = 530000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3163,7 +2842,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Viettel T2 4G",
                             Price = 530000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3173,7 +2851,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Fami 8 4G",
                             Price = 570000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3183,7 +2860,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Fami 8 4G",
                             Price = 570000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3193,7 +2869,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi T5 plus 4G",
                             Price = 530000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3203,7 +2878,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi T5 plus 4G",
                             Price = 530000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3213,7 +2887,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi 22",
                             Price = 470000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3223,7 +2896,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi 22",
                             Price = 470000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3233,7 +2905,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Izi S8",
                             Price = 485000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3243,7 +2914,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Izi S8",
                             Price = 485000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3253,7 +2923,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Fami 25",
                             Price = 650000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3263,7 +2932,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel Fami 25",
                             Price = 650000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3273,7 +2941,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi T8",
                             Price = 530000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3283,7 +2950,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi T8",
                             Price = 530000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3293,7 +2959,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi T2 4G",
                             Price = 500000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3303,7 +2968,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi T2 4G",
                             Price = 500000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3313,7 +2977,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi 16 4G",
                             Price = 450000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3323,7 +2986,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Masstel izi 16 4G",
                             Price = 450000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3333,7 +2995,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3343,7 +3004,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3353,7 +3013,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3363,7 +3022,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3373,7 +3031,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3383,7 +3040,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3393,7 +3049,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3403,7 +3058,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3413,7 +3067,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 512GB | Chính hãng",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3423,7 +3076,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 512GB | Chính hãng",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3433,7 +3085,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 1TB | Chính hãng",
                             Price = 49990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3443,7 +3094,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 1TB | Chính hãng",
                             Price = 49990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3453,7 +3103,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 512GB | Chính hãng",
                             Price = 40990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3463,7 +3112,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 512GB | Chính hãng",
                             Price = 40990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3473,7 +3121,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 2TB | Chính hãng",
                             Price = 61990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3483,7 +3130,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 2TB | Chính hãng",
                             Price = 61990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3493,7 +3139,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 512GB | Chính hãng",
                             Price = 30790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3503,7 +3148,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 512GB | Chính hãng",
                             Price = 30790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3513,7 +3157,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 1TB | Chính hãng",
                             Price = 46290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3523,7 +3166,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 1TB | Chính hãng",
                             Price = 46290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3533,7 +3175,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 512GB | Chính hãng",
                             Price = 23690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3543,7 +3184,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 512GB | Chính hãng",
                             Price = 23690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3553,7 +3193,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3563,7 +3202,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3573,7 +3211,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 512GB | Chính hãng",
                             Price = 28990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3583,7 +3220,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 512GB | Chính hãng",
                             Price = 28990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3593,7 +3229,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 1TB | Chính hãng",
                             Price = 34990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3603,7 +3238,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 1TB | Chính hãng",
                             Price = 34990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3613,7 +3247,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3623,7 +3256,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3633,7 +3265,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3643,7 +3274,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3653,7 +3283,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3663,7 +3292,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3673,7 +3301,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại iPhone 16 Pro Max 256GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3683,7 +3310,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại iPhone 16 Pro Max 256GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3693,7 +3319,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3703,7 +3328,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3713,7 +3337,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3723,7 +3346,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3733,7 +3355,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3743,7 +3364,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3753,7 +3373,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3763,7 +3382,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3773,7 +3391,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 512GB | Chính hãng",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3783,7 +3400,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 512GB | Chính hãng",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3793,7 +3409,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3803,7 +3418,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3813,7 +3427,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3823,7 +3436,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3833,7 +3445,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 128GB | Chính hãng VN/A",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3843,7 +3454,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 128GB | Chính hãng VN/A",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3853,7 +3463,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3863,7 +3472,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3873,7 +3481,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 Pro Max 128GB | Chính hãng VN/ASắp về hàng",
                             Price = 25590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3883,7 +3490,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 Pro Max 128GB | Chính hãng VN/ASắp về hàng",
                             Price = 25590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3893,7 +3499,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3903,7 +3508,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3913,7 +3517,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3923,7 +3526,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3933,7 +3535,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3943,7 +3544,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3953,7 +3553,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 1TB | Chính hãng",
                             Price = 49990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3963,7 +3562,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 1TB | Chính hãng",
                             Price = 49990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3973,7 +3571,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 Plus 128GB | Chính hãng VN/A",
                             Price = 17690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3983,7 +3580,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 Plus 128GB | Chính hãng VN/A",
                             Price = 17690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -3993,7 +3589,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 512GB | Chính hãng",
                             Price = 40990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4003,7 +3598,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 512GB | Chính hãng",
                             Price = 40990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4013,7 +3607,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4023,7 +3616,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4033,7 +3625,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4043,7 +3634,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 12GB 256GB",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4053,7 +3643,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 12GB 256GB",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4063,7 +3652,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4073,7 +3661,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4083,7 +3670,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4093,7 +3679,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4103,7 +3688,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A57 5G 8GB 128GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4113,7 +3697,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A57 5G 8GB 128GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4123,7 +3706,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4133,7 +3715,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4143,7 +3724,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4153,7 +3733,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4163,7 +3742,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4173,7 +3751,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4183,7 +3760,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A56 5G 8GB 128GB",
                             Price = 9190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4193,7 +3769,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A56 5G 8GB 128GB",
                             Price = 9190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4203,7 +3778,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4213,7 +3787,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4223,7 +3796,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A26 5G 8GB 128GB",
                             Price = 6990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4233,7 +3805,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A26 5G 8GB 128GB",
                             Price = 6990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4243,7 +3814,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4253,7 +3823,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4263,7 +3832,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A36 5G 8GB 128GB",
                             Price = 7490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4273,7 +3841,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A36 5G 8GB 128GB",
                             Price = 7490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4283,7 +3850,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4293,7 +3859,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4303,7 +3868,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A37 5G 8GB 128GB",
                             Price = 9990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4313,7 +3877,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A37 5G 8GB 128GB",
                             Price = 9990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4323,7 +3886,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4333,7 +3895,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4343,7 +3904,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 512GB",
                             Price = 35990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4353,7 +3913,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 512GB",
                             Price = 35990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4363,7 +3922,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 512GB",
                             Price = 30390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4373,7 +3931,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 512GB",
                             Price = 30390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4383,7 +3940,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 16GB 1TB",
                             Price = 44990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4393,7 +3949,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 16GB 1TB",
                             Price = 44990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4403,7 +3958,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Plus 256GB",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4413,7 +3967,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Plus 256GB",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4423,7 +3976,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4433,7 +3985,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4443,7 +3994,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4453,7 +4003,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 1TB",
                             Price = 28990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4463,7 +4012,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 17 Ultra 5G 16GB 512GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4473,7 +4021,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 17 Ultra 5G 16GB 512GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4483,7 +4030,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4493,7 +4039,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 Pro Plus 5G 8GB 256GB",
                             Price = 7990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4503,7 +4048,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 6GB 128GB",
                             Price = 5290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4513,7 +4057,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 6GB 128GB",
                             Price = 5290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4523,7 +4066,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15T 5G 12GB 512GB",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4533,7 +4075,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15T 5G 12GB 512GB",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4543,7 +4084,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4553,7 +4093,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO X7 Pro 5G 12GB 256GB",
                             Price = 8890000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4563,7 +4102,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15T Pro 5G 12GB 512GB",
                             Price = 16990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4573,7 +4111,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15T Pro 5G 12GB 512GB",
                             Price = 16990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4583,7 +4120,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 5G 8GB 256GB",
                             Price = 6490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4593,7 +4129,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 14 5G 8GB 256GB",
                             Price = 6490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4603,7 +4138,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 Pro 12GB 256GB",
                             Price = 8790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4613,7 +4147,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 Pro 12GB 256GB",
                             Price = 8790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4623,7 +4156,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 Pro 5G 12GB 256GB",
                             Price = 10690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4633,7 +4165,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 Pro 5G 12GB 256GB",
                             Price = 10690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4643,7 +4174,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO F8 Pro 5G 12GB 256GB",
                             Price = 14490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4653,7 +4183,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi POCO F8 Pro 5G 12GB 256GB",
                             Price = 14490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4663,7 +4192,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi 15 5G 8GB 256GB",
                             Price = 5990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4673,7 +4201,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi 15 5G 8GB 256GB",
                             Price = 5990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4683,7 +4210,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4693,7 +4219,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4703,7 +4228,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4713,7 +4237,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4723,7 +4246,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 5G 6GB 128GB",
                             Price = 6290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4733,7 +4255,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi Note 15 5G 6GB 128GB",
                             Price = 6290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4743,7 +4264,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 1TB",
                             Price = 28990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4753,7 +4273,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 Ultra 5G 16GB 1TB",
                             Price = 28990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4763,7 +4282,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 256GB",
                             Price = 18490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4773,7 +4291,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 15 5G 12GB 256GB",
                             Price = 18490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4783,7 +4300,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi 15C 4GB 128GB NFC",
                             Price = 3540000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4793,7 +4309,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi 15C 4GB 128GB NFC",
                             Price = 3540000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4803,7 +4318,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi 15C 8GB 256GB NFC",
                             Price = 4490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4813,7 +4327,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi 15C 8GB 256GB NFC",
                             Price = 4490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4823,7 +4336,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 14T 12GB 512GBSắp về hàng",
                             Price = 11290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4833,7 +4345,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi 14T 12GB 512GBSắp về hàng",
                             Price = 11290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4843,7 +4354,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi A7 Pro 4GB 128GBHàng mới về",
                             Price = 4140000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4853,7 +4363,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Xiaomi Redmi A7 Pro 4GB 128GBHàng mới về",
                             Price = 4140000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4863,7 +4372,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 F 5G 8GB 256GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4873,7 +4381,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 F 5G 8GB 256GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4883,7 +4390,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N6 16GB 512GBHàng mới về",
                             Price = 63990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4893,7 +4399,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N6 16GB 512GBHàng mới về",
                             Price = 63990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4903,7 +4408,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4913,7 +4417,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4923,7 +4426,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 5G 12GB 256GB",
                             Price = 16490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4933,7 +4435,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 5G 12GB 256GB",
                             Price = 16490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4943,7 +4444,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4953,7 +4453,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4963,7 +4462,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4973,7 +4471,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4983,7 +4480,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 256GB",
                             Price = 9090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -4993,7 +4489,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 256GB",
                             Price = 9090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5003,7 +4498,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5013,7 +4507,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5023,7 +4516,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 16GB 512GB",
                             Price = 25990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5033,7 +4525,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 16GB 512GB",
                             Price = 25990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5043,7 +4534,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N5 16GB 512GB",
                             Price = 44180000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5053,7 +4543,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N5 16GB 512GB",
                             Price = 44180000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5063,7 +4552,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 5G 12GB 256GB",
                             Price = 8990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5073,7 +4561,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 5G 12GB 256GB",
                             Price = 8990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5083,7 +4570,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno14 5G 12GB 256GB",
                             Price = 15500000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5093,7 +4579,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno14 5G 12GB 256GB",
                             Price = 15500000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5103,7 +4588,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 128GB",
                             Price = 8090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5113,7 +4597,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 128GB",
                             Price = 8090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5123,7 +4606,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 F 5G 8GB 256GB",
                             Price = 7120000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5133,7 +4615,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 F 5G 8GB 256GB",
                             Price = 7120000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5143,7 +4624,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3X 6GB 128GB",
                             Price = 4210000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5153,7 +4633,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3X 6GB 128GB",
                             Price = 4210000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5163,7 +4642,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N3 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5173,7 +4651,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N3 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5183,7 +4660,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3 8GB 256GB",
                             Price = 5780000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5193,7 +4669,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3 8GB 256GB",
                             Price = 5780000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5203,7 +4678,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A79 5G 8GB 256GB",
                             Price = 7060000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5213,7 +4687,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A79 5G 8GB 256GB",
                             Price = 7060000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5223,7 +4696,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6t 6GB 256GB",
                             Price = 7290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5233,7 +4705,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6t 6GB 256GB",
                             Price = 7290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5243,7 +4714,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X5 Pro 5G 12GB 256GB",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5253,7 +4723,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X5 Pro 5G 12GB 256GB",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5263,7 +4732,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5273,7 +4741,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5283,7 +4750,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5293,7 +4759,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5303,7 +4768,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5313,7 +4777,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5323,7 +4786,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5333,7 +4795,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 128GB | Chính hãng VN/A",
                             Price = 23990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5343,7 +4804,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 256GB | Chính hãng VN/A",
                             Price = 14490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5353,7 +4813,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 256GB | Chính hãng VN/A",
                             Price = 14490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5363,7 +4822,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 256GB | Chính hãng VN/A",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5373,7 +4831,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Plus 256GB | Chính hãng VN/A",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5383,7 +4840,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 512GB | Chính hãng VN/ASắp về hàng",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5393,7 +4849,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 512GB | Chính hãng VN/ASắp về hàng",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5403,7 +4858,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại iPhone 16 Pro Max 256GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5413,7 +4867,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại iPhone 16 Pro Max 256GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5423,7 +4876,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 128GB | Chính hãng VN/A",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5433,7 +4885,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 128GB | Chính hãng VN/A",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5443,7 +4894,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5453,7 +4903,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5463,7 +4912,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 1TB | Chính hãng VN/A",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5473,7 +4921,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 1TB | Chính hãng VN/A",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5483,7 +4930,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 22790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5493,7 +4939,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 22790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5503,7 +4948,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 1TB | Chính hãng VN/A",
                             Price = 35990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5513,7 +4957,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 1TB | Chính hãng VN/A",
                             Price = 35990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5523,7 +4966,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 256GB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 15990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5533,7 +4975,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 256GB | Chính hãng Apple Việt NamHàng mới về",
                             Price = 15990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5543,7 +4984,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 512GB Touch ID | Chính hãng Apple Việt NamHàng mới về",
                             Price = 18490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5553,7 +4993,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "MacBook Neo 13 inch A18 Pro 2026 6CPU 5GPU 8GB 512GB Touch ID | Chính hãng Apple Việt NamHàng mới về",
                             Price = 18490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5563,7 +5002,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5573,7 +5011,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 256GB | Chính hãng",
                             Price = 36990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5583,7 +5020,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5593,7 +5029,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 256GB | Chính hãng",
                             Price = 34690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5603,7 +5038,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5613,7 +5047,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 256GB | Chính hãng",
                             Price = 24390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5623,7 +5056,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại iPhone 16 Pro Max 256GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5633,7 +5065,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Điện thoại iPhone 16 Pro Max 256GB",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5643,7 +5074,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5653,7 +5083,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17e 256GB | Chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5663,7 +5092,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5673,7 +5101,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone Air 256GB | Chính hãng",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5683,7 +5110,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5693,7 +5119,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro Max 512GB | Chính hãng VN/A",
                             Price = 38490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5703,7 +5128,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5713,7 +5137,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 128GB | Chính hãng VN/A",
                             Price = 17590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5723,7 +5146,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 512GB | Chính hãng",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5733,7 +5155,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 512GB | Chính hãng",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5743,7 +5164,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5753,7 +5173,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16e 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5763,7 +5182,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5773,7 +5191,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 128GB | Chính hãng VN/A",
                             Price = 13990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5783,7 +5200,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 128GB | Chính hãng VN/A",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5793,7 +5209,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 128GB | Chính hãng VN/A",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5803,7 +5218,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5813,7 +5227,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 128GB | Chính hãng VN/A",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5823,7 +5236,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 Pro Max 128GB | Chính hãng VN/ASắp về hàng",
                             Price = 25590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5833,7 +5245,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 14 Pro Max 128GB | Chính hãng VN/ASắp về hàng",
                             Price = 25590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5843,7 +5254,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5853,7 +5263,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 13 128GB | Chính hãng VN/A",
                             Price = 11990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5863,7 +5272,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5873,7 +5281,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 256GB | Chính hãng VN/A",
                             Price = 20790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5883,7 +5290,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5893,7 +5299,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 16 Pro 256GB | Chính hãng VN/ASắp về hàng",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5903,7 +5308,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 1TB | Chính hãng",
                             Price = 49990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5913,7 +5317,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro Max 1TB | Chính hãng",
                             Price = 49990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5923,7 +5326,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 Plus 128GB | Chính hãng VN/A",
                             Price = 17690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5933,7 +5335,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 15 Plus 128GB | Chính hãng VN/A",
                             Price = 17690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5943,7 +5344,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 512GB | Chính hãng",
                             Price = 40990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5953,7 +5353,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "iPhone 17 Pro 512GB | Chính hãng",
                             Price = 40990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5963,7 +5362,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5973,7 +5371,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5983,7 +5380,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 256GB",
                             Price = 29990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -5993,7 +5389,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 12GB 256GB",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6003,7 +5398,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 12GB 256GB",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6013,7 +5407,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6023,7 +5416,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 12GB 256GB",
                             Price = 25490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6033,7 +5425,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6043,7 +5434,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Flip7 12GB 256GB",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6053,7 +5443,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A57 5G 8GB 128GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6063,7 +5452,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A57 5G 8GB 128GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6073,7 +5461,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6083,7 +5470,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A17 5G 8GB 128GB",
                             Price = 5790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6093,7 +5479,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6103,7 +5488,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy Z Fold7 12GB 256GB",
                             Price = 39990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6113,7 +5497,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6123,7 +5506,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A07 4GB 128GB",
                             Price = 3240000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6133,7 +5515,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A56 5G 8GB 128GB",
                             Price = 9190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6143,7 +5524,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A56 5G 8GB 128GB",
                             Price = 9190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6153,7 +5533,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6163,7 +5542,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 FE 8GB 128GB",
                             Price = 13290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6173,7 +5551,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A26 5G 8GB 128GB",
                             Price = 6990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6183,7 +5560,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A26 5G 8GB 128GB",
                             Price = 6990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6193,7 +5569,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6203,7 +5578,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S24 Plus 12GB 256GB",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6213,7 +5587,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A36 5G 8GB 128GB",
                             Price = 7490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6223,7 +5596,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A36 5G 8GB 128GB",
                             Price = 7490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6233,7 +5605,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6243,7 +5614,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A06 5G 4GB 128GB",
                             Price = 3150000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6253,7 +5623,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A37 5G 8GB 128GB",
                             Price = 9990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6263,7 +5632,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy A37 5G 8GB 128GB",
                             Price = 9990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6273,7 +5641,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6283,7 +5650,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 256GB",
                             Price = 16690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6293,7 +5659,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 512GB",
                             Price = 35990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6303,7 +5668,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 12GB 512GB",
                             Price = 35990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6313,7 +5677,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 512GB",
                             Price = 30390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6323,7 +5686,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Ultra 512GB",
                             Price = 30390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6333,7 +5695,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 16GB 1TB",
                             Price = 44990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6343,7 +5704,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S26 Ultra 16GB 1TB",
                             Price = 44990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6353,7 +5713,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Plus 256GB",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6363,7 +5722,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Samsung Galaxy S25 Plus 256GB",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6373,7 +5731,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 F 5G 8GB 256GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6383,7 +5740,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 F 5G 8GB 256GB",
                             Price = 11490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6393,7 +5749,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N6 16GB 512GBHàng mới về",
                             Price = 63990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6403,7 +5758,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N6 16GB 512GBHàng mới về",
                             Price = 63990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6413,7 +5767,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6423,7 +5776,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 12GB 256GB",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6433,7 +5785,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 5G 12GB 256GB",
                             Price = 16490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6443,7 +5794,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno15 5G 12GB 256GB",
                             Price = 16490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6453,7 +5803,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6463,7 +5812,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X8 16GB 512GB",
                             Price = 19490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6473,7 +5821,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6483,7 +5830,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno10 Pro+ 5G 12GB 256GB",
                             Price = 10490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6493,7 +5839,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 256GB",
                             Price = 9090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6503,7 +5848,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 256GB",
                             Price = 9090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6513,7 +5857,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6523,7 +5866,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 Pro 16GB 512GB",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6533,7 +5875,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 16GB 512GB",
                             Price = 25990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6543,7 +5884,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X9 16GB 512GB",
                             Price = 25990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6553,7 +5893,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N5 16GB 512GB",
                             Price = 44180000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6563,7 +5902,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N5 16GB 512GB",
                             Price = 44180000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6573,7 +5911,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 5G 12GB 256GB",
                             Price = 8990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6583,7 +5920,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 5G 12GB 256GB",
                             Price = 8990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6593,7 +5929,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno14 5G 12GB 256GB",
                             Price = 15500000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6603,7 +5938,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno14 5G 12GB 256GB",
                             Price = 15500000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6613,7 +5947,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 128GB",
                             Price = 8090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6623,7 +5956,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6 Pro 8GB 128GB",
                             Price = 8090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6633,7 +5965,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 F 5G 8GB 256GB",
                             Price = 7120000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6643,7 +5974,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Reno12 F 5G 8GB 256GB",
                             Price = 7120000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6653,7 +5983,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3X 6GB 128GB",
                             Price = 4210000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6663,7 +5992,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3X 6GB 128GB",
                             Price = 4210000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6673,7 +6001,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N3 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6683,7 +6010,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find N3 16GB 512GB",
                             Price = 26990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6693,7 +6019,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3 8GB 256GB",
                             Price = 5780000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6703,7 +6028,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A3 8GB 256GB",
                             Price = 5780000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6713,7 +6037,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A79 5G 8GB 256GB",
                             Price = 7060000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6723,7 +6046,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A79 5G 8GB 256GB",
                             Price = 7060000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6733,7 +6055,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6t 6GB 256GB",
                             Price = 7290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6743,7 +6064,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO A6t 6GB 256GB",
                             Price = 7290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6753,7 +6073,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X5 Pro 5G 12GB 256GB",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6763,7 +6082,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OPPO Find X5 Pro 5G 12GB 256GB",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6773,7 +6091,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6783,7 +6100,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 21990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6793,7 +6109,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 28490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6803,7 +6118,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 28490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6813,7 +6127,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 15490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6823,7 +6136,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 15490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6833,7 +6145,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro Lite 16",
                             Price = 27190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6843,7 +6154,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro Lite 16",
                             Price = 27190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6853,7 +6163,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Nitro V 15",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6863,7 +6172,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Nitro V 15",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6873,7 +6181,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite Gen 2",
                             Price = 12790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6883,7 +6190,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite Gen 2",
                             Price = 12790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6893,7 +6199,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 23490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6903,7 +6208,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Aspire 7",
                             Price = 23490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6913,7 +6217,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6923,7 +6226,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6933,7 +6235,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro Lite 16",
                             Price = 26190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6943,7 +6244,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro Lite 16",
                             Price = 26190000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6953,7 +6253,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6963,7 +6262,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6973,7 +6271,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6983,7 +6280,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 15",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -6993,7 +6289,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro V 15",
                             Price = 26490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7003,7 +6298,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro V 15",
                             Price = 26490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7013,7 +6307,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 14",
                             Price = 14790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7023,7 +6316,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 14",
                             Price = 14790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7033,7 +6325,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Swift Lite 14 AI",
                             Price = 19690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7043,7 +6334,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Swift Lite 14 AI",
                             Price = 19690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7053,7 +6343,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7063,7 +6352,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 30990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7073,7 +6361,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 16 GEN 2",
                             Price = 18790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7083,7 +6370,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 16 GEN 2",
                             Price = 18790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7093,7 +6379,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 14 AL14-52M-52UUHàng mới về",
                             Price = 18990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7103,7 +6388,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Aspire Lite 14 AL14-52M-52UUHàng mới về",
                             Price = 18990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7113,7 +6397,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 34490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7123,7 +6406,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 34490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7133,7 +6415,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7143,7 +6424,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 22990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7153,7 +6433,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7163,7 +6442,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Acer Gaming Nitro ProPanel",
                             Price = 27490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7173,7 +6451,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Pro 15 Essential PV15250 VKVKD - Nhập khẩu chính hãng",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7183,7 +6460,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Pro 15 Essential PV15250 VKVKD - Nhập khẩu chính hãng",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7193,7 +6469,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 14 DC14250",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7203,7 +6478,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 14 DC14250",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7213,7 +6487,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Inspiron 15 3530 J9XFD - Nhập khẩu chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7223,7 +6496,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Inspiron 15 3530 J9XFD - Nhập khẩu chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7233,7 +6505,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15255",
                             Price = 18390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7243,7 +6514,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15255",
                             Price = 18390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7253,7 +6523,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 KR0N9 - Nhập khẩu chính hãng",
                             Price = 16490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7263,7 +6532,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 KR0N9 - Nhập khẩu chính hãng",
                             Price = 16490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7273,7 +6541,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Inspiron 14 5440 D0F3W - Nhập khẩu chính hãng",
                             Price = 18290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7283,7 +6550,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Inspiron 14 5440 D0F3W - Nhập khẩu chính hãng",
                             Price = 18290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7293,7 +6559,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Vostro 3530",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7303,7 +6568,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Vostro 3530",
                             Price = 19990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7313,7 +6577,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Pro 14",
                             Price = 26290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7323,7 +6586,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Pro 14",
                             Price = 26290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7333,7 +6595,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 16 Plus DB16250",
                             Price = 31790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7343,7 +6604,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 16 Plus DB16250",
                             Price = 31790000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7353,7 +6613,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 MCW52 - Nhập khẩu chính hãng",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7363,7 +6622,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 MCW52 - Nhập khẩu chính hãng",
                             Price = 20990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7373,7 +6631,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15255 G8MK9 - Nhập khẩu chính hãng",
                             Price = 18990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7383,7 +6640,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15255 G8MK9 - Nhập khẩu chính hãng",
                             Price = 18990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7393,7 +6649,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 14 DC14250",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7403,7 +6658,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 14 DC14250",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7413,7 +6667,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250",
                             Price = 19090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7423,7 +6676,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250",
                             Price = 19090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7433,7 +6685,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15255 HV1N4 - Nhập khẩu chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7443,7 +6694,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15255 HV1N4 - Nhập khẩu chính hãng",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7453,7 +6703,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250",
                             Price = 22590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7463,7 +6712,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250",
                             Price = 22590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7473,7 +6721,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 16 DC16250",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7483,7 +6730,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 16 DC16250",
                             Price = 27990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7493,7 +6739,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Pro 13 Plus",
                             Price = 34490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7503,7 +6748,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell Pro 13 Plus",
                             Price = 34490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7513,7 +6757,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 H5YXJ - Nhập khẩu chính hãng",
                             Price = 22490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7523,7 +6766,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 H5YXJ - Nhập khẩu chính hãng",
                             Price = 22490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7533,7 +6775,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250",
                             Price = 19090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7543,7 +6784,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250",
                             Price = 19090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7553,7 +6793,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 1XVHG - Nhập khẩu chính hãng",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7563,7 +6802,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop Dell 15 DC15250 1XVHG - Nhập khẩu chính hãng",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7573,7 +6811,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FK0092AU",
                             Price = 29690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7583,7 +6820,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FK0092AU",
                             Price = 29690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7593,7 +6829,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook 5 AI 16-AF1048TU",
                             Price = 25690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7603,7 +6838,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook 5 AI 16-AF1048TU",
                             Price = 25690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7613,7 +6847,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 15-FD1289TU",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7623,7 +6856,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 15-FD1289TU",
                             Price = 24490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7633,7 +6865,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP OmniBook 7 14-FR0033TU",
                             Price = 27290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7643,7 +6874,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP OmniBook 7 14-FR0033TU",
                             Price = 27290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7653,7 +6883,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 245 G10",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7663,7 +6892,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 245 G10",
                             Price = 14990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7673,7 +6901,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 245 G10",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7683,7 +6910,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 245 G10",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7693,7 +6919,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FM0088TU",
                             Price = 30390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7703,7 +6928,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FM0088TU",
                             Price = 30390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7713,7 +6937,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14-EP0220TU",
                             Price = 12690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7723,7 +6946,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14-EP0220TU",
                             Price = 12690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7733,7 +6955,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14‑EM0023AU D0BG7PAHàng mới về",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7743,7 +6964,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14‑EM0023AU D0BG7PAHàng mới về",
                             Price = 16090000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7753,7 +6973,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14-EP0112TU",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7763,7 +6982,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14-EP0112TU",
                             Price = 17490000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7773,7 +6991,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook 7 Aero 13-BG1087AU",
                             Price = 28590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7783,7 +7000,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook 7 Aero 13-BG1087AU",
                             Price = 28590000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7793,7 +7009,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Victus 15-FA2731TX",
                             Price = 27690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7803,7 +7018,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Victus 15-FA2731TX",
                             Price = 27690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7813,7 +7027,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 250R G10",
                             Price = 14290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7823,7 +7036,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 250R G10",
                             Price = 14290000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7833,7 +7045,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 250R G9",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7843,7 +7054,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 250R G9",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7853,7 +7063,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14-EP1178TU",
                             Price = 18690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7863,7 +7072,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 14-EP1178TU",
                             Price = 18690000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7873,7 +7081,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FM0076TU",
                             Price = 38390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7883,7 +7090,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Omnibook X Flip 14-FM0076TU",
                             Price = 38390000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7893,7 +7099,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Pavilion 15-EG3094TU 8C5L5PA V2Sắp về hàng",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7903,7 +7108,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Pavilion 15-EG3094TU 8C5L5PA V2Sắp về hàng",
                             Price = 17990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7913,7 +7117,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Gaming OMEN 16-AM0176TX",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7923,7 +7126,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Gaming OMEN 16-AM0176TX",
                             Price = 42990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7933,7 +7135,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Envy x360 14-FA0093AU",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7943,7 +7144,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP Envy x360 14-FA0093AU",
                             Price = 31990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7953,7 +7153,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 250R G9",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -7963,7 +7162,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                             CreatedDate = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Laptop HP 250R G9",
                             Price = 12990000m,
-                            StockQuantity = 100,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -7987,7 +7185,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
 
                     b.HasData(
                         new
@@ -12516,7 +11714,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -12570,36 +11768,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Cart", b =>
-                {
-                    b.HasOne("RetailsEcosystem.Customer.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.CartItem", b =>
-                {
-                    b.HasOne("RetailsEcosystem.Customer.Domain.Entities.Cart", "Cart")
-                        .WithMany("Items")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RetailsEcosystem.Customer.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Product", b =>
                 {
                     b.HasOne("RetailsEcosystem.Customer.Domain.Entities.Category", "Category")
@@ -12631,11 +11799,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Cart", b =>
-                {
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("RetailsEcosystem.Customer.Domain.Entities.Category", b =>

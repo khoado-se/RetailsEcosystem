@@ -15,6 +15,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -54,6 +56,32 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
                       .WithMany()
                       .HasForeignKey(rt => rt.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ── Cart relationships ────────────────────────────────────────────
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.HasOne(c => c.User)
+                      .WithMany()
+                      .HasForeignKey(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(c => c.UserId).IsUnique();
+            });
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasOne(i => i.Cart)
+                      .WithMany(c => c.Items)
+                      .HasForeignKey(i => i.CartId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(i => i.Product)
+                      .WithMany()
+                      .HasForeignKey(i => i.ProductId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(i => i.UnitPrice).HasPrecision(18, 2);
             });
 
             // ── Existing data seed ────────────────────────────────────────────
