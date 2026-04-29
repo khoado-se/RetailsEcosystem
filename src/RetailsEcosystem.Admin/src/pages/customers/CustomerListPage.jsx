@@ -20,19 +20,21 @@ export default function CustomerListPage() {
   }, [fetchCustomers]);
 
   return (
-    <div className="container-fluid mt-4">
-      {/* Page header */}
+    <>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="page-header-title mb-0">Customers</h4>
+        <div>
+          <h1 className="page-header-title mb-0">Customers</h1>
+          <p className="page-header-subtitle mb-0">Manage customer accounts</p>
+        </div>
         <form className="d-flex gap-2" onSubmit={handleSearch}>
           <input
             type="search"
-            className="form-control rounded-pill"
+            className="form-control"
             placeholder="Search by name or email…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button type="submit" className="btn btn-primary rounded-pill px-4">
+          <button type="submit" className="btn btn-primary px-4">
             <i className="bi bi-search"></i>
           </button>
         </form>
@@ -52,6 +54,6 @@ export default function CustomerListPage() {
           onStatusChange={handleStatusChange}
         />
       )}
-    </div>
+    </>
   );
 }

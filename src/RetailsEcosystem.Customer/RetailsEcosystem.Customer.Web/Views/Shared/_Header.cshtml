@@ -60,9 +60,12 @@
                     <div class="top-end">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <div class="user">
-                                <i class="lni lni-user"></i>
-                                @User.FindFirstValue(ClaimTypes.Name)
+                            var displayName = User.FindFirstValue(ClaimTypes.Name) ?? "User";
+                            var initial = displayName.Length > 0 ? displayName[0].ToString().ToUpper() : "U";
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                                     style="width:32px;height:32px;font-size:0.8rem;">@initial</div>
+                                <span class="small fw-medium d-none d-md-inline">@displayName</span>
                             </div>
                             <ul class="user-login">
                                 <li>
@@ -78,18 +81,12 @@
                         }
                         else
                         {
-                            <div class="user">
-                                <i class="lni lni-user"></i>
-                                Hello
+                            <div class="d-flex align-items-center gap-2">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-light fw-semibold">
+                                    <i class="lni lni-user me-1"></i>Sign In
+                                </a>
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-primary fw-semibold">Register</a>
                             </div>
-                            <ul class="user-login">
-                                <li>
-                                    <a asp-controller="Account" asp-action="Login">Sign In</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Account" asp-action="Register">Register</a>
-                                </li>
-                            </ul>
                         }
                     </div>
                 </div>
@@ -157,25 +154,28 @@
                                     <i class="lni lni-cart"></i>
                                     <span class="total-items" id="header-cart-count">0</span>
                                 </a>
-                                <!-- Shopping Item -->
-                                <div class="shopping-item">
-                                    <div class="dropdown-cart-header">
-                                        <span><span id="header-cart-label">0</span> Items</span>
-                                        <a asp-controller="Cart" asp-action="Index">View Cart</a>
-                                    </div>
-                                    <ul class="shopping-list" id="header-cart-list">
-                                    </ul>
-                                    <div class="bottom">
-                                        <div class="total">
-                                            <span>Total</span>
-                                            <span class="total-amount" id="header-cart-total">$0.00</span>
+                                @if (User.Identity?.IsAuthenticated == true)
+                                {
+                                    <!-- Shopping Item -->
+                                    <div class="shopping-item">
+                                        <div class="dropdown-cart-header">
+                                            <span><span id="header-cart-label">0</span> Items</span>
+                                            <a asp-controller="Cart" asp-action="Index">View Cart</a>
                                         </div>
-                                        <div class="button">
-                                            <a href="javascript:void(0)" class="btn animate">Checkout</a>
+                                        <ul class="shopping-list" id="header-cart-list">
+                                        </ul>
+                                        <div class="bottom">
+                                            <div class="total">
+                                                <span>Total</span>
+                                                <span class="total-amount" id="header-cart-total">$0.00</span>
+                                            </div>
+                                            <div class="button">
+                                                <a href="javascript:void(0)" class="btn animate">Checkout</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!--/ End Shopping Item -->
+                                    <!--/ End Shopping Item -->
+                                }
                             </div>
                         </div>
 

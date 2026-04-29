@@ -1,53 +1,65 @@
+import { useState } from "react";
 import { useCategories } from "../../features/category/useCategories";
-import { useNavigate } from "react-router-dom";
+import CategoryTable from "../../features/category/CategoryTable";
+import CategoryForm from "../../features/category/CategoryForm";
+import { deleteCategory } from "../../features/category/categoryApi";
 
-export default function CategoryListPage() {
-  const { categories } = useCategories();
-  const navigate = useNavigate();
+export default function CategoriesPage() {
+  const { categories, fetchCategories } = useCategories();
+  const [showForm, setShowForm] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const handleEdit = (cat) => {
+    setSelectedCategory(cat);
+    setShowForm(true);
+  };
+
+  const handleCreate = () => {
+    setSelectedCategory(null);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this category?")) return;
+    try {
+      await deleteCategory(id);
+      fetchCategories();
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
+  };
+
+  const handleSuccess = () => {
+    setShowForm(false);
+    fetchCategories();
+  };
 
   return (
     <>
-      <div className="d-flex justify-content-between mb-3">
-        <h3>Categoies</h3>
-        <button
-          className="btn btn-success"
-          onClick={() => navigate("/category/create")}
-        >
-          + Create Category
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h1 className="page-header-title mb-0">Categories</h1>
+          <p className="page-header-subtitle mb-0">Manage product categories</p>
+        </div>
+        <button className="btn btn-primary" onClick={handleCreate}>
+          <i className="bi bi-plus-lg me-1" />
+          Create Category
         </button>
       </div>
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map((category) => (
-            <tr key={category.id}>
-              <th scope="row">{category.id}</th>
-              <td>{category.name}</td>
-              <td>
-                <button
-                  onClick={() => navigate(`/categories/edit/${category.id}`)}
-                  className="btn btn-primary btn-sm me-2"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => navigate(`/categories/delete/${category.id}`)}
-                  className="btn btn-danger btn-sm"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <CategoryTable
+        categories={categories}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      {showForm && (
+        <CategoryForm
+          category={selectedCategory}
+          onSuccess={handleSuccess}
+          onClose={() => setShowForm(false)}
+        />
+      )}
     </>
   );
 }

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function Header() {
-  const { logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -10,9 +10,9 @@ export default function Header() {
   };
 
   return (
-    <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
-        Company name
+    <header className="navbar navbar-dark sticky-top bg-brand-nav flex-md-nowrap p-0 shadow">
+      <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fw-bold" href="#">
+        RetailsEcosystem
       </a>
 
       <button
@@ -27,18 +27,22 @@ export default function Header() {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <input
-        className="form-control form-control-dark w-100"
-        type="text"
-        placeholder="Search"
-        aria-label="Search"
-      />
-
-      <div className="navbar-nav">
+      <div className="navbar-nav ms-auto d-flex align-items-center flex-row gap-2 px-3">
+        {user && (
+          <div className="d-flex align-items-center gap-2">
+            <div
+              className="rounded-circle bg-primary-tint text-primary-brand d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+              style={{ width: "32px", height: "32px", fontSize: "0.875rem" }}
+            >
+              {user?.fullName?.[0]?.toUpperCase() ?? "?"}
+            </div>
+            <span className="text-white text-body-sm d-none d-md-inline">{user?.fullName}</span>
+          </div>
+        )}
         <div className="nav-item text-nowrap">
-          <a className="nav-link px-3" href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+          <button className="btn btn-link text-white p-0 text-body-sm nav-link" onClick={handleLogout}>
             Sign out
-          </a>
+          </button>
         </div>
       </div>
     </header>

@@ -1,4 +1,4 @@
-﻿@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Options
 @using RetailsEcosystem.Customer.Shared
 @using RetailsEcosystem.Customer.Web.Options
 @model PagedResult<ProductDto>
@@ -10,47 +10,51 @@
 <div class="container product-card row">
     @foreach (var item in Model.Items)
     {
-        <div class="card col-xl-3 col-lg-4 col-md-6 col-sm-1 my-3">
-            <!-- Carousel -->
-            <div id="slideshow-@item.Id" class="carousel slide" data-bs-ride="carousel">
-                <!-- The slideshow/carousel -->
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@item.Id">
-                            @{
-                                var baseUrl = ApiOptions.Value.BaseUrl;
-                                var imageUrl = item.ImageUrl != null ? $"{item.ImageUrl}" : $"{baseUrl}/images/products/product-placeholder-image.jpg";
-                            }
-                            <img src="@imageUrl"
-                                 alt="product image"
-                                 class="d-block card-img-top img-fluid mx-auto d-block img-rounded"
-                                 style="width:100%">
-                        </a>
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 my-3">
+            <div class="card border-0 shadow-sm h-100">
+                <!-- Carousel -->
+                <div id="slideshow-@item.Id" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@item.Id">
+                                @{
+                                    var baseUrl = ApiOptions.Value.BaseUrl;
+                                    var imageUrl = item.ImageUrl != null ? $"{item.ImageUrl}" : $"{baseUrl}/images/products/product-placeholder-image.jpg";
+                                }
+                                <img src="@imageUrl"
+                                     alt="product image"
+                                     class="d-block card-img-top img-fluid mx-auto d-block img-rounded"
+                                     style="height:200px;object-fit:cover;">
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card-body ">
-                <h2 class="card-title">@item.Name</h2>
-                <p class="price"><h4>@item.Price.ToString("C")</h4></p>
-                <p class="card-text">@item.Description</p>
-                <p>
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <button class="btn btn-success w-100"
-                                data-action="add-to-cart"
-                                data-product-id="@item.Id"
-                                @(item.StockQuantity == 0 ? "disabled" : "")>
-                            @(item.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
-                        </button>
-                    }
-                    else
-                    {
-                        <a asp-controller="Account" asp-action="Login"
-                           asp-route-returnUrl="@Url.Action("ProductIndex", "Products")"
-                           class="btn btn-success w-100">Add to Cart</a>
-                    }
-                </p>
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-1 text-heading">@item.Name</h6>
+                    <p class="mb-1"><span class="fw-bold text-primary-brand">@item.Price.ToString("C")</span></p>
+                    <p class="card-text text-muted small">@item.Description</p>
+                    <div class="mt-auto pt-2">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <button class="btn btn-primary w-100"
+                                    data-action="add-to-cart"
+                                    data-product-id="@item.Id"
+                                    @(item.StockQuantity == 0 ? "disabled" : "")>
+                                <i class="lni lni-cart me-1"></i>
+                                @(item.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
+                            </button>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login"
+                               asp-route-returnUrl="@Url.Action("ProductIndex", "Products")"
+                               class="btn btn-primary w-100">
+                                <i class="lni lni-cart me-1"></i>Add to Cart
+                            </a>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     }

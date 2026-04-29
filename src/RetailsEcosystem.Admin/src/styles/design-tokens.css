@@ -201,3 +201,20 @@
   border: none;
   box-shadow: var(--shadow-card);
 }
+
+/* -- Nav background -- */
+.bg-brand-nav { background-color: var(--clr-primary-900) !important; }
+
+/* -- Small logo badge (mobile login) -- */
+.brand-logo-badge-sm {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--clr-primary-500), var(--clr-primary-600));
+  box-shadow: 0 8px 32px rgba(74, 144, 217, 0.4);
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

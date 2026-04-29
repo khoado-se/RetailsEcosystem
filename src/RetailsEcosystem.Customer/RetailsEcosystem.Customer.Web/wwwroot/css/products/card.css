@@ -1,5 +1,5 @@
 ﻿.product-card {
-    --primary-color: #0d6efd;
+    --primary-color: var(--clr-primary-500);
 }
 
 .product-card #addToCard {

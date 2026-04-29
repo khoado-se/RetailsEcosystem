@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getCategories } from "./categoryApi";
 
 export const useCategories = () => {
   const [categories, setCategories] = useState([]);
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,9 +14,10 @@ export const useCategories = () => {
         console.error(err);
       }
     };
-
     fetchData();
-  }, []);
+  }, [tick]);
 
-  return { categories };
+  const fetchCategories = useCallback(() => setTick((t) => t + 1), []);
+
+  return { categories, fetchCategories };
 };

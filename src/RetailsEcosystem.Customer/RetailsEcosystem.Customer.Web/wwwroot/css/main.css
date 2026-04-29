@@ -1,6 +1,28 @@
 /*======================================
     Variables
 ========================================*/
+:root {
+  --clr-primary-50:#EBF3FB; --clr-primary-100:#D4E8F7; --clr-primary-200:#A9D2EF;
+  --clr-primary-300:#7EBAE6; --clr-primary-400:#5AA4DC; --clr-primary-500:#4A90D9;
+  --clr-primary-600:#3A7BC4; --clr-primary-700:#2E68AE; --clr-primary-800:#235597;
+  --clr-primary-900:#1A4080;
+  --clr-neutral-50:#F8F9FA; --clr-neutral-100:#F1F3F5; --clr-neutral-200:#E9ECEF;
+  --clr-neutral-400:#ADB5BD; --clr-neutral-600:#6C757D; --clr-neutral-800:#343A40;
+  --clr-neutral-900:#081828;
+  --clr-success:#2E9E6B; --clr-warning:#E0973A; --clr-danger:#D94F4F;
+  --brand-panel-gradient: linear-gradient(135deg,var(--clr-primary-900) 0%,var(--clr-primary-700) 50%,var(--clr-primary-500) 100%);
+  --radius-sm:6px; --radius-md:10px; --radius-lg:14px; --radius-xl:16px;
+}
+.brand-panel-bg { background: var(--brand-panel-gradient); }
+.brand-logo-badge {
+  width:80px; height:80px;
+  background: linear-gradient(135deg, var(--clr-primary-500), var(--clr-primary-600));
+  box-shadow: 0 8px 32px rgba(74,144,217,0.4);
+  font-size:2rem; font-weight:700;
+  border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+}
+.text-primary-brand { color: var(--clr-primary-500); }
+.bg-surface { background-color: var(--clr-neutral-50); }
 /*======================================
     Normalize CSS
 ========================================*/
@@ -49,8 +71,8 @@ button:focus,
 }
 
 .form-check-input:checked {
-  background-color: #0167F3;
-  border-color: #0167F3;
+  background-color: var(--clr-primary-500);
+  border-color: var(--clr-primary-500);
 }
 
 select {
