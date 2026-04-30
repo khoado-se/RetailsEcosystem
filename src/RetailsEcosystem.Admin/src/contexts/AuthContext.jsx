@@ -7,8 +7,9 @@ import { ENV } from "../configs/env";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Synchronously restore from localStorage — prevents redirect-to-login flash on reload.
+  const [user, setUser] = useState(() => tokenService.getUser());
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!tokenService.getUser());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,11 +22,19 @@ export function AuthProvider({ children }) {
           {},
           { withCredentials: true }
         );
-        tokenService.setToken(res.data.accessToken);
-        setUser(res.data.user);
+        const { accessToken, user: freshUser } = res.data ?? {};
+        if (!accessToken || !freshUser) throw new Error("Invalid refresh response");
+
+        tokenService.setToken(accessToken);
+        tokenService.setUser(freshUser);
+        setUser(freshUser);
         setIsAuthenticated(true);
       } catch {
-        // No valid refresh token — user must log in.
+        // Refresh token absent, expired, or response invalid — clear stale cache.
+        tokenService.clearToken();
+        tokenService.clearUser();
+        setUser(null);
+        setIsAuthenticated(false);
       } finally {
         setLoading(false);
       }
@@ -37,6 +46,7 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     const data = await loginApi(credentials);
     tokenService.setToken(data.accessToken);
+    tokenService.setUser(data.user);
     setUser(data.user);
     setIsAuthenticated(true);
   };
@@ -48,14 +58,17 @@ export function AuthProvider({ children }) {
       console.error("Logout error", e);
     } finally {
       tokenService.clearToken();
+      tokenService.clearUser();
       setUser(null);
       setIsAuthenticated(false);
     }
   };
 
+  // Always render children — loading state is handled by ProtectedRoute.
+  // Hiding the entire tree here would also hide BrowserRouter and the /login route.
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, loading, login, logout }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }
