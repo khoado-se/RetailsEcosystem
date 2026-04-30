@@ -3,10 +3,12 @@ import { useState } from "react";
 import CreateProductModal from "../../features/product/CreateProductModal.jsx";
 import EditProductModal from "../../features/product/EditProductModal.jsx";
 import ProductTable from "../../features/product/ProductTable.jsx";
+import ProductImageModal from "../../features/productImage/ProductImageModal.jsx";
 
 export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [editingProductId, setEditingProductId] = useState(null);
+  const [imageProduct, setImageProduct] = useState(null);
   const { products, totalPage, fetchProducts } = useProducts(pageNumber);
 
   const handleEdited = () => {
@@ -37,6 +39,7 @@ export default function ProductsPage() {
         totalPage={totalPage}
         onEdit={setEditingProductId}
         onDeleted={() => { fetchProducts(); setPageNumber(1); }}
+        onImages={(id, name) => setImageProduct({ id, name })}
       />
 
       <CreateProductModal
@@ -49,6 +52,12 @@ export default function ProductsPage() {
       <EditProductModal
         productId={editingProductId}
         onSuccess={handleEdited}
+      />
+
+      <ProductImageModal
+        productId={imageProduct?.id}
+        productName={imageProduct?.name}
+        onClose={() => setImageProduct(null)}
       />
     </>
   );

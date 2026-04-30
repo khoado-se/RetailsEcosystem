@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Shared.DTOs.ProductImage;
 
 namespace RetailsEcosystem.Customer.API.Controllers
 {
@@ -24,7 +25,31 @@ namespace RetailsEcosystem.Customer.API.Controllers
         {
             var urls = await _fileService.SaveFilesAsync(files);
             await _productImageService.AddImageRangeAsync(productId, urls);
-            return NoContent();
+            return Ok(new { urls });
+        }
+
+        [HttpGet("by-product/{productId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ProductImageItemDto>>> GetByProduct(int productId)
+        {
+            var images = await _productImageService.GetByProductIdAsync(productId);
+            return Ok(images);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            try
+            {
+                var publicId = await _productImageService.DeleteImageAsync(id);
+                await _fileService.DeleteFileAsync(publicId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

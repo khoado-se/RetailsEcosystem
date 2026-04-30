@@ -2,7 +2,7 @@ import Pagination from "../../components/ui/Pagination";
 import { ENV } from "../../configs/env";
 import { deleteProduct } from "./productApi";
 
-export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, onEdit, onDeleted }) {
+export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, onEdit, onDeleted, onImages }) {
 
   const handleDelete = async (product) => {
     if (!window.confirm(`Delete "${product.name}"?`)) return;
@@ -53,6 +53,15 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                   </td>
                   <td className="text-muted small">{product.createdDate}</td>
                   <td className="text-end">
+                    <button
+                      className="btn btn-outline-secondary btn-sm me-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#productImageModal"
+                      onClick={() => onImages(product.id, product.name)}
+                    >
+                      <i className="bi bi-images me-1" />
+                      Images
+                    </button>
                     <button
                       className="btn btn-primary btn-sm me-2"
                       data-bs-toggle="modal"

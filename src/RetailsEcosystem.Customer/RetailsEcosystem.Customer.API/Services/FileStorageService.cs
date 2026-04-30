@@ -52,5 +52,7 @@ namespace RetailsEcosystem.Customer.API.Services
 
             return result;
         }
+
+        public Task DeleteFileAsync(string publicId) => Task.CompletedTask;
     }
 }

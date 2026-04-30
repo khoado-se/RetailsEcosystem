@@ -1,3 +1,5 @@
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
 using RetailsEcosystem.Customer.API.Options;
 using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Infrastructure;
@@ -11,7 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.Configure<FileStorageOptions>(
     builder.Configuration.GetSection("FileStorage"));
-builder.Services.AddScoped<IFileStorageService, FileStorageService>();
+builder.Services.Configure<CloudinaryOptions>(
+    builder.Configuration.GetSection("Cloudinary"));
+builder.Services.AddSingleton<Cloudinary>(sp =>
+{
+    var opts = sp.GetRequiredService<IOptions<CloudinaryOptions>>().Value;
+    if (string.IsNullOrEmpty(opts.CloudName) || string.IsNullOrEmpty(opts.ApiKey) || string.IsNullOrEmpty(opts.ApiSecret))
+        throw new InvalidOperationException("Cloudinary credentials are not configured. Set Cloudinary:CloudName, ApiKey, and ApiSecret.");
+    var account = new Account(opts.CloudName, opts.ApiKey, opts.ApiSecret);
+    return new Cloudinary(account) { Api = { Secure = true } };
+});
+builder.Services.AddScoped<IFileStorageService, CloudinaryStorageService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ProductionPolicy", policy =>
