@@ -9,5 +9,6 @@
         public DateTime UpdatedDate { get; set; }
 
         public int CategoryId { get; set; }
+        public bool IsFeatured { get; set; }
     }
 }

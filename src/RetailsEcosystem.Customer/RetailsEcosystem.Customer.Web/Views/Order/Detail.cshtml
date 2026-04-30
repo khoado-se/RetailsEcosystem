@@ -1,0 +1,176 @@
+@using RetailsEcosystem.Customer.Shared.DTOs.Order
+@using RetailsEcosystem.Customer.Shared.Enums
+@model OrderDto
+@{
+    ViewData["Title"] = $"Order #{Model.Id}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Start Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="breadcrumbs-content">
+                    <h1 class="page-title">Order #@Model.Id</h1>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <ul class="breadcrumb-nav">
+                    <li><a asp-controller="Home" asp-action="Index"><i class="lni lni-home"></i> Home</a></li>
+                    <li><a asp-action="History">My Orders</a></li>
+                    <li>Order #@Model.Id</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success py-2 small mb-4">@TempData["SuccessMessage"]</div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger py-2 small mb-4">@TempData["ErrorMessage"]</div>
+                }
+
+                <!-- Status + Actions -->
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                            <div>
+                                <h5 class="fw-bold mb-1">Order #@Model.Id</h5>
+                                <div class="text-muted small">
+                                    Placed on @Model.CreatedDate.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                @{
+                                    var badgeClass = Model.Status switch
+                                    {
+                                        OrderStatus.Pending => "bg-warning text-dark",
+                                        OrderStatus.Confirmed => "bg-info text-dark",
+                                        OrderStatus.Shipped => "bg-primary",
+                                        OrderStatus.Delivered => "bg-success",
+                                        OrderStatus.Cancelled => "bg-secondary",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @badgeClass fs-6 px-3 py-2">@Model.StatusLabel</span>
+
+                                @if (Model.Status == OrderStatus.Pending)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post"
+                                          onsubmit="return confirm('Cancel this order?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm px-3">
+                                            Cancel Order
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Status Timeline -->
+                        <div class="mt-4">
+                            <div class="d-flex gap-2 flex-wrap">
+                                @foreach (var status in new[] { OrderStatus.Pending, OrderStatus.Confirmed, OrderStatus.Shipped, OrderStatus.Delivered })
+                                {
+                                    var isReached = (int)Model.Status >= (int)status && Model.Status != OrderStatus.Cancelled;
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                             style="width:32px;height:32px;font-size:0.75rem;
+                                                    background:@(isReached ? "#4A90D9" : "#e9ecef");
+                                                    color:@(isReached ? "white" : "#6c757d")">
+                                            @((int)status + 1)
+                                        </div>
+                                        <span class="small @(isReached ? "fw-semibold" : "text-muted")">@status</span>
+                                        @if (status != OrderStatus.Delivered)
+                                        {
+                                            <i class="lni lni-chevron-right text-muted small"></i>
+                                        }
+                                    </div>
+                                }
+                                @if (Model.Status == OrderStatus.Cancelled)
+                                {
+                                    <span class="badge bg-secondary ms-2 align-self-center">Cancelled</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Info -->
+                <div class="row g-4 mb-4">
+                    <div class="col-sm-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold text-muted small text-uppercase mb-2">Shipping Address</h6>
+                                <p class="mb-0">@Model.ShippingAddress</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold text-muted small text-uppercase mb-2">Last Updated</h6>
+                                <p class="mb-0">@Model.UpdatedDate.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Items -->
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">Items Ordered</h5>
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                @if (!string.IsNullOrEmpty(item.ProductImageUrl))
+                                                {
+                                                    <img src="@item.ProductImageUrl" alt="@item.ProductName"
+                                                         class="rounded-2" style="width:52px;height:52px;object-fit:cover;">
+                                                }
+                                                <span class="fw-semibold">@item.ProductName</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">@item.Quantity</td>
+                                        <td class="text-center">@item.UnitPrice.ToString("C")</td>
+                                        <td class="text-end fw-semibold">@item.LineTotal.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold border-top">
+                                    <td colspan="3" class="text-end">Grand Total</td>
+                                    <td class="text-end">@Model.TotalAmount.ToString("C")</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

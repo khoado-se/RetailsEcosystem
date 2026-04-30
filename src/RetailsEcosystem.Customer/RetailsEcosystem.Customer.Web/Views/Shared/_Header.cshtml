@@ -72,6 +72,9 @@
                                     <a asp-controller="Account" asp-action="Profile">My Profile</a>
                                 </li>
                                 <li>
+                                    <a asp-controller="Order" asp-action="History">My Orders</a>
+                                </li>
+                                <li>
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="btn btn-link p-0 text-decoration-none">Sign Out</button>
@@ -170,7 +173,7 @@
                                                 <span class="total-amount" id="header-cart-total">$0.00</span>
                                             </div>
                                             <div class="button">
-                                                <a href="javascript:void(0)" class="btn animate">Checkout</a>
+                                                <a asp-controller="Order" asp-action="Checkout" class="btn animate">Checkout</a>
                                             </div>
                                         </div>
                                     </div>

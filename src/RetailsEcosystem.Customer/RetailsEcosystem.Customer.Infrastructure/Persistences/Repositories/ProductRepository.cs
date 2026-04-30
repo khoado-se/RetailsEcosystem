@@ -63,15 +63,12 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         public async Task<int> GetProductCountAsync(int? categoryId, bool isFeature)
         {
             if (isFeature)
-            {
-                var featuredCount = await _context.Products.CountAsync(p => p.IsFeatured);
-                return featuredCount > 0 ? featuredCount : await _context.Products.CountAsync();
-            }
+                return await _context.Products.CountAsync(p => p.IsFeatured);
+
             var query = _context.Products.AsQueryable();
             if (categoryId.HasValue)
-            {
                 query = query.Where(p => p.Category.Id == categoryId.Value);
-            }
+
             return await query.CountAsync();
         }
 
@@ -90,13 +87,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public async Task<IEnumerable<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize)
         {
-            var hasFeatured = await _context.Products.AnyAsync(p => p.IsFeatured);
-
-            var query = hasFeatured
-                ? _context.Products.Where(p => p.IsFeatured)
-                : _context.Products.AsQueryable();
-
-            return await query
+            return await _context.Products
+                .Where(p => p.IsFeatured)
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .AsNoTracking()

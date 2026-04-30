@@ -2,85 +2,58 @@ import { useState } from "react";
 import { createProduct } from "./productApi";
 import ProductForm from "./ProductForm";
 
-export default function CreateProductModal({ onSuccess }) {
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  price: "",
+  categoryId: "",
+  isFeatured: false,
+};
 
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    price: "",
-    categoryId: "",
-  });
+export default function CreateProductModal({ onSuccess }) {
+  const [form, setForm] = useState(EMPTY_FORM);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, type, value, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = async () => {
-    
     const payload = {
-      ...form,
       name: form.name.trim(),
-      price: Number(form.price),
       description: form.description || null,
-      categoryId: Number(form.categoryId)
+      price: Number(form.price),
+      categoryId: Number(form.categoryId),
+      isFeatured: form.isFeatured,
     };
 
     await createProduct(payload);
-
-    setForm({
-      name: "",
-      description: "",
-      price: "",
-      categoryId: "",
-    });
-
-    onSuccess(); // reload list
+    setForm(EMPTY_FORM);
+    onSuccess();
   };
 
   return (
-    <div
-      className="modal fade"
-      id="createProductModal"
-      tabIndex="-1"
-      aria-hidden="true"
-    >
+    <div className="modal fade" id="createProductModal" tabIndex="-1" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-
-          {/* Header */}
           <div className="modal-header">
             <h5 className="modal-title">Create Product</h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-            />
+            <button type="button" className="btn-close" data-bs-dismiss="modal" />
           </div>
 
-          {/* Body */}
           <ProductForm form={form} handleChange={handleChange} />
 
-          {/* Footer */}
           <div className="modal-footer">
-            <button
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+            <button className="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
-
-            <button
-              className="btn btn-primary"
-              onClick={handleSubmit}
-              data-bs-dismiss="modal"
-            >
+            <button className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
               Create
             </button>
           </div>
-
         </div>
       </div>
     </div>

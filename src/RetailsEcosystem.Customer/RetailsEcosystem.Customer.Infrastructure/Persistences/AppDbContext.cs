@@ -17,6 +17,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -82,6 +84,33 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(i => i.UnitPrice).HasPrecision(18, 2);
+            });
+
+            // ── Order relationships ───────────────────────────────────────────
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.HasOne(o => o.User)
+                      .WithMany()
+                      .HasForeignKey(o => o.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(o => o.TotalAmount).HasPrecision(18, 0);
+                entity.Property(o => o.Status).HasConversion<int>();
+            });
+
+            modelBuilder.Entity<OrderItem>(entity =>
+            {
+                entity.HasOne(i => i.Order)
+                      .WithMany(o => o.Items)
+                      .HasForeignKey(i => i.OrderId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(i => i.Product)
+                      .WithMany()
+                      .HasForeignKey(i => i.ProductId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(i => i.UnitPrice).HasPrecision(18, 0);
             });
 
             // ── Existing data seed ────────────────────────────────────────────

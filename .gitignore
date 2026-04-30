@@ -578,3 +578,5 @@ FodyWeavers.xsd
 src/RetailsEcosystem.Admin/.env
 
 documents/
+.claude/
+CLAUDE.md

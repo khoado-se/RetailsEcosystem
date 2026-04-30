@@ -94,6 +94,10 @@ namespace RetailsEcosystem.Customer.Infrastructure
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<ICartService, CartService>();
 
+            // ── Order services ────────────────────────────────────────────────
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+
             return services;
         }
     }

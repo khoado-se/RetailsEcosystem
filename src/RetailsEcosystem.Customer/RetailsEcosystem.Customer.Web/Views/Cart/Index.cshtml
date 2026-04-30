@@ -126,7 +126,8 @@
                                         <span>Grand Total</span>
                                         <span id="grand-total">@Model.Total.ToString("C")</span>
                                     </div>
-                                    <a href="javascript:void(0)" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
+                                    <a asp-controller="Order" asp-action="Checkout"
+                                       class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
                                         Proceed to Checkout
                                     </a>
                                 </div>

@@ -1,11 +1,17 @@
 import { useProducts } from "../../features/product/useProducts.js";
 import { useState } from "react";
 import CreateProductModal from "../../features/product/CreateProductModal.jsx";
+import EditProductModal from "../../features/product/EditProductModal.jsx";
 import ProductTable from "../../features/product/ProductTable.jsx";
 
 export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(1);
+  const [editingProductId, setEditingProductId] = useState(null);
   const { products, totalPage, fetchProducts } = useProducts(pageNumber);
+
+  const handleEdited = () => {
+    fetchProducts();
+  };
 
   return (
     <>
@@ -29,12 +35,20 @@ export default function ProductsPage() {
         pageNumber={pageNumber}
         setPageNumber={setPageNumber}
         totalPage={totalPage}
+        onEdit={setEditingProductId}
+        onDeleted={() => { fetchProducts(); setPageNumber(1); }}
       />
+
       <CreateProductModal
         onSuccess={() => {
           fetchProducts();
           setPageNumber(1);
         }}
+      />
+
+      <EditProductModal
+        productId={editingProductId}
+        onSuccess={handleEdited}
       />
     </>
   );

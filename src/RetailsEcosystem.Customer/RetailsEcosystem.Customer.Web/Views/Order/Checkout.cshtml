@@ -1,0 +1,104 @@
+@model RetailsEcosystem.Customer.Web.Models.Order.CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Start Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="breadcrumbs-content">
+                    <h1 class="page-title">Checkout</h1>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <ul class="breadcrumb-nav">
+                    <li><a asp-controller="Home" asp-action="Index"><i class="lni lni-home"></i> Home</a></li>
+                    <li><a asp-controller="Cart" asp-action="Index">Cart</a></li>
+                    <li>Checkout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Shipping Form -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-4">Shipping Information</h5>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger py-2 small">
+                                @Html.ValidationSummary(false)
+                            </div>
+                        }
+
+                        <form asp-action="Checkout" asp-controller="Order" method="post" id="checkout-form">
+                            @Html.AntiForgeryToken()
+
+                            <div class="mb-4">
+                                <label asp-for="ShippingAddress" class="form-label fw-semibold small">Shipping Address</label>
+                                <textarea asp-for="ShippingAddress"
+                                          class="form-control rounded-3"
+                                          rows="3"
+                                          placeholder="123 Main St, City, State, ZIP, Country"></textarea>
+                                <span asp-validation-for="ShippingAddress" class="text-danger small"></span>
+                            </div>
+
+                            <button type="submit" id="place-order-btn"
+                                    class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
+                                <i class="lni lni-checkmark me-2"></i> Place Order
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-4">Order Summary</h5>
+
+                        @foreach (var item in Model.Cart.Items)
+                        {
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                @if (!string.IsNullOrEmpty(item.ProductImageUrl))
+                                {
+                                    <img src="@item.ProductImageUrl" alt="@item.ProductName"
+                                         class="rounded-2" style="width:56px;height:56px;object-fit:cover;">
+                                }
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold small">@item.ProductName</div>
+                                    <div class="text-muted small">Qty: @item.Quantity</div>
+                                </div>
+                                <div class="fw-semibold small">@item.LineTotal.ToString("C")</div>
+                            </div>
+                        }
+
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total</span>
+                            <span>@Model.Cart.Total.ToString("C")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/checkout.js" asp-append-version="true"></script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

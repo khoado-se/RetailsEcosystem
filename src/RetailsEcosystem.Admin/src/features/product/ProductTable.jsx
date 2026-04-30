@@ -1,9 +1,18 @@
-import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/ui/Pagination";
 import { ENV } from "../../configs/env";
+import { deleteProduct } from "./productApi";
 
-export default function ProductTable({ products, pageNumber, setPageNumber, totalPage }) {
-  const navigate = useNavigate();
+export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, onEdit, onDeleted }) {
+
+  const handleDelete = async (product) => {
+    if (!window.confirm(`Delete "${product.name}"?`)) return;
+    try {
+      await deleteProduct(product.id);
+      onDeleted();
+    } catch {
+      alert("Failed to delete product.");
+    }
+  };
 
   return (
     <>
@@ -15,6 +24,7 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                 <th>Id</th>
                 <th>Name</th>
                 <th>Price</th>
+                <th>Featured</th>
                 <th>Image</th>
                 <th>Created Date</th>
                 <th className="text-end">Action</th>
@@ -27,6 +37,13 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                   <td className="fw-semibold">{product.name}</td>
                   <td>{product.price}</td>
                   <td>
+                    {product.isFeatured ? (
+                      <span className="badge bg-primary bg-opacity-10 text-primary rounded-badge">Featured</span>
+                    ) : (
+                      <span className="text-muted small">—</span>
+                    )}
+                  </td>
+                  <td>
                     <img
                       src={product.imageUrl || ENV.PRODUCT_PLACEHOLDER_IMAGE}
                       alt="Product"
@@ -37,15 +54,17 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                   <td className="text-muted small">{product.createdDate}</td>
                   <td className="text-end">
                     <button
-                      onClick={() => navigate(`/products/edit/${product.id}`)}
                       className="btn btn-primary btn-sm me-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editProductModal"
+                      onClick={() => onEdit(product.id)}
                     >
                       <i className="bi bi-pencil me-1" />
                       Edit
                     </button>
                     <button
-                      onClick={() => navigate(`/products/delete/${product.id}`)}
                       className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(product)}
                     >
                       <i className="bi bi-trash me-1" />
                       Delete

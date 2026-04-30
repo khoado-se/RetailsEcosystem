@@ -1,6 +1,6 @@
 import { useCategories } from "../../features/category/useCategories";
 
-export default function ProductForm({form, handleChange}) {
+export default function ProductForm({ form, handleChange }) {
   const { categories } = useCategories();
 
   return (
@@ -52,6 +52,20 @@ export default function ProductForm({form, handleChange}) {
             value={form.description}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="mb-3 form-check">
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="isFeatured"
+            name="isFeatured"
+            checked={!!form.isFeatured}
+            onChange={handleChange}
+          />
+          <label className="form-check-label" htmlFor="isFeatured">
+            Featured Product
+          </label>
         </div>
       </div>
     </>

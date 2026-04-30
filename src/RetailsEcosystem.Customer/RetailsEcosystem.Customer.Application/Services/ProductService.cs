@@ -31,6 +31,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 Description = productDto.Description,
                 UpdatedDate = productDto.UpdatedDate,
                 Price = productDto.Price,
+                IsFeatured = productDto.IsFeatured,
                 Category = category
             };
 
