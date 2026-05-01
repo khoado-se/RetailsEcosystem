@@ -1,23 +1,15 @@
-﻿@using RetailsEcosystem.Customer.Shared
+@using RetailsEcosystem.Customer.Shared
 @{
     ViewData["Title"] = "Home Page";
-
-    // Hero images
-    var sliderBg1 = Url.Content("~/images/hero/slider-bg1.jpg");
-    var sliderBg2 = Url.Content("~/images/hero/slider-bg2.jpg");
-    var smallBanner = Url.Content("~/images/hero/slider-bnr.jpg");
-
-    // Banner images
-    var banner1 = Url.Content("~/images/banner/banner-1-bg.jpg");
-    var banner2 = Url.Content("~/images/banner/banner-2-bg.jpg");
-
     var featureProducts = ViewBag.FeatureProducts as List<ProductDto>;
 }
 
-<!-- Start Hero Area -->
+<!-- ══ Hero Area ══════════════════════════════════════════════════════ -->
 <section class="hero-area">
     <div class="container">
         <div class="row">
+
+            <!-- Main slider: products 0 + 1 -->
             <div class="col-lg-8 col-12 custom-padding-right">
                 <div class="slider-head">
                     <div class="hero-slider">
@@ -25,23 +17,26 @@
                         @for (int i = 0; i < Math.Min(2, featureProducts?.Count ?? 0); i++)
                         {
                             var sp = featureProducts![i];
-                            var bg = i == 0 ? sliderBg1 : sliderBg2;
-                            var shortDesc = sp.Description?.Length > 80
-                                ? sp.Description[..80] + "…"
+                            var desc = sp.Description?.Length > 100
+                                ? sp.Description[..100] + "…"
                                 : sp.Description ?? string.Empty;
-                            <div class="single-slider" style="background-image: url('@bg');">
-                                <div class="content">
-                                    <h2>
-                                        <span>@sp.Category?.Name</span>
-                                        @sp.Name
-                                    </h2>
-                                    <p>@shortDesc</p>
-                                    <h3><span>Only</span> @sp.Price.ToString("N0") ₫</h3>
-                                    <div class="button">
-                                        <a asp-controller="Products" asp-action="ProductDetails"
-                                           asp-route-productId="@sp.Id" class="btn">Shop Now</a>
-                                    </div>
-                                </div>
+                            var url  = Url.Action("ProductDetails", "Products", new { productId = sp.Id }) ?? "#";
+                            var bg   = i == 0 ? "#f0f5fb" : "#f5f0fb";
+
+                            var vm = new PromoBannerViewModel
+                            {
+                                Category      = sp.Category?.Name,
+                                Title         = sp.Name,
+                                Subtitle      = desc,
+                                Price         = sp.Price,
+                                ImageUrl      = sp.ImageUrl,
+                                BgColor       = bg,
+                                ButtonUrl     = url,
+                                ButtonText    = "Shop Now",
+                            };
+
+                            <div class="single-slider">
+                                <partial name="_PromoBanner" model="vm" />
                             </div>
                         }
 
@@ -49,39 +44,35 @@
                 </div>
             </div>
 
+            <!-- Right column: product 2 + weekly sale -->
             <div class="col-lg-4 col-12">
-                <div class="row">
-                    <div class="col-lg-12 col-md-6 col-12 md-custom-padding">
+                <div class="row g-3 h-100">
 
-                        @if (featureProducts?.Count > 2)
+                    @if (featureProducts?.Count > 2)
+                    {
+                        var sb    = featureProducts[2];
+                        var sbUrl = Url.Action("ProductDetails", "Products", new { productId = sb.Id }) ?? "#";
+                        var sbVm  = new PromoBannerViewModel
                         {
-                            var sb = featureProducts[2];
-                            <div class="hero-small-banner" style="background-image: url('@smallBanner');">
-                                <div class="content">
-                                    <h2>
-                                        <span>@sb.Category?.Name</span>
-                                        @sb.Name
-                                    </h2>
-                                    <h3>@sb.Price.ToString("N0") ₫</h3>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="hero-small-banner" style="background-image: url('@smallBanner');"></div>
-                        }
-
-                    </div>
+                            Category        = sb.Category?.Name,
+                            Title           = sb.Name,
+                            Price           = sb.Price,
+                            ImageUrl        = sb.ImageUrl,
+                            BgColor         = "#fff8f0",
+                            ButtonUrl       = sbUrl,
+                            ButtonText      = "View Details",
+                            AdditionalClass = "promo-banner--compact",
+                        };
+                        <div class="col-lg-12 col-md-6 col-12">
+                            <partial name="_PromoBanner" model="sbVm" />
+                        </div>
+                    }
 
                     <div class="col-lg-12 col-md-6 col-12">
-                        <div class="hero-small-banner style2">
-                            <div class="content">
-                                <h2>Weekly Sale!</h2>
-                                <p>Saving up to 50% off all items.</p>
-                                <div class="button">
-                                    <a class="btn" asp-controller="Products" asp-action="ProductIndex">Shop Now</a>
-                                </div>
-                            </div>
+                        <div class="weekly-sale-card">
+                            <h3>Weekly Sale!</h3>
+                            <p>Saving up to 50% off all items.</p>
+                            <a asp-controller="Products" asp-action="ProductIndex" class="promo-cta">Shop Now</a>
                         </div>
                     </div>
 
@@ -91,51 +82,60 @@
         </div>
     </div>
 </section>
-<!-- End Hero Area -->
-<!-- Start Banner Area -->
+<!-- ══ End Hero Area ══════════════════════════════════════════════════ -->
+
+<!-- ══ Campaign Banners ══════════════════════════════════════════════ -->
 @if (featureProducts?.Count > 3)
 {
-    <section class="banner section">
+    <section class="campaign-banners-section">
         <div class="container">
-            <div class="row">
+            <div class="row g-4">
 
                 @{
-                    var pb1 = featureProducts[3];
-                    var pb1Desc = pb1.Description?.Length > 60
-                        ? pb1.Description[..60] + "…"
+                    var pb1     = featureProducts[3];
+                    var pb1Url  = Url.Action("ProductDetails", "Products", new { productId = pb1.Id }) ?? "#";
+                    var pb1Desc = pb1.Description?.Length > 90
+                        ? pb1.Description[..90] + "…"
                         : pb1.Description ?? string.Empty;
+
+                    var pb1Vm = new PromoBannerViewModel
+                    {
+                        Category   = pb1.Category?.Name,
+                        Title      = pb1.Name,
+                        Subtitle   = pb1Desc,
+                        Price      = pb1.Price,
+                        ImageUrl   = pb1.ImageUrl,
+                        BgColor    = "#f0f5fb",
+                        ButtonUrl  = pb1Url,
+                        ButtonText = "View Details",
+                    };
                 }
-                <div class="col-lg-6 col-md-6 col-12">
-                    <div class="single-banner" style="background-image:url('@banner1')">
-                        <div class="content">
-                            <h2>@pb1.Name</h2>
-                            <p>@pb1Desc</p>
-                            <div class="button">
-                                <a asp-controller="Products" asp-action="ProductDetails"
-                                   asp-route-productId="@pb1.Id" class="btn">View Details</a>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-6 col-12">
+                    <partial name="_PromoBanner" model="pb1Vm" />
                 </div>
 
                 @if (featureProducts.Count > 4)
                 {
-                    var pb2 = featureProducts[4];
-                    var pb2Desc = pb2.Description?.Length > 60
-                        ? pb2.Description[..60] + "…"
+                    var pb2     = featureProducts[4];
+                    var pb2Url  = Url.Action("ProductDetails", "Products", new { productId = pb2.Id }) ?? "#";
+                    var pb2Desc = pb2.Description?.Length > 90
+                        ? pb2.Description[..90] + "…"
                         : pb2.Description ?? string.Empty;
-                    <div class="col-lg-6 col-md-6 col-12">
-                        <div class="single-banner custom-responsive-margin"
-                             style="background-image:url('@banner2')">
-                            <div class="content">
-                                <h2>@pb2.Name</h2>
-                                <p>@pb2Desc</p>
-                                <div class="button">
-                                    <a asp-controller="Products" asp-action="ProductDetails"
-                                       asp-route-productId="@pb2.Id" class="btn">Shop Now</a>
-                                </div>
-                            </div>
-                        </div>
+
+                    var pb2Vm = new PromoBannerViewModel
+                    {
+                        Category       = pb2.Category?.Name,
+                        Title          = pb2.Name,
+                        Subtitle       = pb2Desc,
+                        Price          = pb2.Price,
+                        ImageUrl       = pb2.ImageUrl,
+                        BgColor        = "#fff8f0",
+                        ButtonUrl      = pb2Url,
+                        ButtonText     = "Shop Now",
+                        ReverseLayout  = true,
+                    };
+                    <div class="col-lg-6 col-12">
+                        <partial name="_PromoBanner" model="pb2Vm" />
                     </div>
                 }
 
@@ -143,7 +143,9 @@
         </div>
     </section>
 }
-<!-- End Banner Area -->
+<!-- ══ End Campaign Banners ══════════════════════════════════════════ -->
+
+<!-- ══ Best Sellers ══════════════════════════════════════════════════ -->
 @if (featureProducts != null && featureProducts.Count > 0)
 {
     <section class="best-sellers-section">
@@ -210,9 +212,11 @@
         </div>
     </section>
 }
+<!-- ══ End Best Sellers ═══════════════════════════════════════════════ -->
 
 @section Styles {
-    <link href="~/css/home/featuredProducts.css" rel="stylesheet" />
+    <link href="~/css/home/promo-banner.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/home/featuredProducts.css" rel="stylesheet" asp-append-version="true" />
 }
 
 @section Scripts {

@@ -1,0 +1,53 @@
+/* ══════════════════════════════════════════════════════════════════
+   product-image.css — Reusable product image normalization
+   ══════════════════════════════════════════════════════════════════
+
+   Strategy: mix-blend-mode: multiply removes baked white/light-gray
+   image backgrounds by multiplying each pixel against the container
+   background.  White (255,255,255) × any color = that color, so the
+   rectangular background of scraped/studio photos disappears and the
+   product appears to float naturally on the surface.
+
+   Works best when the container background is light (white → pastel).
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper: fixed-ratio box ────────────────────────────────────── */
+.pi-box {
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+/* Aspect ratio presets (apply one alongside .pi-box) */
+.pi-box--square    { padding-top: 100%; }
+.pi-box--landscape { padding-top: 66%;  }   /* 3:2  */
+.pi-box--portrait  { padding-top: 133%; }   /* 3:4  */
+
+/* ── Image inside .pi-box ────────────────────────────────────────── */
+.pi-box .pi {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    mix-blend-mode: multiply;
+}
+
+/* ── Modifiers ───────────────────────────────────────────────────── */
+
+/* Tighter padding — e.g. hero banners where space is already generous */
+.pi-box .pi--snug   { padding: 4%; }
+
+/* More breathing room — small thumbnails */
+.pi-box .pi--padded { padding: 14%; }
+
+/* Disable blend — for photos with transparent PNG or lifestyle shots */
+.pi-box .pi--natural { mix-blend-mode: normal; }
+
+/* Full-bleed cover — lifestyle / banner images (not product photos) */
+.pi-box .pi--cover  { object-fit: cover; padding: 0; mix-blend-mode: normal; }
+
+/* Rounded box variant */
+.pi-box--card { border-radius: 10px 10px 0 0; }

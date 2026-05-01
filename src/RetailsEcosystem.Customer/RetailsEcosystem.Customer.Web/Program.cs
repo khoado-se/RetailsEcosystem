@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using RetailsEcosystem.Customer.Web.Attributes;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using RetailsEcosystem.Customer.Web.Options;
 using RetailsEcosystem.Customer.Web.Services;
@@ -7,7 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 var apiSettings = builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>()!;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    // Sign out + redirect to login when the stored JWT is expired (pre-action check)
+    options.Filters.Add<TokenExpiryFilter>();
+    // Sign out + redirect to login when the API returns 401 (handles timing edge cases)
+    options.Filters.Add<ApiUnauthorizedFilter>();
+});
 builder.Services.Configure<ApiSettings>(
     builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddHttpClient("MyApi", client =>

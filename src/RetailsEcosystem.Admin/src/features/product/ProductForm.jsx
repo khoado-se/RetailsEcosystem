@@ -38,7 +38,7 @@ export default function ProductForm({ form, handleChange }) {
             <option value="">-- Select --</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.categoryName}
+                {c.name}
               </option>
             ))}
           </select>

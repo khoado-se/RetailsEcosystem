@@ -2903,9 +2903,10 @@ top: 2px;
 }
 
 .hero-area .hero-slider .single-slider {
-  background-size: cover;
-  background-position: center;
+  background-size: contain;
+  background-position: right center;
   background-repeat: no-repeat;
+  background-color: #f8f9fa;
   height: 500px;
   position: relative;
 }

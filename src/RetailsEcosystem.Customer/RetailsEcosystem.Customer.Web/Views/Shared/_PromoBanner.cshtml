@@ -1,0 +1,39 @@
+@model RetailsEcosystem.Customer.Web.Models.PromoBannerViewModel
+@{
+    var cls = "promo-banner"
+        + (Model.ReverseLayout ? " promo-banner--reverse" : "")
+        + (Model.IsDark      ? " promo-banner--dark"    : "")
+        + (!string.IsNullOrEmpty(Model.AdditionalClass) ? " " + Model.AdditionalClass : "");
+
+    var style = $"background-color:{Model.BgColor};color:{Model.TextColor};";
+}
+
+<div class="@cls" style="@style">
+    <div class="promo-banner__text">
+        @if (!string.IsNullOrEmpty(Model.Category))
+        {
+            <span class="promo-label">@Model.Category</span>
+        }
+        <h2 class="promo-title">@Model.Title</h2>
+        @if (!string.IsNullOrEmpty(Model.Subtitle))
+        {
+            <p class="promo-subtitle">@Model.Subtitle</p>
+        }
+        @if (Model.Price.HasValue)
+        {
+            <div class="promo-price">
+                <span class="promo-price-prefix">Only</span>@Model.Price.Value.ToString("N0") ₫
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.ButtonUrl))
+        {
+            <a href="@Model.ButtonUrl" class="promo-cta">@Model.ButtonText</a>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="promo-banner__image">
+            <img src="@Model.ImageUrl" alt="@Model.Title" loading="lazy" />
+        </div>
+    }
+</div>

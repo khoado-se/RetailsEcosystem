@@ -11,8 +11,10 @@
     <link rel="stylesheet" href="~/css/glightbox.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/product-image.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="~/RetailsEcosystem.Customer.Web.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     @await Html.PartialAsync("_Header")
@@ -22,7 +24,6 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
-            @RenderSection("Styles", required: false)
         </main>
     </div>
 

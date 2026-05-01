@@ -6,6 +6,8 @@ using RetailsEcosystem.Customer.Shared.DTOs.Customer;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using RetailsEcosystem.Customer.Web.Models.Account;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 
 namespace RetailsEcosystem.Customer.Web.Controllers
 {
@@ -177,7 +179,11 @@ namespace RetailsEcosystem.Customer.Web.Controllers
         {
             var token = User.FindFirstValue("access_token");
             if (!string.IsNullOrEmpty(token))
-                await _accountService.LogoutAsync(token);
+            {
+                // Best-effort: revoke server-side refresh token. Don't block logout if the call fails
+                // (token may already be expired, network error, etc.)
+                try { await _accountService.LogoutAsync(token); } catch { }
+            }
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
@@ -193,6 +199,12 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 new(ClaimTypes.Email, email),
                 new("access_token", accessToken)
             };
+
+            // Store token expiry so TokenExpiryFilter can check before each API call
+            var expiry = GetTokenExpiry(accessToken);
+            if (expiry.HasValue)
+                claims.Add(new("token_expires_at", expiry.Value.ToString("O")));
+
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -200,6 +212,33 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties { IsPersistent = true });
+        }
+
+        // Decodes the JWT payload (base64url) and reads the "exp" Unix timestamp.
+        // Uses only built-in .NET APIs — no extra NuGet package required.
+        private static DateTime? GetTokenExpiry(string jwt)
+        {
+            try
+            {
+                var parts = jwt.Split('.');
+                if (parts.Length != 3) return null;
+
+                var payload = parts[1];
+                var padded = (payload.Length % 4) switch
+                {
+                    2 => payload + "==",
+                    3 => payload + "=",
+                    _ => payload
+                };
+                padded = padded.Replace('-', '+').Replace('_', '/');
+                var bytes = Convert.FromBase64String(padded);
+                using var doc = JsonDocument.Parse(Encoding.UTF8.GetString(bytes));
+
+                if (doc.RootElement.TryGetProperty("exp", out var exp))
+                    return DateTimeOffset.FromUnixTimeSeconds(exp.GetInt64()).UtcDateTime;
+            }
+            catch { }
+            return null;
         }
 
         private IActionResult RedirectToLocal(string? returnUrl)

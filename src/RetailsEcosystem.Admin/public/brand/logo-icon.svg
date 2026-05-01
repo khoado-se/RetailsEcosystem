@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none" role="img" aria-label="RetailsEcosystem">
+  <title>RetailsEcosystem</title>
+  <!-- Bag body -->
+  <rect x="5" y="15" width="30" height="20" rx="4" fill="#4A90D9"/>
+  <!-- Left handle -->
+  <path d="M 11 15 C 11 6 19 6 19 15" stroke="#4A90D9" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- Right handle -->
+  <path d="M 21 15 C 21 6 29 6 29 15" stroke="#4A90D9" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

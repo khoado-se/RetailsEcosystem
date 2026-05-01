@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="48" viewBox="0 0 280 48" fill="none" role="img" aria-label="RetailsEcosystem">
+  <title>RetailsEcosystem</title>
+
+  <!-- Icon mark — white on transparent (dark surface provides the background) -->
+  <g transform="translate(4, 4)">
+    <rect x="5" y="15" width="30" height="20" rx="4" fill="white"/>
+    <path d="M 11 15 C 11 6 19 6 19 15" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M 21 15 C 21 6 29 6 29 15" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Wordmark — white heading + light blue accent, both legible on dark -->
+  <text
+    x="52"
+    y="32"
+    font-family="'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="22"
+    letter-spacing="-0.3"
+  >
+    <tspan font-weight="700" fill="#FFFFFF">Retails</tspan><tspan font-weight="400" fill="#A9D2EF">Ecosystem</tspan>
+  </text>
+</svg>
