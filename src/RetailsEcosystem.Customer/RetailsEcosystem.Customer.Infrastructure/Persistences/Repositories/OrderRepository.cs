@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
+using RetailsEcosystem.Customer.Shared.DTOs.Order;
 using RetailsEcosystem.Customer.Shared.Enums;
 
 namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
@@ -78,6 +79,26 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public Task<int> GetPendingOrderCountAsync() =>
             _context.Orders.CountAsync(o => o.Status == OrderStatus.Pending);
+
+        public async Task<IEnumerable<DailyRevenueDto>> GetDailyRevenueAsync(int days)
+        {
+            var cutoff = DateTime.UtcNow.Date.AddDays(-(days - 1));
+
+            var rawData = await _context.Orders
+                .Where(o => o.CreatedDate >= cutoff)
+                .GroupBy(o => o.CreatedDate.Date)
+                .Select(g => new { Date = g.Key, Revenue = g.Sum(o => (decimal?)o.TotalAmount) ?? 0m })
+                .OrderBy(x => x.Date)
+                .ToListAsync();
+
+            return Enumerable.Range(0, days)
+                .Select(i => cutoff.AddDays(i))
+                .Select(date => new DailyRevenueDto
+                {
+                    Date = date.ToString("MMM d"),
+                    Revenue = rawData.FirstOrDefault(r => r.Date == date)?.Revenue ?? 0m
+                });
+        }
 
         public Task SaveAsync() => _context.SaveChangesAsync();
     }

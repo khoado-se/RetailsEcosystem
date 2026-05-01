@@ -128,12 +128,21 @@ namespace RetailsEcosystem.Customer.Application.Services
             return MapToDto(order);
         }
 
-        public async Task<OrderStatsDto> GetStatsAsync() => new()
+        public async Task<OrderStatsDto> GetStatsAsync()
         {
-            OrdersToday = await _orderRepo.GetOrdersTodayCountAsync(),
-            RevenueThisMonth = await _orderRepo.GetRevenueThisMonthAsync(),
-            PendingOrders = await _orderRepo.GetPendingOrderCountAsync()
-        };
+            var ordersToday = await _orderRepo.GetOrdersTodayCountAsync();
+            var revenueMonth = await _orderRepo.GetRevenueThisMonthAsync();
+            var pendingOrders = await _orderRepo.GetPendingOrderCountAsync();
+            var dailyRevenue = await _orderRepo.GetDailyRevenueAsync(7);
+
+            return new OrderStatsDto
+            {
+                OrdersToday = ordersToday,
+                RevenueThisMonth = revenueMonth,
+                PendingOrders = pendingOrders,
+                DailyRevenue = dailyRevenue,
+            };
+        }
 
         private static OrderDto MapToDto(Order order) => new()
         {

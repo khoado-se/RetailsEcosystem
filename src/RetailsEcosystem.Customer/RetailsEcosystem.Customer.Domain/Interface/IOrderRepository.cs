@@ -1,4 +1,5 @@
 using RetailsEcosystem.Customer.Domain.Entities;
+using RetailsEcosystem.Customer.Shared.DTOs.Order;
 
 namespace RetailsEcosystem.Customer.Domain.Interface
 {
@@ -13,6 +14,7 @@ namespace RetailsEcosystem.Customer.Domain.Interface
         Task<int> GetOrdersTodayCountAsync();
         Task<decimal> GetRevenueThisMonthAsync();
         Task<int> GetPendingOrderCountAsync();
+        Task<IEnumerable<DailyRevenueDto>> GetDailyRevenueAsync(int days);
         Task SaveAsync();
     }
 }

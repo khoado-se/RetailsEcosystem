@@ -15,16 +15,18 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const ctx = chartRef.current;
+    if (!stats?.dailyRevenue?.length) return;
 
-    chartInstance.current = new Chart(ctx, {
+    if (chartInstance.current) chartInstance.current.destroy();
+
+    chartInstance.current = new Chart(chartRef.current, {
       type: "line",
       data: {
-        labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        labels: stats.dailyRevenue.map((d) => d.date),
         datasets: [
           {
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-            tension: 0,
+            data: stats.dailyRevenue.map((d) => d.revenue),
+            tension: 0.3,
             backgroundColor: "transparent",
             borderColor: "#4A90D9",
             borderWidth: 4,
@@ -33,15 +35,20 @@ export default function DashboardPage() {
         ],
       },
       options: {
-        scales: { y: { beginAtZero: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: (v) => `$${Number(v).toLocaleString()}`,
+            },
+          },
+        },
         plugins: { legend: { display: false } },
       },
     });
 
-    return () => {
-      chartInstance.current.destroy();
-    };
-  }, []);
+    return () => chartInstance.current?.destroy();
+  }, [stats]);
 
   const fmt = (val) =>
     val != null
@@ -107,7 +114,16 @@ export default function DashboardPage() {
 
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body p-4">
-          <canvas ref={chartRef} className="w-100" height={100}></canvas>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="fw-semibold">Revenue — Last 7 Days</div>
+          </div>
+          {stats?.dailyRevenue?.length ? (
+            <canvas ref={chartRef} className="w-100" height={100}></canvas>
+          ) : (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: 100 }}>
+              <div className="spinner-border spinner-border-sm text-secondary" role="status" />
+            </div>
+          )}
         </div>
       </div>
     </>
