@@ -4,6 +4,7 @@ using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Order;
+using RetailsEcosystem.Customer.Shared.Enums;
 using System.Security.Claims;
 
 namespace RetailsEcosystem.Customer.API.Controllers
@@ -47,7 +48,8 @@ namespace RetailsEcosystem.Customer.API.Controllers
 
         // GET /api/orders
         [HttpGet]
-        public async Task<ActionResult<PagedResult<OrderDto>>> GetOrders(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<PagedResult<OrderDto>>> GetOrders(
+            int pageNumber = 1, int pageSize = 10, OrderStatus? status = null)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             var role = User.IsInRole("Admin") ? "Admin" : "Customer";
@@ -55,7 +57,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize
-            });
+            }, status);
             return Ok(result);
         }
 

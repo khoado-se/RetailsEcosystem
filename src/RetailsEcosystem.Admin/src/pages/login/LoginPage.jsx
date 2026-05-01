@@ -42,12 +42,12 @@ export default function LoginPage() {
         style={{ width: "45%" }}
       >
         <div className="text-center">
-          <div className="brand-logo-badge rounded-circle d-inline-flex align-items-center justify-content-center mb-4">
-            R
+          <div className="brand-logo-badge rounded-circle d-inline-flex align-items-center justify-content-center mb-4 overflow-hidden">
+            <img src="/brand/logo-icon.svg" alt="RetailsEcosystem" style={{ width: "60%", height: "60%" }} />
           </div>
-          <h1 className="fw-bold mb-2" style={{ letterSpacing: "-0.5px" }}>
-            RetailsEcosystem
-          </h1>
+          <div className="mb-2">
+            <img src="/brand/logo-full-dark.svg" alt="RetailsEcosystem" style={{ height: "36px" }} />
+          </div>
           <p className="mb-5 text-white-50 text-body-sm">
             Unified commerce management platform
           </p>
@@ -77,8 +77,8 @@ export default function LoginPage() {
         <div style={{ width: "100%", maxWidth: "440px" }}>
           {/* Mobile logo */}
           <div className="text-center mb-4 d-lg-none">
-            <div className="brand-logo-badge-sm rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
-              R
+            <div className="brand-logo-badge-sm rounded-circle d-inline-flex align-items-center justify-content-center mb-2 overflow-hidden">
+              <img src="/brand/logo-icon.svg" alt="RetailsEcosystem" style={{ width: "60%", height: "60%" }} />
             </div>
             <div className="fw-bold text-white" style={{ fontSize: "1.1rem" }}>
               RetailsEcosystem

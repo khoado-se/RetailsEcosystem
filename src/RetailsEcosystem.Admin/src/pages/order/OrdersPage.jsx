@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Modal, Toast } from "bootstrap";
 import { useOrders } from "../../features/order/useOrders";
 import OrderDetailModal from "../../features/order/OrderDetailModal";
 import Pagination from "../../components/ui/Pagination";
@@ -29,6 +30,13 @@ export default function OrdersPage() {
 
   const { orders, totalPage, loading, error, fetchOrders } = useOrders(pageNumber, statusFilter);
 
+  useEffect(() => {
+    if (selectedOrder) {
+      const el = document.getElementById("orderDetailModal");
+      if (el) Modal.getOrCreateInstance(el).show();
+    }
+  }, [selectedOrder]);
+
   const handleStatusFilter = (val) => {
     setStatusFilter(val);
     setPageNumber(1);
@@ -39,10 +47,6 @@ export default function OrdersPage() {
     try {
       const res = await getOrderById(orderId);
       setSelectedOrder(res.data);
-      const modal = window.bootstrap.Modal.getOrCreateInstance(
-        document.getElementById("orderDetailModal")
-      );
-      modal.show();
     } catch {
       /* ignore */
     } finally {
@@ -50,12 +54,15 @@ export default function OrdersPage() {
     }
   };
 
-  const handleStatusUpdated = () => {
+  const handleStatusUpdated = (label) => {
     fetchOrders();
-    const modal = window.bootstrap.Modal.getInstance(
-      document.getElementById("orderDetailModal")
-    );
-    modal?.hide();
+    Modal.getInstance(document.getElementById("orderDetailModal"))?.hide();
+    const toastEl = document.getElementById("orderStatusToast");
+    if (toastEl) {
+      document.getElementById("orderStatusToastBody").textContent =
+        `Order status updated to ${label}.`;
+      Toast.getOrCreateInstance(toastEl).show();
+    }
   };
 
   const fmt = (date) =>
@@ -151,6 +158,27 @@ export default function OrdersPage() {
       <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
 
       <OrderDetailModal order={selectedOrder} onStatusUpdated={handleStatusUpdated} />
+
+      {/* Success toast */}
+      <div className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 1100 }}>
+        <div
+          id="orderStatusToast"
+          className="toast align-items-center text-bg-success border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div className="d-flex">
+            <div className="toast-body" id="orderStatusToastBody" />
+            <button
+              type="button"
+              className="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            />
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -70,15 +70,15 @@ namespace RetailsEcosystem.Customer.Application.Services
             return await GetOrderByIdAsync(order.Id, userId, "Customer");
         }
 
-        public async Task<PagedResult<OrderDto>> GetOrdersAsync(string userId, string role, PagedRequest pageRequest)
+        public async Task<PagedResult<OrderDto>> GetOrdersAsync(string userId, string role, PagedRequest pageRequest, OrderStatus? status = null)
         {
             IEnumerable<Order> orders;
             int totalCount;
 
             if (role == "Admin")
             {
-                orders = await _orderRepo.GetAllOrdersAsync(pageRequest.PageNumber, pageRequest.PageSize);
-                totalCount = await _orderRepo.GetAllOrderCountAsync();
+                orders = await _orderRepo.GetAllOrdersAsync(pageRequest.PageNumber, pageRequest.PageSize, status);
+                totalCount = await _orderRepo.GetAllOrderCountAsync(status);
             }
             else
             {
@@ -105,11 +105,25 @@ namespace RetailsEcosystem.Customer.Application.Services
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
                 ?? throw new KeyNotFoundException($"Order {orderId} not found.");
 
+            if (!IsValidTransition(order.Status, dto.Status))
+                throw new InvalidOperationException(
+                    $"Cannot transition from {order.Status} to {dto.Status}.");
+
             order.Status = dto.Status;
             order.UpdatedDate = DateTime.UtcNow;
             await _orderRepo.SaveAsync();
             return MapToDto(order);
         }
+
+        private static bool IsValidTransition(OrderStatus from, OrderStatus to) => (from, to) switch
+        {
+            (OrderStatus.Pending,   OrderStatus.Confirmed) => true,
+            (OrderStatus.Pending,   OrderStatus.Cancelled) => true,
+            (OrderStatus.Confirmed, OrderStatus.Shipped)   => true,
+            (OrderStatus.Confirmed, OrderStatus.Cancelled) => true,
+            (OrderStatus.Shipped,   OrderStatus.Delivered) => true,
+            _ => false
+        };
 
         public async Task<OrderDto> CancelOrderAsync(int orderId, string userId)
         {

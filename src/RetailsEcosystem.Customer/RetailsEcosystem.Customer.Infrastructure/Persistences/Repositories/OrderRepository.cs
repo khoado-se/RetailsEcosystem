@@ -43,13 +43,19 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync(int pageNumber, int pageSize, OrderStatus? status = null)
         {
-            return await _context.Orders
+            var query = _context.Orders
                 .Include(o => o.Items)
                     .ThenInclude(i => i.Product)
                         .ThenInclude(p => p.Images)
                 .Include(o => o.User)
+                .AsQueryable();
+
+            if (status.HasValue)
+                query = query.Where(o => o.Status == status.Value);
+
+            return await query
                 .OrderByDescending(o => o.CreatedDate)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -60,8 +66,10 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         public Task<int> GetOrderCountByUserIdAsync(string userId) =>
             _context.Orders.CountAsync(o => o.UserId == userId);
 
-        public Task<int> GetAllOrderCountAsync() =>
-            _context.Orders.CountAsync();
+        public Task<int> GetAllOrderCountAsync(OrderStatus? status = null) =>
+            status.HasValue
+                ? _context.Orders.CountAsync(o => o.Status == status.Value)
+                : _context.Orders.CountAsync();
 
         public Task<int> GetOrdersTodayCountAsync()
         {

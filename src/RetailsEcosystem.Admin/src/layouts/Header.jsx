@@ -11,8 +11,8 @@ export default function Header() {
 
   return (
     <header className="navbar navbar-dark sticky-top bg-brand-nav flex-md-nowrap p-0 shadow">
-      <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fw-bold" href="#">
-        RetailsEcosystem
+      <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">
+        <img src="/brand/logo-full-dark.svg" alt="RetailsEcosystem" style={{ height: "28px" }} />
       </a>
 
       <button
