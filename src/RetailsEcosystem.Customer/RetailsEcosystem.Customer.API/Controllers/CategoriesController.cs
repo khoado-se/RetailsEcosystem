@@ -39,6 +39,17 @@ namespace RetailsEcosystem.Customer.API.Controllers
             return CreatedAtAction(nameof(GetCategories), new { }, created);
         }
 
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDto dto)
+        {
+            if (id != dto.Id)
+                return BadRequest();
+
+            var updated = await _categoryService.UpdateAsync(dto);
+            return Ok(updated);
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)

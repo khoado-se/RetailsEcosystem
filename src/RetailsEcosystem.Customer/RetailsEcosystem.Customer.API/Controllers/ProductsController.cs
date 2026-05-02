@@ -19,12 +19,13 @@ namespace RetailsEcosystem.Customer.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(int pageNumber = 1, int pageSize = 8, int? categoryId = null)
+        public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(int pageNumber = 1, int pageSize = 8, int? categoryId = null, string? search = null)
         {
             var result = await _productService.GetAllProductAsync(new PagedRequest
             {
                 PageNumber = pageNumber,
-                PageSize = pageSize
+                PageSize = pageSize,
+                Search = search
             }, categoryId);
 
             return Ok(result);

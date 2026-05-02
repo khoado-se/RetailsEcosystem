@@ -13,7 +13,7 @@ export default function CategoryForm({ category, onSuccess, onClose }) {
     setLoading(true);
     try {
       if (isEdit) {
-        await updateCategory(category.id, { name });
+        await updateCategory(category.id, { id: category.id, name });
       } else {
         await createCategory({ name });
       }

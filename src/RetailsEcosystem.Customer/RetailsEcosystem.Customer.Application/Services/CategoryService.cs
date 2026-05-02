@@ -52,6 +52,25 @@ namespace RetailsEcosystem.Customer.Application.Services
             };
         }
 
+        public async Task<CategoryDto> UpdateAsync(UpdateCategoryDto dto)
+        {
+            var category = new Category
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description
+            };
+
+            await _categoryRepository.UpdateAsync(category);
+
+            return new CategoryDto
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description
+            };
+        }
+
         public async Task DeleteAsync(int id)
         {
             await _categoryRepository.DeleteAsync(id);

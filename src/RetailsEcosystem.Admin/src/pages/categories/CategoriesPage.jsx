@@ -8,6 +8,11 @@ export default function CategoriesPage() {
   const { categories, fetchCategories } = useCategories();
   const [showForm, setShowForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCategories = categories.filter((c) =>
+    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleEdit = (cat) => {
     setSelectedCategory(cat);
@@ -47,8 +52,41 @@ export default function CategoriesPage() {
         </button>
       </div>
 
+      {/* Search Bar */}
+      <div className="card border-0 shadow-sm mb-4">
+        <div className="card-body py-3">
+          <div className="row g-2 align-items-center">
+            <div className="col-12 col-md-6">
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0">
+                  <i className="bi bi-search text-muted" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control border-start-0"
+                  placeholder="Search categories by name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            {searchTerm && (
+              <div className="col-auto">
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={() => setSearchTerm("")}
+                >
+                  <i className="bi bi-x-lg me-1" />
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <CategoryTable
-        categories={categories}
+        categories={filteredCategories}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />

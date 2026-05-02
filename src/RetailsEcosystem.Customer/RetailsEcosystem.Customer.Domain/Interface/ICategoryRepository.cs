@@ -8,6 +8,7 @@ namespace RetailsEcosystem.Customer.Domain.Interface
         Task<Category?> GetCategoryByIdAsync(int categoryId);
         Task<int> GetTotalCategoriesAsync();
         Task<int> CreateAsync(Category category);
+        Task UpdateAsync(Category category);
         Task DeleteAsync(int categoryId);
     }
 }

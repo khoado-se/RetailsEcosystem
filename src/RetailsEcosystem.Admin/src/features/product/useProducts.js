@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getProducts } from "./productApi";
 
-export const useProducts = (pageNumber, categoryId) => {
+export const useProducts = (pageNumber, categoryId, search) => {
   const [data, setData] = useState({
     items: [],
     totalPage: 0,
@@ -9,7 +9,7 @@ export const useProducts = (pageNumber, categoryId) => {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const res = await getProducts({pageNumber, categoryId });
+      const res = await getProducts({ pageNumber, categoryId, search });
       setData({
         items: res.items ?? [],
         totalPage: res.totalPage ?? 0,
@@ -17,7 +17,7 @@ export const useProducts = (pageNumber, categoryId) => {
     } catch (err) {
       console.error("Fetch error:", err);
     }
-  }, [pageNumber, categoryId]); // Only changes when these params change
+  }, [pageNumber, categoryId, search]);
 
   useEffect(() => {
     fetchProducts();
@@ -26,6 +26,6 @@ export const useProducts = (pageNumber, categoryId) => {
   return {
     products: data.items,
     totalPage: data.totalPage,
-    fetchProducts: fetchProducts,
+    fetchProducts,
   };
 };

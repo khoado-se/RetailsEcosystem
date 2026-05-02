@@ -20,6 +20,17 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             return category.Id;
         }
 
+        public async Task UpdateAsync(Category category)
+        {
+            var tracked = await _context.Categories.FindAsync(category.Id)
+                ?? throw new KeyNotFoundException($"Category {category.Id} not found.");
+
+            tracked.Name = category.Name;
+            tracked.Description = category.Description;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(int cateogryId)
         {
             var category = await _context.Categories.FindAsync(cateogryId) 

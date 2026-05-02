@@ -9,15 +9,15 @@ namespace RetailsEcosystem.Customer.Web.Services
         private readonly string ProductUrl = "api/Products";
         public ProductService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-        public async Task<PagedResult<ProductDto>> GetAllAsync(PagedRequest pagedRequest, int? categoryId)
+        public async Task<PagedResult<ProductDto>> GetAllAsync(PagedRequest pagedRequest, int? categoryId, string? search = null)
         {
-
             var url = $"{ProductUrl}?pageNumber={pagedRequest.PageNumber}&pageSize={pagedRequest.PageSize}";
 
             if (categoryId.HasValue)
-            {
                 url += $"&categoryId={categoryId.Value}";
-            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+                url += $"&search={Uri.EscapeDataString(search)}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 

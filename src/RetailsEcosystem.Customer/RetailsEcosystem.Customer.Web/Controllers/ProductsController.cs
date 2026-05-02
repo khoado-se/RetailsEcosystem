@@ -18,11 +18,12 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             _productService = productService;
         }
         [Breadcrumb("Shop")]
-        public async Task<IActionResult> ProductIndex([FromQuery] PagedRequest pagedRequest, [FromQuery] int? categoryId = null)
+        public async Task<IActionResult> ProductIndex([FromQuery] PagedRequest pagedRequest, [FromQuery] int? categoryId = null, [FromQuery] string? search = null)
         {
-            var productsDto = await _productService.GetAllAsync(pagedRequest, categoryId);
+            var productsDto = await _productService.GetAllAsync(pagedRequest, categoryId, search);
 
             ViewBag.CategoryId = categoryId;
+            ViewBag.Search = search;
 
             return View(model: productsDto);
         }

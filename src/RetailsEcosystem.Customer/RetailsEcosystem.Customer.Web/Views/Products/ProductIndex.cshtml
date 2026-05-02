@@ -5,107 +5,150 @@
 @inject IOptions<ApiSettings> ApiOptions
 @{
     int? categoryId = ViewBag.CategoryId as int?;
+    string? search = ViewBag.Search as string;
 }
 
-<div class="container product-card row">
-    @foreach (var item in Model.Items)
-    {
-        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 my-3">
-            <div class="card border-0 shadow-sm h-100">
-                <!-- Carousel -->
-                <div id="slideshow-@item.Id" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@item.Id">
-                                @{
-                                    var baseUrl = ApiOptions.Value.BaseUrl;
-                                    var imageUrl = item.ImageUrl != null ? $"{item.ImageUrl}" : $"{baseUrl}/images/products/product-placeholder-image.jpg";
-                                }
-                                <img src="@imageUrl"
-                                     alt="product image"
-                                     class="d-block card-img-top img-fluid mx-auto d-block img-rounded"
-                                     style="height:200px;object-fit:cover;">
-                            </a>
+@* Search + Filter Bar *@
+<div class="mb-4">
+    <form method="get" asp-controller="Products" asp-action="ProductIndex" class="row g-2 align-items-center">
+        <div class="col-12 col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="lni lni-search-alt text-muted"></i></span>
+                <input type="text" name="search" value="@search" class="form-control border-start-0"
+                       placeholder="Search products by name...">
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            @await Component.InvokeAsync("CategoryMenu", new { viewName = "CategorySelect" })
+        </div>
+        <div class="col-12 col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-fill">
+                <i class="lni lni-search-alt me-1"></i>Search
+            </button>
+            @if (!string.IsNullOrWhiteSpace(search) || categoryId.HasValue)
+            {
+                <a asp-controller="Products" asp-action="ProductIndex" class="btn btn-outline-secondary" title="Clear filters">
+                    <i class="lni lni-close"></i>
+                </a>
+            }
+        </div>
+    </form>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <div class="text-center py-5 text-muted">
+        <i class="lni lni-search-alt" style="font-size:2.5rem;"></i>
+        <p class="mt-3 mb-0 fw-semibold">No products found</p>
+        <p class="small">Try a different search term or category.</p>
+        <a asp-controller="Products" asp-action="ProductIndex" class="btn btn-outline-primary btn-sm mt-2">Clear filters</a>
+    </div>
+}
+else
+{
+    <div class="container product-card row">
+        @foreach (var item in Model.Items)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 my-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <!-- Carousel -->
+                    <div id="slideshow-@item.Id" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@item.Id">
+                                    @{
+                                        var baseUrl = ApiOptions.Value.BaseUrl;
+                                        var imageUrl = item.ImageUrl != null ? $"{item.ImageUrl}" : $"{baseUrl}/images/products/product-placeholder-image.jpg";
+                                    }
+                                    <img src="@imageUrl"
+                                         alt="product image"
+                                         class="d-block card-img-top img-fluid mx-auto d-block img-rounded"
+                                         style="height:200px;object-fit:cover;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <h6 class="fw-semibold mb-1 text-heading">@item.Name</h6>
+                        <p class="mb-1"><span class="fw-bold text-primary-brand">@item.Price.ToString("C")</span></p>
+                        <p class="card-text text-muted small">@item.Description</p>
+                        <div class="mt-auto pt-2">
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <button class="btn btn-outline-primary w-100"
+                                        data-action="add-to-cart"
+                                        data-product-id="@item.Id"
+                                        @(item.StockQuantity == 0 ? "disabled" : "")>
+                                    <i class="lni lni-cart me-1"></i>
+                                    @(item.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
+                                </button>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Login"
+                                   asp-route-returnUrl="@Url.Action("ProductIndex", "Products")"
+                                   class="btn btn-outline-primary w-100">
+                                    <i class="lni lni-cart me-1"></i>Add to Cart
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
-
-                <div class="card-body">
-                    <h6 class="fw-semibold mb-1 text-heading">@item.Name</h6>
-                    <p class="mb-1"><span class="fw-bold text-primary-brand">@item.Price.ToString("C")</span></p>
-                    <p class="card-text text-muted small">@item.Description</p>
-                    <div class="mt-auto pt-2">
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <button class="btn btn-outline-primary w-100"
-                                    data-action="add-to-cart"
-                                    data-product-id="@item.Id"
-                                    @(item.StockQuantity == 0 ? "disabled" : "")>
-                                <i class="lni lni-cart me-1"></i>
-                                @(item.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
-                            </button>
-                        }
-                        else
-                        {
-                            <a asp-controller="Account" asp-action="Login"
-                               asp-route-returnUrl="@Url.Action("ProductIndex", "Products")"
-                               class="btn btn-outline-primary w-100">
-                                <i class="lni lni-cart me-1"></i>Add to Cart
-                            </a>
-                        }
-                    </div>
-                </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
 
-@* Pagination *@
-<nav aria-label="..." class="d-flex justify-content-center">
-    <ul class="pagination">
-        <li class="page-item @(Model.PageNumber - 1 > 0 ? "" : "disabled")">
-            <a class="page-link" tabindex="-1" aria-disabled="true"
-               asp-controller="Products"
-               asp-action="ProductIndex"
-               asp-route-pageNumber="@(Model.PageNumber - 1)"
-               asp-route-categoryId="@categoryId">Previous</a>
-        </li>
-        @if (Model.PageNumber - 1 > 0)
-        {
-            <li class="page-item">
-                <a class="page-link"
-                       asp-controller="Products"
-                       asp-action="ProductIndex"
+    @* Pagination — only shown when more than one page *@
+    @if (Model.TotalPage > 1)
+    {
+        <nav aria-label="Product pages" class="d-flex justify-content-center mt-3">
+            <ul class="pagination">
+                <li class="page-item @(Model.PageNumber - 1 > 0 ? "" : "disabled")">
+                    <a class="page-link" tabindex="-1" aria-disabled="true"
+                       asp-controller="Products" asp-action="ProductIndex"
                        asp-route-pageNumber="@(Model.PageNumber - 1)"
-                       asp-route-categoryId="@categoryId">
-                    @(Model.PageNumber - 1)
-                </a>
-            </li>
-        }
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="#">@Model.PageNumber</a>
-        </li>
-        @if (Model.PageNumber + 1 <= Model.TotalPage)
-        {
-            <li class="page-item">
-                <a class="page-link"
-                       asp-controller="Products"
-                       asp-action="ProductIndex"
+                       asp-route-categoryId="@categoryId"
+                       asp-route-search="@search">Previous</a>
+                </li>
+                @if (Model.PageNumber - 1 > 0)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="Products" asp-action="ProductIndex"
+                           asp-route-pageNumber="@(Model.PageNumber - 1)"
+                           asp-route-categoryId="@categoryId"
+                           asp-route-search="@search">
+                            @(Model.PageNumber - 1)
+                        </a>
+                    </li>
+                }
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">@Model.PageNumber</a>
+                </li>
+                @if (Model.PageNumber + 1 <= Model.TotalPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="Products" asp-action="ProductIndex"
+                           asp-route-pageNumber="@(Model.PageNumber + 1)"
+                           asp-route-categoryId="@categoryId"
+                           asp-route-search="@search">
+                            @(Model.PageNumber + 1)
+                        </a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageNumber + 1 <= Model.TotalPage ? "" : "disabled")">
+                    <a class="page-link"
+                       asp-controller="Products" asp-action="ProductIndex"
                        asp-route-pageNumber="@(Model.PageNumber + 1)"
-                       asp-route-categoryId="@categoryId">
-                    @(Model.PageNumber + 1)
-                </a>
-            </li>
-        }
-        <li class="page-item @(Model.PageNumber + 1 <= Model.TotalPage ? "" : "disabled")">
-            <a class="page-link"
-               asp-controller="Products"
-               asp-action="ProductIndex"
-               asp-route-pageNumber="@(Model.PageNumber + 1)"
-               asp-route-categoryId="@categoryId">Next</a>
-        </li>
-    </ul>
-</nav>
+                       asp-route-categoryId="@categoryId"
+                       asp-route-search="@search">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}
 
 @section Styles {
     <link href="~/css/products/card.css" rel="stylesheet" />

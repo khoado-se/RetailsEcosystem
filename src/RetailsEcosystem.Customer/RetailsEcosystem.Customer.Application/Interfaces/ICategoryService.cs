@@ -8,6 +8,7 @@ namespace RetailsEcosystem.Customer.Application.Interfaces
     {
         Task<PagedResult<CategoryDto>> GetAllAsync(PagedRequest pagedRequest);
         Task<CategoryDto> CreateAsync(CreateCategoryDto dto);
+        Task<CategoryDto> UpdateAsync(UpdateCategoryDto dto);
         Task DeleteAsync(int id);
     }
 }

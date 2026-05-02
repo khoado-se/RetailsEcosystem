@@ -36,12 +36,13 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId)
+        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId, string? search = null)
         {
             IEnumerable<Product> products = await _context.Products
                     .Include(p => p.Category)
                     .Include(p => p.Images)
-                    .Where(p => !categogyId.HasValue || p.Category.Id == categogyId.Value) // no category or filter by category
+                    .Where(p => (!categogyId.HasValue || p.Category.Id == categogyId.Value)
+                             && (string.IsNullOrWhiteSpace(search) || p.Name.Contains(search)))
                     .AsNoTracking()
                     .OrderByDescending(p => p.CreatedDate)
                     .ThenByDescending(p => p.Id)
@@ -60,7 +61,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
-        public async Task<int> GetProductCountAsync(int? categoryId, bool isFeature)
+        public async Task<int> GetProductCountAsync(int? categoryId = null, bool isFeature = false, string? search = null)
         {
             if (isFeature)
                 return await _context.Products.CountAsync(p => p.IsFeatured);
@@ -68,6 +69,8 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             var query = _context.Products.AsQueryable();
             if (categoryId.HasValue)
                 query = query.Where(p => p.Category.Id == categoryId.Value);
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(p => p.Name.Contains(search));
 
             return await query.CountAsync();
         }

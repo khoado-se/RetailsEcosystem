@@ -12,10 +12,10 @@ namespace RetailsEcosystem.Customer.Web.ViewComponents
             _categoryService = categoryService; 
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(string viewName = "Default")
         {
             var items = await _categoryService.GetAllAsync();
-            return View(items.Items);
+            return View(viewName, items.Items);
         }
     }
 }
