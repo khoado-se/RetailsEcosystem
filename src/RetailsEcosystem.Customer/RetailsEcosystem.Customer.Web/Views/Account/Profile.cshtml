@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Start Account Section -->
 <section class="section">
     <div class="container">
         <div class="row justify-content-center">
@@ -12,19 +11,23 @@
 
                 @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="alert alert-success py-2 small mb-4">@TempData["SuccessMessage"]</div>
+                    <div class="alert alert-success d-flex align-items-start gap-2 rounded-3 py-2 px-3 mb-4" role="alert">
+                        <i class="lni lni-checkmark-circle flex-shrink-0 mt-1 text-caption"></i>
+                        <span class="text-body-sm">@TempData["SuccessMessage"]</span>
+                    </div>
                 }
 
                 <!-- Profile Card -->
-                <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
-                    <div class="card-body">
-                        <h4 class="fw-bold mb-1">My Profile</h4>
-                        <p class="text-muted small mb-4">Keep your personal information up to date.</p>
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h2 class="text-page-title mb-1">My Profile</h2>
+                        <p class="text-muted text-body-sm mb-4">Keep your personal information up to date.</p>
 
                         @if (!ViewData.ModelState.IsValid)
                         {
-                            <div class="alert alert-danger py-2 small">
-                                @Html.ValidationSummary(false)
+                            <div class="alert alert-danger d-flex align-items-start gap-2 rounded-3 py-2 px-3 mb-4" role="alert">
+                                <i class="lni lni-warning flex-shrink-0 mt-1 text-caption"></i>
+                                <span class="text-body-sm">@Html.ValidationSummary(false)</span>
                             </div>
                         }
 
@@ -32,51 +35,81 @@
                             @Html.AntiForgeryToken()
 
                             <div class="mb-3">
-                                <label asp-for="FullName" class="form-label fw-semibold small"></label>
-                                <input asp-for="FullName" type="text" class="form-control rounded-3" />
-                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                                <label asp-for="FullName" class="form-label text-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="lni lni-user text-muted"></i>
+                                    </span>
+                                    <input asp-for="FullName" type="text"
+                                           class="form-control border-start-0 bg-light" />
+                                </div>
+                                <span asp-validation-for="FullName" class="text-danger text-caption"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="PhoneNumber" class="form-label fw-semibold small"></label>
-                                <input asp-for="PhoneNumber" type="tel" class="form-control rounded-3"
-                                       placeholder="+1 234 567 8900" />
-                                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                <label asp-for="PhoneNumber" class="form-label text-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="lni lni-phone text-muted"></i>
+                                    </span>
+                                    <input asp-for="PhoneNumber" type="tel"
+                                           class="form-control border-start-0 bg-light"
+                                           placeholder="+1 234 567 8900" />
+                                </div>
+                                <span asp-validation-for="PhoneNumber" class="text-danger text-caption"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="Address" class="form-label fw-semibold small"></label>
-                                <input asp-for="Address" type="text" class="form-control rounded-3"
-                                       placeholder="123 Main St, City" />
-                                <span asp-validation-for="Address" class="text-danger small"></span>
+                                <label asp-for="Address" class="form-label text-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="lni lni-map-marker text-muted"></i>
+                                    </span>
+                                    <input asp-for="Address" type="text"
+                                           class="form-control border-start-0 bg-light"
+                                           placeholder="123 Main St, City" />
+                                </div>
+                                <span asp-validation-for="Address" class="text-danger text-caption"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="DateOfBirth" class="form-label fw-semibold small"></label>
-                                <input asp-for="DateOfBirth" type="date" class="form-control rounded-3" />
-                                <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                                <label asp-for="DateOfBirth" class="form-label text-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="lni lni-calendar text-muted"></i>
+                                    </span>
+                                    <input asp-for="DateOfBirth" type="date"
+                                           class="form-control border-start-0 bg-light" />
+                                </div>
+                                <span asp-validation-for="DateOfBirth" class="text-danger text-caption"></span>
                             </div>
 
                             <div class="mb-4">
-                                <label asp-for="AvatarUrl" class="form-label fw-semibold small"></label>
-                                <input asp-for="AvatarUrl" type="url" class="form-control rounded-3"
-                                       placeholder="https://example.com/avatar.jpg" />
-                                <span asp-validation-for="AvatarUrl" class="text-danger small"></span>
+                                <label asp-for="AvatarUrl" class="form-label text-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="lni lni-image text-muted"></i>
+                                    </span>
+                                    <input asp-for="AvatarUrl" type="url"
+                                           class="form-control border-start-0 bg-light"
+                                           placeholder="https://example.com/avatar.jpg" />
+                                </div>
+                                <span asp-validation-for="AvatarUrl" class="text-danger text-caption"></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 fw-semibold">
-                                Save Changes
+                            <button type="submit" class="btn btn-primary fw-semibold">
+                                <i class="lni lni-save me-2"></i>Save Changes
                             </button>
                         </form>
                     </div>
                 </div>
 
                 <!-- Change Password Card -->
-                <div class="card shadow-sm border-0 rounded-4 p-4">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3">Change Password</h5>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="text-section-title mb-3">Change Password</h3>
                         <a asp-action="ChangePassword" asp-controller="Account"
-                           class="btn btn-outline-secondary rounded-pill py-2 px-4 fw-semibold">
+                           class="btn btn-outline-secondary fw-semibold">
                             Change Password
                         </a>
                     </div>
@@ -86,7 +119,6 @@
         </div>
     </div>
 </section>
-<!-- End Account Section -->
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

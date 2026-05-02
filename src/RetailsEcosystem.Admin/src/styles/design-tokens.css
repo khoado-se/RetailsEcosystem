@@ -164,6 +164,11 @@
 /* -- Background -- */
 .bg-surface          { background-color: var(--clr-neutral-50); }
 .bg-primary-tint     { background-color: var(--clr-primary-50); }
+.bg-success-tint     { background-color: rgba(25, 135, 84, 0.12); }
+.bg-warning-tint     { background-color: rgba(255, 193, 7, 0.15); }
+
+/* -- Icon badge size -- */
+.icon-badge-md { width: 48px; height: 48px; }
 
 /* -- Border radius (override Bootstrap where needed) -- */
 .rounded-badge  { border-radius: var(--radius-sm) !important; }

@@ -23,6 +23,18 @@
 }
 .text-primary-brand { color: var(--clr-primary-500); }
 .bg-surface { background-color: var(--clr-neutral-50); }
+/* --- Design-system token utilities (mirror Admin design-tokens.css) --- */
+.bg-primary-tint { background-color: var(--clr-primary-50) !important; }
+.card-panel { border-radius: var(--radius-xl) !important; }
+.brand-logo-badge-sm {
+  width: 60px; height: 60px;
+  background: rgba(255,255,255,0.15);
+}
+.text-page-title { font-size: 1.75rem; font-weight: 700; color: var(--clr-neutral-900); letter-spacing: -0.5px; }
+.text-section-title { font-size: 1.25rem; font-weight: 600; color: var(--clr-neutral-900); }
+.text-label { font-size: 0.875rem; font-weight: 600; color: var(--clr-neutral-800); }
+.text-body-sm { font-size: 0.875rem; }
+.text-caption { font-size: 0.75rem; }
 /*======================================
     Normalize CSS
 ========================================*/

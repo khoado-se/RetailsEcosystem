@@ -69,9 +69,8 @@ export default function DashboardPage() {
         <div className="col-sm-4">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-body d-flex align-items-center gap-3 p-4">
-              <div className="rounded-3 d-flex align-items-center justify-content-center"
-                style={{ width: 48, height: 48, background: "rgba(74,144,217,0.12)" }}>
-                <i className="bi bi-bag-check fs-5" style={{ color: "#4A90D9" }} />
+              <div className="icon-badge-md bg-primary-tint rounded-3 d-flex align-items-center justify-content-center">
+                <i className="bi bi-bag-check fs-5 text-primary-brand" />
               </div>
               <div>
                 <div className="text-muted small">Orders Today</div>
@@ -84,8 +83,7 @@ export default function DashboardPage() {
         <div className="col-sm-4">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-body d-flex align-items-center gap-3 p-4">
-              <div className="rounded-3 d-flex align-items-center justify-content-center"
-                style={{ width: 48, height: 48, background: "rgba(25,135,84,0.12)" }}>
+              <div className="icon-badge-md bg-success-tint rounded-3 d-flex align-items-center justify-content-center">
                 <i className="bi bi-currency-dollar fs-5 text-success" />
               </div>
               <div>
@@ -99,8 +97,7 @@ export default function DashboardPage() {
         <div className="col-sm-4">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-body d-flex align-items-center gap-3 p-4">
-              <div className="rounded-3 d-flex align-items-center justify-content-center"
-                style={{ width: 48, height: 48, background: "rgba(255,193,7,0.15)" }}>
+              <div className="icon-badge-md bg-warning-tint rounded-3 d-flex align-items-center justify-content-center">
                 <i className="bi bi-hourglass-split fs-5 text-warning" />
               </div>
               <div>
