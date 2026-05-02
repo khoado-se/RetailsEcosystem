@@ -115,7 +115,7 @@ export default function LoginPage() {
                       id="email-address"
                       name="email"
                       type="email"
-                      className="form-control border-start-0 bg-light"
+                      className="form-control form-control-lg border-start-0 bg-light"
                       placeholder="you@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Password field */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <label htmlFor="password" className="form-label text-label">
                     Password
                   </label>
@@ -138,7 +138,7 @@ export default function LoginPage() {
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      className="form-control border-start-0 border-end-0 bg-light"
+                      className="form-control form-control-lg border-start-0 border-end-0 bg-light"
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}

@@ -34,3 +34,27 @@
 #gallery.single-image .images {
     display: none;
 }
+
+/* ── PDP gallery (new Bootstrap-native layout) ────────────────────── */
+.pdp-gallery__main img {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.pdp-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.pdp-thumb:hover,
+.pdp-thumb.active {
+    border-color: var(--clr-primary-500, #4A90D9);
+}
+
+.pdp-gallery--single .pdp-gallery__thumbs {
+    display: none;
+}

@@ -16,7 +16,7 @@
 .brand-panel-bg { background: var(--brand-panel-gradient); }
 .brand-logo-badge {
   width:80px; height:80px;
-  background: linear-gradient(135deg, var(--clr-primary-500), var(--clr-primary-600));
+  background: white;
   box-shadow: 0 8px 32px rgba(74,144,217,0.4);
   font-size:2rem; font-weight:700;
   border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
@@ -28,7 +28,7 @@
 .card-panel { border-radius: var(--radius-xl) !important; }
 .brand-logo-badge-sm {
   width: 60px; height: 60px;
-  background: rgba(255,255,255,0.15);
+  background: white;
 }
 .text-page-title { font-size: 1.75rem; font-weight: 700; color: var(--clr-neutral-900); letter-spacing: -0.5px; }
 .text-section-title { font-size: 1.25rem; font-weight: 600; color: var(--clr-neutral-900); }

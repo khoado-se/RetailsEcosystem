@@ -1,143 +1,120 @@
 @using RetailsEcosystem.Customer.Shared
 @model ProductDto
-<!-- Start Item Details -->
-<section class="item-details section">
-    <div class="container">
-        <div class="top-area">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-12 col-12">
-                    <div class="product-images">
-                        <main id="gallery" class="@(Model.ImageUrls.Count <= 1 ? "single-image" : "")">
-                            <div class="main-img">
-                                @if (Model.ImageUrls.Count > 0)
-                                {
-                                    <img src="@Model.ImageUrls[0]" id="current" alt="@Model.Name">
-                                }
-                                else
-                                {
-                                    <img src="~/images/product-placeholder.jpg" id="current" alt="@Model.Name">
-                                }
-                            </div>
-                            <div class="images">
-                                @foreach (var imgUrl in Model.ImageUrls)
-                                {
-                                    <img src="@imgUrl" class="img" alt="@Model.Name">
-                                }
-                            </div>
-                        </main>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12 col-12">
-                    <div class="product-info">
-                        <h2 class="title">@Model.Name</h2>
-                        <p class="category">
-                            <a asp-controller="Products"
-                               asp-action="ProductIndex"
-                               asp-route-categoryId="@Model.Category.Id">@Model.Category.Name</a>
-                        </p>
-                        <h3 class="price">@Model.Price.ToString("N0") ₫</h3>
-                        <p class="info-text">@Model.Description</p>
 
-                        @if (Model.StockQuantity > 0)
-                        {
-                            <span class="stock-badge in-stock">
-                                <i class="lni lni-checkmark-circle"></i> In Stock (@Model.StockQuantity available)
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="stock-badge out-of-stock">
-                                <i class="lni lni-close"></i> Out of Stock
-                            </span>
-                        }
+<div class="row g-4 align-items-start py-3">
 
-                        <div class="row mt-3">
-                            <div class="col-lg-5 col-md-5 col-12">
-                                <div class="form-group quantity">
-                                    <label for="quantity">Quantity</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary" type="button" data-action="qty-dec">-</button>
-                                        </div>
-                                        <input type="number" id="quantity" class="form-control qty-input text-center" value="1" min="1" max="@Model.StockQuantity">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" data-action="qty-inc">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="details-alert" class="alert d-none mb-3"></div>
-                        <div class="bottom-content">
-                            <div class="row align-items-end">
-                                <div class="col-lg-4 col-md-4 col-12">
-                                    <div class="button cart-button">
-                                        @if (User.Identity?.IsAuthenticated == true)
-                                        {
-                                            <button id="add-to-cart-btn" class="btn btn-add-cart-detail"
-                                                    data-action="add-to-cart"
-                                                    data-product-id="@Model.Id"
-                                                    @(Model.StockQuantity == 0 ? "disabled" : "")>
-                                                @(Model.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <a asp-controller="Account" asp-action="Login"
-                                               asp-route-returnUrl="@Url.Action("ProductDetails", "Products", new { productId = Model.Id })"
-                                               class="btn btn-add-cart-detail">Add to Cart</a>
-                                        }
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-12">
-                                    <div class="wish-button">
-                                        <button class="btn"><i class="lni lni-heart"></i> Wishlist</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    @* ── Left: image gallery ── *@
+    <div class="col-lg-5 col-12">
+        <div class="pdp-gallery @(Model.ImageUrls.Count <= 1 ? "pdp-gallery--single" : "")">
+            <div class="pdp-gallery__main mb-2">
+                @if (Model.ImageUrls.Count > 0)
+                {
+                    <img src="@Model.ImageUrls[0]" id="current" alt="@Model.Name"
+                         class="img-fluid w-100 rounded" style="max-height:420px;object-fit:contain;">
+                }
+                else
+                {
+                    <img src="~/images/product-placeholder.jpg" id="current" alt="@Model.Name"
+                         class="img-fluid w-100 rounded" style="max-height:420px;object-fit:contain;">
+                }
             </div>
-        </div>
-        <div class="product-details-info">
-            <div class="single-block">
-                <div class="row">
-                    <div class="col-lg-6 col-12">
-                        <div class="info-body custom-responsive-margin">
-                            <h4>Description</h4>
-                            <p>@Model.Description</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-12">
-                        <div class="info-body">
-                            <h4>Product Information</h4>
-                            <ul class="normal-list">
-                                <li><span>Category:</span> @Model.Category.Name</li>
-                                <li><span>SKU:</span> #@Model.Id.ToString("D6")</li>
-                                <li>
-                                    <span>Availability:</span>
-                                    @(Model.StockQuantity > 0
-                                        ? $"In Stock ({Model.StockQuantity} units)"
-                                        : "Out of Stock")
-                                </li>
-                                <li><span>Added:</span> @Model.CreatedDate.ToString("MMMM yyyy")</li>
-                            </ul>
-                            <h4>Shipping Options</h4>
-                            <ul class="normal-list">
-                                <li><span>Courier:</span> 2–4 days, $22.50</li>
-                                <li><span>Local Shipping:</span> up to one week, $10.00</li>
-                                <li><span>UPS Ground:</span> 4–6 days, $18.00</li>
-                            </ul>
-                        </div>
-                    </div>
+            @if (Model.ImageUrls.Count > 1)
+            {
+                <div class="pdp-gallery__thumbs d-flex gap-2 flex-wrap">
+                    @foreach (var imgUrl in Model.ImageUrls)
+                    {
+                        <img src="@imgUrl" class="pdp-thumb rounded" alt="@Model.Name">
+                    }
                 </div>
-            </div>
+            }
         </div>
     </div>
-</section>
-<!-- End Item Details -->
+
+    @* ── Right: product info ── *@
+    <div class="col-lg-7 col-12">
+
+        <p class="text-muted small mb-1">
+            <a asp-controller="Products" asp-action="ProductIndex"
+               asp-route-categoryId="@Model.Category.Id"
+               class="text-decoration-none text-muted">@Model.Category.Name</a>
+        </p>
+        <h1 class="fs-3 fw-bold mb-2">@Model.Name</h1>
+        <p class="fs-2 fw-bold text-primary-brand mb-3">@Model.Price.ToString("N0") ₫</p>
+
+        @if (Model.StockQuantity > 0)
+        {
+            <span class="badge bg-success-subtle text-success-emphasis mb-3 px-2 py-1">
+                <i class="lni lni-checkmark-circle me-1"></i>In Stock (@Model.StockQuantity available)
+            </span>
+        }
+        else
+        {
+            <span class="badge bg-danger-subtle text-danger-emphasis mb-3 px-2 py-1">
+                <i class="lni lni-close me-1"></i>Out of Stock
+            </span>
+        }
+
+        <div id="details-alert" class="alert d-none mb-3"></div>
+
+        @if (Model.StockQuantity > 0)
+        {
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="input-group" style="width:130px;">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" data-action="qty-dec">−</button>
+                    <input type="number" id="quantity" class="form-control form-control-sm text-center qty-input"
+                           value="1" min="1" max="@Model.StockQuantity">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" data-action="qty-inc">+</button>
+                </div>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <button id="add-to-cart-btn" class="btn btn-primary"
+                            data-action="add-to-cart" data-product-id="@Model.Id">
+                        <i class="lni lni-cart me-1"></i>Add to Cart
+                    </button>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login"
+                       asp-route-returnUrl="@Url.Action("ProductDetails", "Products", new { productId = Model.Id })"
+                       class="btn btn-primary">
+                        <i class="lni lni-cart me-1"></i>Add to Cart
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <button class="btn btn-secondary mb-3" disabled>Out of Stock</button>
+        }
+
+        <hr class="my-3">
+
+        <dl class="row small mb-0">
+            <dt class="col-sm-4 text-muted fw-normal">Category</dt>
+            <dd class="col-sm-8">@Model.Category.Name</dd>
+            <dt class="col-sm-4 text-muted fw-normal">SKU</dt>
+            <dd class="col-sm-8">#@Model.Id.ToString("D6")</dd>
+            <dt class="col-sm-4 text-muted fw-normal">Added</dt>
+            <dd class="col-sm-8">@Model.CreatedDate.ToString("MMMM yyyy")</dd>
+        </dl>
+    </div>
+</div>
+
+@* ── Description + Shipping ── *@
+<div class="row g-4 mt-1 border-top pt-4">
+    <div class="col-lg-7 col-12">
+        <h5 class="fw-semibold mb-2">Description</h5>
+        <p class="text-muted">@Model.Description</p>
+    </div>
+    <div class="col-lg-5 col-12">
+        <h5 class="fw-semibold mb-2">Shipping Options</h5>
+        <ul class="list-unstyled small text-muted">
+            <li class="mb-1"><i class="lni lni-delivery me-2 text-primary-brand"></i>Courier: 2–4 days, $22.50</li>
+            <li class="mb-1"><i class="lni lni-delivery me-2 text-primary-brand"></i>Local Shipping: up to 1 week, $10.00</li>
+            <li><i class="lni lni-delivery me-2 text-primary-brand"></i>UPS Ground: 4–6 days, $18.00</li>
+        </ul>
+    </div>
+</div>
 
 @section Styles {
     <link href="~/css/products/product-details.css" rel="stylesheet" />

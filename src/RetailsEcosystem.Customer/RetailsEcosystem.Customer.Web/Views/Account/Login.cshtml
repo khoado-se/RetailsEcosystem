@@ -68,27 +68,27 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="ReturnUrl" />
 
-                        <div class="mb-3">
+                        <div>
                             <label asp-for="Email" class="form-label text-label"></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0">
                                     <i class="lni lni-envelope text-muted"></i>
                                 </span>
                                 <input asp-for="Email" type="email"
-                                       class="form-control border-start-0 bg-light"
+                                       class="form-control form-control-lg border-start-0 bg-light"
                                        placeholder="you@example.com" autocomplete="email" />
                             </div>
                             <span asp-validation-for="Email" class="text-danger text-caption"></span>
                         </div>
 
-                        <div class="mb-4">
+                        <div>
                             <label asp-for="Password" class="form-label text-label"></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0">
                                     <i class="lni lni-lock text-muted"></i>
                                 </span>
                                 <input asp-for="Password" type="password"
-                                       class="form-control border-start-0 border-end-0 bg-light"
+                                       class="form-control form-control-lg border-start-0 border-end-0 bg-light"
                                        placeholder="Enter your password" autocomplete="current-password" />
                                 <button type="button"
                                         class="input-group-text bg-light border-start-0 password-toggle"
