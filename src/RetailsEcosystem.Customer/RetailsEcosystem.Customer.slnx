@@ -15,4 +15,7 @@
   <Folder Name="/SharedLibraries/">
     <Project Path="RetailsEcosystem.Customer.Shared/RetailsEcosystem.Customer.Shared.csproj" Id="df84f28b-d1b9-40a8-bb5f-f4318b23fbcb" />
   </Folder>
+  <Folder Name="/TestLayer/">
+    <Project Path="../../test/RetailsEcosystem.Customer.Tests/RetailsEcosystem.Customer.Tests.csproj" Id="a1b2c3d4-e5f6-7890-abcd-ef1234567890" />
+  </Folder>
 </Solution>
