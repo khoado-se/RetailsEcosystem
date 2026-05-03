@@ -1,4 +1,5 @@
 using CloudinaryDotNet;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
 using RetailsEcosystem.Customer.API.Options;
 using RetailsEcosystem.Customer.API.Services;
@@ -35,6 +36,14 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/json"]);
+});
+
+builder.Services.AddResponseCaching();
+
 // Add FluentValidation
 builder.Services.AddValidatorsFromAssembly(typeof(RetailsEcosystem.Customer.Application.Validators.RegisterDtoValidator).Assembly);
 
@@ -45,6 +54,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseResponseCompression();
+app.UseResponseCaching();
 
 if (app.Environment.IsDevelopment())
 {

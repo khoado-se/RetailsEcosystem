@@ -2,6 +2,8 @@
 
 const fmt = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
+let _qtyAbortController = null;
+
 document.addEventListener('click', async e => {
     const decBtn = e.target.closest('[data-action="qty-dec"]');
     const incBtn = e.target.closest('[data-action="qty-inc"]');
@@ -10,43 +12,63 @@ document.addEventListener('click', async e => {
     if (decBtn) {
         const id = decBtn.dataset.itemId;
         const current = parseInt(document.getElementById('qty-' + id).value);
-        await updateQty(id, current - 1);
+        await updateQty(id, current - 1, decBtn);
     } else if (incBtn) {
         const id = incBtn.dataset.itemId;
         const current = parseInt(document.getElementById('qty-' + id).value);
-        await updateQty(id, current + 1);
+        await updateQty(id, current + 1, incBtn);
     } else if (removeBtn) {
-        await removeItem(removeBtn.dataset.itemId);
+        await removeItem(removeBtn.dataset.itemId, removeBtn);
     }
 });
 
 document.addEventListener('change', async e => {
     const input = e.target.closest('[data-action="qty-change"]');
-    if (input) await updateQty(input.dataset.itemId, parseInt(input.value));
+    if (input) await updateQty(input.dataset.itemId, parseInt(input.value), null);
 });
 
-async function updateQty(itemId, qty) {
+async function updateQty(itemId, qty, triggerBtn) {
     if (qty < 1) return;
-    const res = await fetch('/cart/items/' + itemId, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: qty })
-    });
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        showAlert('danger', err.message || 'Failed to update quantity.');
-        return;
+
+    if (_qtyAbortController) _qtyAbortController.abort();
+    _qtyAbortController = new AbortController();
+
+    if (triggerBtn) triggerBtn.disabled = true;
+    try {
+        const res = await fetch('/cart/items/' + itemId, {
+            method: 'PUT',
+            signal: _qtyAbortController.signal,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantity: qty })
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showAlert('danger', err.message || 'Failed to update quantity.');
+            return;
+        }
+        refreshCartUI(await res.json());
+    } catch (err) {
+        if (err.name !== 'AbortError') showAlert('danger', 'Failed to update quantity.');
+    } finally {
+        if (triggerBtn) triggerBtn.disabled = false;
+        _qtyAbortController = null;
     }
-    refreshCartUI(await res.json());
 }
 
-async function removeItem(itemId) {
-    const res = await fetch('/cart/items/' + itemId, { method: 'DELETE' });
-    if (!res.ok) { showAlert('danger', 'Failed to remove item.'); return; }
-    const cart = await res.json();
-    document.getElementById('cart-row-' + itemId)?.remove();
-    refreshCartUI(cart);
-    if (cart.items.length === 0) location.reload();
+async function removeItem(itemId, btn) {
+    btn.disabled = true;
+    try {
+        const res = await fetch('/cart/items/' + itemId, { method: 'DELETE' });
+        if (!res.ok) { showAlert('danger', 'Failed to remove item.'); return; }
+        const cart = await res.json();
+        document.getElementById('cart-row-' + itemId)?.remove();
+        refreshCartUI(cart);
+        if (cart.items.length === 0) location.reload();
+    } catch {
+        showAlert('danger', 'Failed to remove item. Please try again.');
+    } finally {
+        btn.disabled = false;
+    }
 }
 
 function refreshCartUI(cart) {
@@ -74,5 +96,6 @@ function showAlert(type, msg) {
     if (!el) return;
     el.className = 'alert alert-' + type;
     el.textContent = msg;
+    el.classList.remove('d-none');
     setTimeout(() => el.classList.add('d-none'), 4000);
 }

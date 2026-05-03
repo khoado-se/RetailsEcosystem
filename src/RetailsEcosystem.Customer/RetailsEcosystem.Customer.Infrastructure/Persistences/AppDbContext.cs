@@ -113,6 +113,23 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
                 entity.Property(i => i.UnitPrice).HasPrecision(18, 0);
             });
 
+            // ── Performance indexes ───────────────────────────────────────────────
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.CategoryId)
+                .HasDatabaseName("IX_Products_CategoryId");
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(o => o.UserId)
+                .HasDatabaseName("IX_Orders_UserId");
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(o => o.Status)
+                .HasDatabaseName("IX_Orders_Status");
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(o => new { o.UserId, o.Status })
+                .HasDatabaseName("IX_Orders_UserId_Status");
+
             // ── Existing data seed ────────────────────────────────────────────
             modelBuilder.SeedCategories();
             modelBuilder.SeedProducts();

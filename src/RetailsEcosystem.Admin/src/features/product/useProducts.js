@@ -6,8 +6,12 @@ export const useProducts = (pageNumber, categoryId, search) => {
     items: [],
     totalPage: 0,
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
       const res = await getProducts({ pageNumber, categoryId, search });
       setData({
@@ -15,7 +19,9 @@ export const useProducts = (pageNumber, categoryId, search) => {
         totalPage: res.totalPage ?? 0,
       });
     } catch (err) {
-      console.error("Fetch error:", err);
+      setError(err.response?.data?.title || err.message || "Failed to load products.");
+    } finally {
+      setLoading(false);
     }
   }, [pageNumber, categoryId, search]);
 
@@ -26,6 +32,8 @@ export const useProducts = (pageNumber, categoryId, search) => {
   return {
     products: data.items,
     totalPage: data.totalPage,
+    loading,
+    error,
     fetchProducts,
   };
 };

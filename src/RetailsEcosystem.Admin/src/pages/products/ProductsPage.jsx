@@ -16,7 +16,7 @@ export default function ProductsPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
   const { categories } = useCategories();
-  const { products, totalPage, fetchProducts } = useProducts(pageNumber, selectedCategoryId || undefined, debouncedSearch || undefined);
+  const { products, totalPage, loading, error, fetchProducts } = useProducts(pageNumber, selectedCategoryId || undefined, debouncedSearch || undefined);
 
   // Debounce search input — waits 300ms after last keystroke
   useEffect(() => {
@@ -105,14 +105,28 @@ export default function ProductsPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="alert alert-danger d-flex align-items-start gap-2 rounded-3 mb-3" role="alert">
+          <i className="bi bi-exclamation-circle-fill flex-shrink-0 mt-1" />
+          <div>
+            {error}
+            <button className="btn btn-sm btn-link p-0 ms-2" onClick={fetchProducts}>
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
       <ProductTable
         products={products}
         pageNumber={pageNumber}
         setPageNumber={setPageNumber}
         totalPage={totalPage}
+        loading={loading}
         onEdit={setEditingProductId}
         onDeleted={() => { fetchProducts(); setPageNumber(1); }}
         onImages={(id, name) => setImageProduct({ id, name })}
+        onClearFilters={hasFilters ? handleClearFilters : undefined}
       />
 
       <CreateProductModal

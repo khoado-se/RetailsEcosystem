@@ -99,12 +99,14 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .OrderBy(x => x.Date)
                 .ToListAsync();
 
+            var revenueByDate = rawData.ToDictionary(r => r.Date, r => r.Revenue);
+
             return Enumerable.Range(0, days)
                 .Select(i => cutoff.AddDays(i))
                 .Select(date => new DailyRevenueDto
                 {
                     Date = date.ToString("MMM d"),
-                    Revenue = rawData.FirstOrDefault(r => r.Date == date)?.Revenue ?? 0m
+                    Revenue = revenueByDate.GetValueOrDefault(date, 0m)
                 });
         }
 

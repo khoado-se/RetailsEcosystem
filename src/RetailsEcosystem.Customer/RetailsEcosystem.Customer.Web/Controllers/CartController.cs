@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using System.Security.Claims;
 
@@ -10,10 +11,12 @@ namespace RetailsEcosystem.Customer.Web.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
+        private readonly IProductService _productService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IProductService productService)
         {
             _cartService = cartService;
+            _productService = productService;
         }
 
         // GET /cart
@@ -22,6 +25,23 @@ namespace RetailsEcosystem.Customer.Web.Controllers
         {
             var token = User.FindFirstValue("access_token")!;
             var cart = await _cartService.GetCartAsync(token);
+
+            var stockChecks = cart.Items.Select(async item =>
+            {
+                try { return await _productService.GetByIdAsync(item.ProductId); }
+                catch { return null; }
+            });
+            var productResults = await Task.WhenAll(stockChecks);
+
+            var warnings = cart.Items
+                .Zip(productResults, (item, product) => (item, product))
+                .Where(r => r.product != null && r.product.StockQuantity < r.item.Quantity)
+                .Select(r => $"\"{r.item.ProductName}\" now has only {r.product!.StockQuantity} unit(s) in stock (you have {r.item.Quantity} in your cart).")
+                .ToList();
+
+            if (warnings.Count > 0)
+                ViewBag.StockWarnings = warnings;
+
             return View(cart);
         }
 

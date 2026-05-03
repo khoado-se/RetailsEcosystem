@@ -20,6 +20,8 @@ namespace RetailsEcosystem.Customer.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any,
+                       VaryByQueryKeys = ["pageNumber", "pageSize"])]
         public async Task<ActionResult<PagedResult<CategoryDto>>> GetCategories(int pageNumber = 1, int pageSize = 10)
         {
             var result = await _categoryService.GetAllAsync(new PagedRequest

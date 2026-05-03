@@ -2,7 +2,7 @@ import Pagination from "../../components/ui/Pagination";
 import { ENV } from "../../configs/env";
 import { deleteProduct } from "./productApi";
 
-export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, onEdit, onDeleted, onImages }) {
+export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, loading, onEdit, onDeleted, onImages, onClearFilters }) {
 
   const handleDelete = async (product) => {
     if (!window.confirm(`Delete "${product.name}"?`)) return;
@@ -13,6 +13,26 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
       alert("Failed to delete product.");
     }
   };
+
+  if (!loading && products?.length === 0) {
+    return (
+      <>
+        <div className="card border-0 shadow-sm mb-4">
+          <div className="card-body text-center py-5">
+            <i className="bi bi-search fs-2 text-muted mb-3 d-block" />
+            <p className="fw-semibold mb-1">No products found</p>
+            <p className="text-muted small mb-3">Try a different search term or category.</p>
+            {onClearFilters && (
+              <button className="btn btn-outline-primary btn-sm" onClick={onClearFilters}>
+                Clear filters
+              </button>
+            )}
+          </div>
+        </div>
+        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -31,14 +51,6 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
               </tr>
             </thead>
             <tbody>
-              {products?.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="text-center text-muted py-5">
-                    <i className="bi bi-search d-block mb-2" style={{ fontSize: "1.5rem" }} />
-                    No products found. Try a different search or filter.
-                  </td>
-                </tr>
-              )}
               {products?.map((product) => (
                 <tr key={product.id}>
                   <td>{product.id}</td>
