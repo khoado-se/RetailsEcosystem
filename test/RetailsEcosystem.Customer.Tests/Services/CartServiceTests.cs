@@ -162,4 +162,58 @@ public class CartServiceTests
         await act.Should().NotThrowAsync();
         _cartRepoMock.Verify(r => r.SaveAsync(), Times.Never);
     }
+
+    // ── GetCartAsync ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetCartAsync_ExistingUser_ReturnsCartWithItems()
+    {
+        var cart = new CartBuilder().WithUserId("user1").WithItem().Build();
+        _cartRepoMock.Setup(r => r.GetByUserIdAsync("user1")).ReturnsAsync(cart);
+
+        var result = await _sut.GetCartAsync("user1");
+
+        result.Items.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task GetCartAsync_NoCartExists_ReturnsEmptyCart()
+    {
+        _cartRepoMock.Setup(r => r.GetByUserIdAsync("user1")).ReturnsAsync((Cart?)null);
+
+        var result = await _sut.GetCartAsync("user1");
+
+        result.Items.Should().BeNullOrEmpty();
+    }
+
+    // ── UpdateItemAsync happy path ────────────────────────────────────────────
+
+    [Fact]
+    public async Task UpdateItemAsync_ValidRequest_UpdatesItemQuantity()
+    {
+        var cart = new CartBuilder().WithUserId("user1").WithItem(productId: 1, quantity: 2, stock: 20).Build();
+        var item = cart.Items.First();
+        var product = new ProductBuilder().WithId(1).WithStock(20).Build();
+
+        _cartRepoMock.Setup(r => r.GetItemAsync(item.Id)).ReturnsAsync(item);
+        _productRepoMock.Setup(r => r.GetProductByIdAsync(1)).ReturnsAsync(product);
+
+        var result = await _sut.UpdateItemAsync("user1", item.Id, new UpdateCartItemDto { Quantity = 5 });
+
+        result.Items.First().Quantity.Should().Be(5);
+    }
+
+    // ── RemoveItemAsync happy path ────────────────────────────────────────────
+
+    [Fact]
+    public async Task RemoveItemAsync_OwnedItem_RemovesItemFromCart()
+    {
+        var cart = new CartBuilder().WithUserId("user1").WithItem().Build();
+        var item = cart.Items.First();
+        _cartRepoMock.Setup(r => r.GetItemAsync(item.Id)).ReturnsAsync(item);
+
+        var result = await _sut.RemoveItemAsync("user1", item.Id);
+
+        result.Items.Should().BeEmpty();
+    }
 }

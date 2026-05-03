@@ -29,7 +29,34 @@ public class CartsControllerTests
         };
     }
 
+    // ── GetCart ───────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetCart_WhenCalled_ReturnsOkWithCartDto()
+    {
+        var cartDto = new CartDto { Id = 1, Items = [] };
+        _cartServiceMock.Setup(s => s.GetCartAsync("user-123")).ReturnsAsync(cartDto);
+
+        var result = await _sut.GetCart();
+
+        result.Result.Should().BeOfType<OkObjectResult>()
+            .Which.Value.Should().BeEquivalentTo(cartDto);
+    }
+
     // ── AddItem ───────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task AddItem_ValidRequest_ReturnsOkWithCartDto()
+    {
+        var cartDto = new CartDto { Id = 1, Items = [] };
+        _cartServiceMock.Setup(s => s.AddItemAsync("user-123", It.IsAny<AddCartItemDto>()))
+            .ReturnsAsync(cartDto);
+
+        var result = await _sut.AddItem(new AddCartItemDto { ProductId = 1, Quantity = 2 });
+
+        result.Result.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be(200);
+    }
 
     [Fact]
     public async Task AddItem_ProductNotFound_Returns404()
@@ -80,5 +107,17 @@ public class CartsControllerTests
 
         result.Result.Should().BeOfType<NotFoundObjectResult>()
             .Which.StatusCode.Should().Be(404);
+    }
+
+    // ── ClearCart ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task ClearCart_WhenCalled_ReturnsNoContent()
+    {
+        _cartServiceMock.Setup(s => s.ClearCartAsync("user-123")).Returns(Task.CompletedTask);
+
+        var result = await _sut.ClearCart();
+
+        result.Should().BeOfType<NoContentResult>();
     }
 }

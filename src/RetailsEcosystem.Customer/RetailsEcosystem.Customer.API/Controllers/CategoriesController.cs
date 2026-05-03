@@ -54,8 +54,15 @@ namespace RetailsEcosystem.Customer.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            await _categoryService.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                await _categoryService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

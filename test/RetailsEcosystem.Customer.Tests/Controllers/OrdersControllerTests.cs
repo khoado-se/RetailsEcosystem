@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
 using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Shared;
+using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Order;
 using RetailsEcosystem.Customer.Shared.Enums;
 using RetailsEcosystem.Customer.Tests.Helpers.Builders;
@@ -37,7 +39,6 @@ public class OrdersControllerTests
     public async Task CreateOrder_Success_ReturnsCreatedAtAction()
     {
         var dto = new CreateOrderDto { ShippingAddress = "123 St" };
-        var orderDto = new OrderBuilder().WithId(10).Build();
         var orderDtoResult = new OrderDto { Id = 10, UserId = "user-123" };
         _orderServiceMock.Setup(s => s.CreateOrderAsync("user-123", dto)).ReturnsAsync(orderDtoResult);
 
@@ -97,6 +98,20 @@ public class OrdersControllerTests
         result.Result.Should().BeOfType<NotFoundResult>();
     }
 
+    // ── UpdateStatus additional ───────────────────────────────────────────────
+
+    [Fact]
+    public async Task UpdateStatus_InvalidTransition_ReturnsBadRequest()
+    {
+        _orderServiceMock.Setup(s => s.UpdateOrderStatusAsync(1, It.IsAny<UpdateOrderStatusDto>()))
+            .ThrowsAsync(new InvalidOperationException("Cannot transition from Delivered to Pending."));
+
+        var result = await _sut.UpdateStatus(1, new UpdateOrderStatusDto { Status = OrderStatus.Pending });
+
+        result.Result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
+    }
+
     // ── CancelOrder ───────────────────────────────────────────────────────────
 
     [Fact]
@@ -108,5 +123,31 @@ public class OrdersControllerTests
         var result = await _sut.CancelOrder(99);
 
         result.Result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task CancelOrder_Forbidden_Returns403()
+    {
+        _orderServiceMock.Setup(s => s.CancelOrderAsync(1, "user-123"))
+            .ThrowsAsync(new UnauthorizedAccessException());
+
+        var result = await _sut.CancelOrder(1);
+
+        result.Result.Should().BeOfType<ForbidResult>();
+    }
+
+    // ── GetOrders ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetOrders_WhenCalled_ReturnsOkWithPagedResult()
+    {
+        var pagedResult = new PagedResult<OrderDto>([], new PagedRequest { PageNumber = 1, PageSize = 10 }, 0);
+        _orderServiceMock.Setup(s => s.GetOrdersAsync("user-123", It.IsAny<string>(), It.IsAny<PagedRequest>(), null))
+            .ReturnsAsync(pagedResult);
+
+        var result = await _sut.GetOrders();
+
+        result.Result.Should().BeOfType<OkObjectResult>()
+            .Which.StatusCode.Should().Be(200);
     }
 }

@@ -54,9 +54,15 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 return BadRequest();
             }
 
-            await _productService.UpdateProductAsync(productDto);
-
-            return NoContent();
+            try
+            {
+                await _productService.UpdateProductAsync(productDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
@@ -72,9 +78,15 @@ namespace RetailsEcosystem.Customer.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
-            await _productService.DeleteProductAsync(productId);
-
-            return NoContent();
+            try
+            {
+                await _productService.DeleteProductAsync(productId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("featured")]

@@ -20,7 +20,7 @@ public class ProductsControllerTests
     }
 
     [Fact]
-    public async Task GetProducts_ReturnsOkWithPagedResult()
+    public async Task GetProducts_WhenCalled_ReturnsOkWithPagedResult()
     {
         var pagedResult = new PagedResult<ProductDto>([], new PagedRequest { PageNumber = 1, PageSize = 8 }, 0);
         _productServiceMock.Setup(s => s.GetAllProductAsync(It.IsAny<PagedRequest>(), null))
@@ -43,7 +43,7 @@ public class ProductsControllerTests
     }
 
     [Fact]
-    public async Task GetProduct_Found_ReturnsOk()
+    public async Task GetProduct_WhenFound_ReturnsOkWithDto()
     {
         var dto = new ProductDto { Id = 1, Name = "Phone" };
         _productServiceMock.Setup(s => s.FindProductByIdAsync(1)).ReturnsAsync(dto);
@@ -87,12 +87,35 @@ public class ProductsControllerTests
     }
 
     [Fact]
-    public async Task DeleteProduct_ReturnsNoContent()
+    public async Task DeleteProduct_WhenCalled_ReturnsNoContent()
     {
         _productServiceMock.Setup(s => s.DeleteProductAsync(1)).Returns(Task.CompletedTask);
 
         var result = await _sut.DeleteProduct(1);
 
         result.Should().BeOfType<NoContentResult>();
+    }
+
+    [Fact]
+    public async Task DeleteProduct_WhenNotFound_Returns404()
+    {
+        _productServiceMock.Setup(s => s.DeleteProductAsync(99))
+            .ThrowsAsync(new KeyNotFoundException("Product is not found!"));
+
+        var result = await _sut.DeleteProduct(99);
+
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task PutProduct_WhenNotFound_Returns404()
+    {
+        var dto = new UpdateProductDto { Id = 99, Name = "X", CategoryId = 1, Price = 10 };
+        _productServiceMock.Setup(s => s.UpdateProductAsync(dto))
+            .ThrowsAsync(new KeyNotFoundException("Product is not found!"));
+
+        var result = await _sut.PutProduct(99, dto);
+
+        result.Should().BeOfType<NotFoundResult>();
     }
 }

@@ -46,7 +46,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             if (!isExist)
             {
-                throw new Exception("Product is not found!");
+                throw new KeyNotFoundException("Product is not found!");
             }
 
             await _productRepo.RemoveProductAsync(productId);
@@ -152,7 +152,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             if (!isExist)
             {
-                throw new Exception("Product is not found!");
+                throw new KeyNotFoundException("Product is not found!");
             }
 
             Category category = await _categoryRepo.GetCategoryByIdAsync(productDto.CategoryId);

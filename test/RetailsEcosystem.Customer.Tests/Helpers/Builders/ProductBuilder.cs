@@ -10,7 +10,7 @@ public class ProductBuilder
     private int _stock = 100;
     private int _categoryId = 1;
     private string _categoryName = "Test Category";
-    private List<ProductImage> _images = [];
+    private readonly List<ProductImage> _images = [];
 
     public ProductBuilder WithId(int id) { _id = id; return this; }
     public ProductBuilder WithName(string name) { _name = name; return this; }
@@ -27,7 +27,7 @@ public class ProductBuilder
         StockQuantity = _stock,
         CategoryId = _categoryId,
         Category = new Category { Id = _categoryId, Name = _categoryName, Description = "Test" },
-        Images = _images,
+        Images = [.._images],
         CreatedDate = DateTime.UtcNow,
         UpdatedDate = DateTime.UtcNow
     };

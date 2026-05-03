@@ -96,6 +96,10 @@ namespace RetailsEcosystem.Customer.API.Controllers
             {
                 return NotFound();
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE /api/orders/{id}

@@ -3,6 +3,7 @@ using Moq;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
+using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Product;
 using RetailsEcosystem.Customer.Tests.Helpers.Builders;
@@ -105,5 +106,57 @@ public class ProductServiceTests
         var act = () => _sut.CreateProductAsync(new CreateProductDto { Name = "New", CategoryId = 999, Price = 10 });
 
         await act.Should().ThrowAsync<KeyNotFoundException>();
+    }
+
+    // ── UpdateProductAsync ────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task UpdateProductAsync_ValidDto_CallsRepositoryUpdate()
+    {
+        var category = new CategoryBuilder().Build();
+        _productRepoMock.Setup(r => r.CheckExist(1)).ReturnsAsync(true);
+        _categoryRepoMock.Setup(r => r.GetCategoryByIdAsync(1)).ReturnsAsync(category);
+
+        await _sut.UpdateProductAsync(new UpdateProductDto { Id = 1, Name = "Updated", CategoryId = 1, Price = 50 });
+
+        _productRepoMock.Verify(r => r.EditProductAsync(It.IsAny<Product>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateProductAsync_ProductNotFound_ThrowsException()
+    {
+        _productRepoMock.Setup(r => r.CheckExist(99)).ReturnsAsync(false);
+
+        var act = () => _sut.UpdateProductAsync(new UpdateProductDto { Id = 99, Name = "X", CategoryId = 1, Price = 1 });
+
+        await act.Should().ThrowAsync<Exception>()
+            .WithMessage("*not found*");
+    }
+
+    // ── GetAllProductAsync pagination ─────────────────────────────────────────
+
+    [Fact]
+    public async Task GetAllProductAsync_MultiplePages_ComputesTotalPagesCorrectly()
+    {
+        _productRepoMock.Setup(r => r.GetAllProductAsync(1, 8, null, null)).ReturnsAsync([]);
+        _productRepoMock.Setup(r => r.GetProductCountAsync(null, false, null)).ReturnsAsync(17);
+
+        var result = await _sut.GetAllProductAsync(new PagedRequest { PageNumber = 1, PageSize = 8 }, null);
+
+        result.TotalPage.Should().Be(3);
+    }
+
+    // ── FindProductByIdAsync edge cases ──────────────────────────────────────
+
+    [Fact]
+    public async Task FindProductByIdAsync_ProductWithNoImages_SetsImageUrlToNull()
+    {
+        var product = new ProductBuilder().WithId(1).Build();
+        _productRepoMock.Setup(r => r.GetProductByIdAsync(1)).ReturnsAsync(product);
+
+        var result = await _sut.FindProductByIdAsync(1);
+
+        result!.ImageUrl.Should().BeNull();
+        result.ImageUrls.Should().BeEmpty();
     }
 }

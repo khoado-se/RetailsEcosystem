@@ -20,7 +20,7 @@ public class CategoriesControllerTests
     }
 
     [Fact]
-    public async Task GetCategories_ReturnsOkWithPagedResult()
+    public async Task GetCategories_WhenCalled_ReturnsOkWithPagedResult()
     {
         var pagedResult = new PagedResult<CategoryDto>([], new PagedRequest { PageNumber = 1, PageSize = 10 }, 0);
         _categoryServiceMock.Setup(s => s.GetAllAsync(It.IsAny<PagedRequest>())).ReturnsAsync(pagedResult);
@@ -54,7 +54,7 @@ public class CategoriesControllerTests
     }
 
     [Fact]
-    public async Task DeleteCategory_ReturnsNoContent()
+    public async Task DeleteCategory_WhenCalled_ReturnsNoContent()
     {
         _categoryServiceMock.Setup(s => s.DeleteAsync(1)).Returns(Task.CompletedTask);
 
@@ -74,5 +74,16 @@ public class CategoriesControllerTests
 
         result.Should().BeOfType<CreatedAtActionResult>()
             .Which.StatusCode.Should().Be(201);
+    }
+
+    [Fact]
+    public async Task DeleteCategory_WhenNotFound_Returns404()
+    {
+        _categoryServiceMock.Setup(s => s.DeleteAsync(99))
+            .ThrowsAsync(new KeyNotFoundException("Category not found."));
+
+        var result = await _sut.DeleteCategory(99);
+
+        result.Should().BeOfType<NotFoundResult>();
     }
 }

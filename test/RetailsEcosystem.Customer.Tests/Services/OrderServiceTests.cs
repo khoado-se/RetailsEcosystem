@@ -239,6 +239,17 @@ public class OrderServiceTests
         _orderRepoMock.Verify(r => r.GetAllOrdersAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OrderStatus?>()), Times.Never);
     }
 
+    [Fact]
+    public async Task GetOrdersAsync_AdminRoleWithStatusFilter_PassesFilterToRepo()
+    {
+        _orderRepoMock.Setup(r => r.GetAllOrdersAsync(1, 10, OrderStatus.Pending)).ReturnsAsync([]);
+        _orderRepoMock.Setup(r => r.GetAllOrderCountAsync(OrderStatus.Pending)).ReturnsAsync(0);
+
+        await _sut.GetOrdersAsync("admin", "Admin", new PagedRequest { PageNumber = 1, PageSize = 10 }, OrderStatus.Pending);
+
+        _orderRepoMock.Verify(r => r.GetAllOrdersAsync(1, 10, OrderStatus.Pending), Times.Once);
+    }
+
     // ── GetStatsAsync ──────────────────────────────────────────────────────────
 
     [Fact]
