@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.Shared.DTOs.Customer;
+using RetailsEcosystem.Customer.Web.Helpers;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using RetailsEcosystem.Customer.Web.Models.Account;
 using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
 
 namespace RetailsEcosystem.Customer.Web.Controllers
 {
@@ -42,8 +41,8 @@ namespace RetailsEcosystem.Customer.Web.Controllers
 
             try
             {
-                var auth = await _accountService.LoginAsync(model.Email, model.Password);
-                await SignInAsync(auth.AccessToken, auth.User.FullName, auth.User.Email, auth.User.Roles);
+                var (auth, refreshToken) = await _accountService.LoginAsync(model.Email, model.Password);
+                await SignInAsync(auth.AccessToken, auth.User.FullName, auth.User.Email, auth.User.Roles, refreshToken);
                 return RedirectToLocal(model.ReturnUrl);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -74,9 +73,9 @@ namespace RetailsEcosystem.Customer.Web.Controllers
 
             try
             {
-                var auth = await _accountService.RegisterAsync(
+                var (auth, refreshToken) = await _accountService.RegisterAsync(
                     model.FullName, model.Email, model.Password, model.ConfirmPassword);
-                await SignInAsync(auth.AccessToken, auth.User.FullName, auth.User.Email, auth.User.Roles);
+                await SignInAsync(auth.AccessToken, auth.User.FullName, auth.User.Email, auth.User.Roles, refreshToken);
                 return RedirectToAction("Index", "Home");
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -125,14 +124,15 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                     DateOfBirth = model.DateOfBirth
                 });
 
-                // Refresh name in cookie
+                // Refresh name in cookie, preserving the existing refresh token
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 var roles = User.Claims
                     .Where(c => c.Type == ClaimTypes.Role)
                     .Select(c => c.Value)
                     .ToList();
                 var email = User.FindFirstValue(ClaimTypes.Email)!;
-                await SignInAsync(token, model.FullName, email, roles);
+                var existingRefreshToken = User.FindFirstValue("refresh_token");
+                await SignInAsync(token, model.FullName, email, roles, existingRefreshToken);
 
                 TempData["SuccessMessage"] = "Profile updated successfully.";
                 return RedirectToAction(nameof(Profile));
@@ -191,7 +191,12 @@ namespace RetailsEcosystem.Customer.Web.Controllers
 
         // ── Private helpers ───────────────────────────────────────────────────
 
-        private async Task SignInAsync(string accessToken, string fullName, string email, IEnumerable<string> roles)
+        private async Task SignInAsync(
+            string accessToken,
+            string fullName,
+            string email,
+            IEnumerable<string> roles,
+            string? refreshToken = null)
         {
             var claims = new List<Claim>
             {
@@ -200,10 +205,12 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 new("access_token", accessToken)
             };
 
-            // Store token expiry so TokenExpiryFilter can check before each API call
-            var expiry = GetTokenExpiry(accessToken);
+            var expiry = JwtHelper.GetTokenExpiry(accessToken);
             if (expiry.HasValue)
                 claims.Add(new("token_expires_at", expiry.Value.ToString("O")));
+
+            if (refreshToken is not null)
+                claims.Add(new("refresh_token", refreshToken));
 
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
@@ -212,33 +219,6 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties { IsPersistent = true });
-        }
-
-        // Decodes the JWT payload (base64url) and reads the "exp" Unix timestamp.
-        // Uses only built-in .NET APIs — no extra NuGet package required.
-        private static DateTime? GetTokenExpiry(string jwt)
-        {
-            try
-            {
-                var parts = jwt.Split('.');
-                if (parts.Length != 3) return null;
-
-                var payload = parts[1];
-                var padded = (payload.Length % 4) switch
-                {
-                    2 => payload + "==",
-                    3 => payload + "=",
-                    _ => payload
-                };
-                padded = padded.Replace('-', '+').Replace('_', '/');
-                var bytes = Convert.FromBase64String(padded);
-                using var doc = JsonDocument.Parse(Encoding.UTF8.GetString(bytes));
-
-                if (doc.RootElement.TryGetProperty("exp", out var exp))
-                    return DateTimeOffset.FromUnixTimeSeconds(exp.GetInt64()).UtcDateTime;
-            }
-            catch { }
-            return null;
         }
 
         private IActionResult RedirectToLocal(string? returnUrl)

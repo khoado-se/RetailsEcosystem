@@ -18,22 +18,38 @@ namespace RetailsEcosystem.Customer.Web.Services
             _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
-        public async Task<AuthResponseDto> LoginAsync(string email, string password)
+        public async Task<(AuthResponseDto Response, string? RefreshToken)> LoginAsync(string email, string password)
         {
             var body = JsonContent.Create(new { email, password });
             var response = await _httpClient.PostAsync("api/auth/login", body);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
+            var dto = JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
+            return (dto, ExtractRefreshTokenFromResponse(response));
         }
 
-        public async Task<AuthResponseDto> RegisterAsync(string fullName, string email, string password, string confirmPassword)
+        public async Task<(AuthResponseDto Response, string? RefreshToken)> RegisterAsync(string fullName, string email, string password, string confirmPassword)
         {
             var body = JsonContent.Create(new { fullName, email, password, confirmPassword });
             var response = await _httpClient.PostAsync("api/auth/register", body);
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
+            var dto = JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
+            return (dto, ExtractRefreshTokenFromResponse(response));
+        }
+
+        public async Task<(AuthResponseDto? Response, string? NewRefreshToken)> RefreshAsync(string refreshToken)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/auth/refresh");
+            request.Headers.Add("Cookie", $"refreshToken={refreshToken}");
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+                return (null, null);
+
+            var json = await response.Content.ReadAsStringAsync();
+            var dto = JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions);
+            return (dto, ExtractRefreshTokenFromResponse(response));
         }
 
         public async Task LogoutAsync(string accessToken)
@@ -75,6 +91,21 @@ namespace RetailsEcosystem.Customer.Web.Services
                 "application/json");
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
+        }
+
+        private static string? ExtractRefreshTokenFromResponse(HttpResponseMessage response)
+        {
+            if (!response.Headers.TryGetValues("Set-Cookie", out var cookies))
+                return null;
+
+            foreach (var cookie in cookies)
+            {
+                if (!cookie.StartsWith("refreshToken=", StringComparison.OrdinalIgnoreCase))
+                    continue;
+                var value = cookie.Split(';')[0]["refreshToken=".Length..].Trim();
+                return string.IsNullOrEmpty(value) ? null : value;
+            }
+            return null;
         }
     }
 }

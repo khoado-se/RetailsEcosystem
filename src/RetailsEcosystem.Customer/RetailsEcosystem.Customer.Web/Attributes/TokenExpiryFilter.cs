@@ -3,46 +3,92 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using RetailsEcosystem.Customer.Web.Helpers;
+using RetailsEcosystem.Customer.Web.Interfaces;
 using System.Security.Claims;
 
 namespace RetailsEcosystem.Customer.Web.Attributes
 {
-    /// <summary>
-    /// Global pre-action filter that checks the stored JWT expiry claim before every request.
-    /// If the stored access token has expired, the user is signed out and redirected to login
-    /// — preventing a 401 from the API and showing a clear "session expired" flow instead.
-    /// </summary>
     public class TokenExpiryFilter : IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var user = context.HttpContext.User;
+            var httpContext = context.HttpContext;
 
-            if (user.Identity?.IsAuthenticated == true)
+            if (httpContext.User.Identity?.IsAuthenticated != true)
             {
-                // Skip the expiry check for Account actions (Login, Register, Logout)
-                // so we don't intercept the logout flow or create redirect loops.
-                var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
-                if (descriptor?.ControllerName == "Account")
-                {
-                    await next();
-                    return;
-                }
+                await next();
+                return;
+            }
 
-                var expiresAt = user.FindFirstValue("token_expires_at");
-                if (expiresAt is not null &&
-                    DateTime.TryParse(expiresAt, null, System.Globalization.DateTimeStyles.RoundtripKind, out var expiry) &&
-                    expiry <= DateTime.UtcNow)
+            // Skip Account controller to avoid refresh loops on login/logout/register
+            var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            if (string.Equals(descriptor?.ControllerName, "Account", StringComparison.OrdinalIgnoreCase))
+            {
+                await next();
+                return;
+            }
+
+            var expiryRaw = httpContext.User.FindFirstValue("token_expires_at");
+            if (expiryRaw is null ||
+                !DateTime.TryParse(expiryRaw, null, System.Globalization.DateTimeStyles.RoundtripKind, out var expiry))
+            {
+                await next();
+                return;
+            }
+
+            if (expiry > DateTime.UtcNow)
+            {
+                await next();
+                return;
+            }
+
+            // Token is expired — attempt silent refresh
+            var storedRefreshToken = httpContext.User.FindFirstValue("refresh_token");
+
+            if (storedRefreshToken is not null)
+            {
+                try
                 {
-                    await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                    context.Result = new RedirectToActionResult(
-                        "Login", "Account",
-                        new { returnUrl = context.HttpContext.Request.Path });
-                    return;
+                    var accountService = httpContext.RequestServices.GetRequiredService<IAccountService>();
+                    var (newAuth, newRefreshToken) = await accountService.RefreshAsync(storedRefreshToken);
+
+                    if (newAuth is not null)
+                    {
+                        var existingClaims = httpContext.User.Claims
+                            .Where(c => c.Type != "access_token"
+                                     && c.Type != "token_expires_at"
+                                     && c.Type != "refresh_token")
+                            .ToList();
+
+                        var newExpiry = JwtHelper.GetTokenExpiry(newAuth.AccessToken);
+                        existingClaims.Add(new Claim("access_token", newAuth.AccessToken));
+                        if (newExpiry.HasValue)
+                            existingClaims.Add(new Claim("token_expires_at", newExpiry.Value.ToString("O")));
+                        if (newRefreshToken is not null)
+                            existingClaims.Add(new Claim("refresh_token", newRefreshToken));
+
+                        var identity = new ClaimsIdentity(
+                            existingClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        await httpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(identity),
+                            new AuthenticationProperties { IsPersistent = true });
+
+                        await next();
+                        return;
+                    }
+                }
+                catch
+                {
+                    // API unreachable — fall through to sign-out
                 }
             }
 
-            await next();
+            // Refresh failed or no refresh token — sign out
+            await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var returnUrl = Uri.EscapeDataString(httpContext.Request.Path + httpContext.Request.QueryString);
+            context.Result = new RedirectResult($"/account/login?returnUrl={returnUrl}");
         }
     }
 }

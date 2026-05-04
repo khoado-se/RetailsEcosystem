@@ -5,8 +5,9 @@ namespace RetailsEcosystem.Customer.Web.Interfaces
 {
     public interface IAccountService
     {
-        Task<AuthResponseDto> LoginAsync(string email, string password);
-        Task<AuthResponseDto> RegisterAsync(string fullName, string email, string password, string confirmPassword);
+        Task<(AuthResponseDto Response, string? RefreshToken)> LoginAsync(string email, string password);
+        Task<(AuthResponseDto Response, string? RefreshToken)> RegisterAsync(string fullName, string email, string password, string confirmPassword);
+        Task<(AuthResponseDto? Response, string? NewRefreshToken)> RefreshAsync(string refreshToken);
         Task LogoutAsync(string accessToken);
         Task<CustomerDto> GetProfileAsync(string accessToken);
         Task UpdateProfileAsync(string accessToken, UpdateProfileDto dto);

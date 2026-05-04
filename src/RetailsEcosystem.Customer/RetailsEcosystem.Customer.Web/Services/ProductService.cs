@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.WebUtilities;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Web.Interfaces;
@@ -36,9 +37,20 @@ namespace RetailsEcosystem.Customer.Web.Services
 
         public async Task<PagedResult<ProductDto>> GetFeaturedProductsAsync(PagedRequest pagedRequest)
         {
+            var query = new Dictionary<string, string?>
+            {
+                ["pageNumber"] = pagedRequest.PageNumber.ToString(),
+                ["pageSize"] = pagedRequest.PageSize.ToString()
+            };
+
+            var url = QueryHelpers.AddQueryString(
+                $"{ProductUrl}/featured",
+                query
+            );
+
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"{ProductUrl}/featured"
+                url
             );
 
             return await SendAsync<PagedResult<ProductDto>>(request);
