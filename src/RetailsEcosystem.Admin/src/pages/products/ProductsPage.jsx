@@ -1,6 +1,7 @@
 import { useProducts } from "../../features/product/useProducts.js";
 import { useCategories } from "../../features/category/useCategories.js";
 import { useState, useEffect } from "react";
+import PageSizeSelector from "../../components/ui/PageSizeSelector.jsx";
 import CreateProductModal from "../../features/product/CreateProductModal.jsx";
 import EditProductModal from "../../features/product/EditProductModal.jsx";
 import ProductTable from "../../features/product/ProductTable.jsx";
@@ -8,6 +9,7 @@ import ProductImageModal from "../../features/productImage/ProductImageModal.jsx
 
 export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [editingProductId, setEditingProductId] = useState(null);
   const [imageProduct, setImageProduct] = useState(null);
 
@@ -15,8 +17,8 @@ export default function ProductsPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
-  const { categories } = useCategories();
-  const { products, totalPage, loading, error, fetchProducts } = useProducts(pageNumber, selectedCategoryId || undefined, debouncedSearch || undefined);
+  const { categories } = useCategories(1, 200);
+  const { products, totalPage, loading, error, fetchProducts } = useProducts(pageNumber, selectedCategoryId || undefined, debouncedSearch || undefined, pageSize);
 
   // Debounce search input — waits 300ms after last keystroke
   useEffect(() => {
@@ -36,6 +38,11 @@ export default function ProductsPage() {
     setSearchInput("");
     setDebouncedSearch("");
     setSelectedCategoryId("");
+    setPageNumber(1);
+  };
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
     setPageNumber(1);
   };
 
@@ -62,7 +69,7 @@ export default function ProductsPage() {
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body py-3">
           <div className="row g-2 align-items-center">
-            <div className="col-12 col-md-5">
+            <div className="col-12 col-md-4">
               <div className="input-group">
                 <span className="input-group-text bg-white border-end-0">
                   <i className="bi bi-search text-muted" />
@@ -76,7 +83,7 @@ export default function ProductsPage() {
                 />
               </div>
             </div>
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-md-3">
               <select
                 className="form-select"
                 value={selectedCategoryId}
@@ -90,7 +97,7 @@ export default function ProductsPage() {
                 ))}
               </select>
             </div>
-            <div className="col-12 col-md-3">
+            <div className="col-12 col-md-2">
               {hasFilters && (
                 <button
                   className="btn btn-outline-secondary w-100"
@@ -100,6 +107,9 @@ export default function ProductsPage() {
                   Clear Filters
                 </button>
               )}
+            </div>
+            <div className="col-12 col-md-3 d-flex justify-content-end">
+              <PageSizeSelector pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
             </div>
           </div>
         </div>
@@ -134,11 +144,13 @@ export default function ProductsPage() {
           setSelectedCategoryId(""); // Refresh table by reset category, it will refetch product table
           setPageNumber(1);
         }}
+        onClose={() => {}}
       />
 
       <EditProductModal
         productId={editingProductId}
         onSuccess={() => fetchProducts()}
+        onClose={() => setEditingProductId(null)}
       />
 
       <ProductImageModal

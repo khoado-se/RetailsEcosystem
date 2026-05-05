@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-export default function Header() {
+export default function Header({ onToggleSidebar }) {
   const { user, logout } = useContext(AuthContext);
 
   const handleLogout = async (e) => {
@@ -16,15 +16,12 @@ export default function Header() {
       </a>
 
       <button
-        className="navbar-toggler position-absolute d-md-none collapsed"
+        className="btn btn-link text-white d-md-none px-3"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#sidebarMenu"
-        aria-controls="sidebarMenu"
-        aria-expanded="false"
+        onClick={onToggleSidebar}
         aria-label="Toggle navigation"
       >
-        <span className="navbar-toggler-icon"></span>
+        <i className="bi bi-list fs-5" />
       </button>
 
       <div className="navbar-nav ms-auto d-flex align-items-center flex-row gap-2 px-3">

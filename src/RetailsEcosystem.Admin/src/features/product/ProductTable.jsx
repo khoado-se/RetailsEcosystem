@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import Pagination from "../../components/ui/Pagination";
 import { ENV } from "../../configs/env";
 import { deleteProduct } from "./productApi";
@@ -8,9 +9,10 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
     if (!window.confirm(`Delete "${product.name}"?`)) return;
     try {
       await deleteProduct(product.id);
+      toast.success("Product deleted.");
       onDeleted();
     } catch {
-      alert("Failed to delete product.");
+      toast.error("Failed to delete product.");
     }
   };
 
@@ -29,7 +31,9 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
             )}
           </div>
         </div>
-        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+        <div className="d-flex justify-content-center mt-3">
+          <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+        </div>
       </>
     );
   }
@@ -75,8 +79,6 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                   <td className="text-end">
                     <button
                       className="btn btn-outline-secondary btn-sm me-2"
-                      data-bs-toggle="modal"
-                      data-bs-target="#productImageModal"
                       onClick={() => onImages(product.id, product.name)}
                     >
                       <i className="bi bi-images me-1" />
@@ -84,8 +86,6 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                     </button>
                     <button
                       className="btn btn-primary btn-sm me-2"
-                      data-bs-toggle="modal"
-                      data-bs-target="#editProductModal"
                       onClick={() => onEdit(product.id)}
                     >
                       <i className="bi bi-pencil me-1" />
@@ -106,7 +106,9 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
         </div>
       </div>
 
-      <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+      <div className="d-flex justify-content-center mt-3">
+        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+      </div>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getOrders } from "./orderApi";
 
-export function useOrders(pageNumber = 1, statusFilter = null) {
+export function useOrders(pageNumber = 1, statusFilter = null, pageSize = 10) {
   const [orders, setOrders] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -11,7 +11,7 @@ export function useOrders(pageNumber = 1, statusFilter = null) {
     setLoading(true);
     setError(null);
     try {
-      const res = await getOrders({ pageNumber, pageSize: 10, status: statusFilter });
+      const res = await getOrders({ pageNumber, pageSize, status: statusFilter });
       setOrders(res.data.items ?? []);
       setTotalPage(res.data.totalPage ?? 1);
     } catch (err) {
@@ -19,7 +19,7 @@ export function useOrders(pageNumber = 1, statusFilter = null) {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, statusFilter]);
+  }, [pageNumber, pageSize, statusFilter]);
 
   useEffect(() => {
     fetchOrders();

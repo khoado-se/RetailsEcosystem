@@ -1,9 +1,11 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { createCategory, updateCategory } from "./categoryApi";
 
 export default function CategoryForm({ category, onSuccess, onClose }) {
   const isEdit = category != null;
   const [name, setName] = useState(category?.name ?? "");
+  const [description, setDescription] = useState(category?.description ?? "");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -13,9 +15,11 @@ export default function CategoryForm({ category, onSuccess, onClose }) {
     setLoading(true);
     try {
       if (isEdit) {
-        await updateCategory(category.id, { id: category.id, name });
+        await updateCategory(category.id, { id: category.id, name, description: description || null });
+        toast.success("Category updated successfully.");
       } else {
-        await createCategory({ name });
+        await createCategory({ name, description: description || null });
+        toast.success("Category created successfully.");
       }
       onSuccess();
     } catch (err) {
@@ -55,6 +59,19 @@ export default function CategoryForm({ category, onSuccess, onClose }) {
                     onChange={(e) => setName(e.target.value)}
                     required
                     autoFocus
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="cat-description" className="form-label text-label">
+                    Description <span className="text-muted fw-normal">(optional)</span>
+                  </label>
+                  <textarea
+                    id="cat-description"
+                    className="form-control"
+                    rows={3}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Brief description of this category…"
                   />
                 </div>
               </div>

@@ -1,8 +1,8 @@
 import apiClient from "../../services/apiClient";
 
 // GET
-export const getCategories = () => {
-  return apiClient.get("/categories");
+export const getCategories = ({ pageNumber = 1, pageSize = 10 } = {}) => {
+  return apiClient.get("/categories", { params: { pageNumber, pageSize } });
 };
 
 // GET by id

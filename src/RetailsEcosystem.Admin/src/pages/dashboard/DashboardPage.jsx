@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
 import { getOrderStats } from "../../features/order/orderApi";
 import { formatCurrency } from "../../utils/format";
-import "./DashboardPage.css";
 
 export default function DashboardPage() {
   const chartRef = useRef(null);

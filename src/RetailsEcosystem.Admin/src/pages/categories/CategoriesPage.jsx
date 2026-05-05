@@ -1,17 +1,24 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useCategories } from "../../features/category/useCategories";
 import CategoryTable from "../../features/category/CategoryTable";
 import CategoryForm from "../../features/category/CategoryForm";
 import { deleteCategory } from "../../features/category/categoryApi";
+import Pagination from "../../components/ui/Pagination";
+import PageSizeSelector from "../../components/ui/PageSizeSelector";
 
 export default function CategoriesPage() {
-  const { categories, fetchCategories } = useCategories();
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [showForm, setShowForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const { categories, totalPage, loading, error, fetchCategories } =
+    useCategories(pageNumber, pageSize);
+
   const filteredCategories = categories.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleEdit = (cat) => {
@@ -28,15 +35,21 @@ export default function CategoriesPage() {
     if (!window.confirm("Delete this category?")) return;
     try {
       await deleteCategory(id);
+      toast.success("Category deleted.");
       fetchCategories();
-    } catch (err) {
-      console.error("Delete failed:", err);
+    } catch {
+      toast.error("Failed to delete category.");
     }
   };
 
   const handleSuccess = () => {
     setShowForm(false);
     fetchCategories();
+  };
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPageNumber(1);
   };
 
   return (
@@ -70,8 +83,9 @@ export default function CategoriesPage() {
                 />
               </div>
             </div>
-            {searchTerm && (
-              <div className="col-auto">
+
+            <div className="col-12 col-md-3">
+              {searchTerm && (
                 <button
                   className="btn btn-outline-secondary"
                   onClick={() => setSearchTerm("")}
@@ -79,17 +93,59 @@ export default function CategoriesPage() {
                   <i className="bi bi-x-lg me-1" />
                   Clear
                 </button>
-              </div>
-            )}
+              )}
+            </div>
+            <div className="col-12 col-md-3 d-flex justify-content-end">
+              <PageSizeSelector
+                pageSize={pageSize}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <CategoryTable
-        categories={filteredCategories}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {error && (
+        <div
+          className="alert alert-danger d-flex align-items-start gap-2 rounded-3 mb-3"
+          role="alert"
+        >
+          <i className="bi bi-exclamation-circle-fill flex-shrink-0 mt-1" />
+          <div>
+            {error}
+            <button
+              className="btn btn-sm btn-link p-0 ms-2"
+              onClick={fetchCategories}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="text-center py-5 text-muted">
+          <div
+            className="spinner-border spinner-border-sm me-2"
+            role="status"
+          />
+          Loading…
+        </div>
+      ) : (
+        <CategoryTable
+          categories={filteredCategories}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
+
+      <div className="d-flex justify-content-center mt-3">
+        <Pagination
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          totalPage={totalPage}
+        />
+      </div>
 
       {showForm && (
         <CategoryForm

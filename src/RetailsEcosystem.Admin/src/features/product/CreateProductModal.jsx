@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Modal } from "bootstrap";
+import toast from "react-hot-toast";
 import { createProduct } from "./productApi";
 import ProductForm from "./ProductForm";
 
@@ -10,8 +12,19 @@ const EMPTY_FORM = {
   isFeatured: false,
 };
 
-export default function CreateProductModal({ onSuccess }) {
+export default function CreateProductModal({ onSuccess, onClose }) {
   const [form, setForm] = useState(EMPTY_FORM);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const modalRef = useRef(null);
+
+  // Reset form and notify parent on any close path (X, Escape, click-outside, submit)
+  useEffect(() => {
+    const el = modalRef.current;
+    if (!el) return;
+    const handler = () => { setForm(EMPTY_FORM); onClose?.(); };
+    el.addEventListener("hidden.bs.modal", handler);
+    return () => el.removeEventListener("hidden.bs.modal", handler);
+  }, [onClose]);
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
@@ -30,13 +43,21 @@ export default function CreateProductModal({ onSuccess }) {
       isFeatured: form.isFeatured,
     };
 
-    await createProduct(payload);
-    setForm(EMPTY_FORM);
-    onSuccess();
+    setIsSubmitting(true);
+    try {
+      await createProduct(payload);
+      toast.success("Product created successfully.");
+      onSuccess();
+      Modal.getOrCreateInstance(modalRef.current).hide();
+    } catch {
+      toast.error("Failed to create product.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="modal fade" id="createProductModal" tabIndex="-1" aria-hidden="true">
+    <div className="modal fade" id="createProductModal" ref={modalRef} tabIndex="-1" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
@@ -50,7 +71,14 @@ export default function CreateProductModal({ onSuccess }) {
             <button className="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
-            <button className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
+            <button
+              className="btn btn-primary"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting && (
+                <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" />
+              )}
               Create
             </button>
           </div>

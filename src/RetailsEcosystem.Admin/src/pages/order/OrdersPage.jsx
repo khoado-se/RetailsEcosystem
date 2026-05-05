@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { Modal, Toast } from "bootstrap";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useOrders } from "../../features/order/useOrders";
 import OrderDetailModal from "../../features/order/OrderDetailModal";
 import Pagination from "../../components/ui/Pagination";
+import PageSizeSelector from "../../components/ui/PageSizeSelector";
 import { getOrderById } from "../../features/order/orderApi";
 import { formatCurrency, formatDate } from "../../utils/format";
 
@@ -25,21 +26,20 @@ const STATUS_BADGE = {
 
 export default function OrdersPage() {
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [statusFilter, setStatusFilter] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
-  const { orders, totalPage, loading, error, fetchOrders } = useOrders(pageNumber, statusFilter);
-
-  useEffect(() => {
-    if (selectedOrder) {
-      const el = document.getElementById("orderDetailModal");
-      if (el) Modal.getOrCreateInstance(el).show();
-    }
-  }, [selectedOrder]);
+  const { orders, totalPage, loading, error, fetchOrders } = useOrders(pageNumber, statusFilter, pageSize);
 
   const handleStatusFilter = (val) => {
     setStatusFilter(val);
+    setPageNumber(1);
+  };
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
     setPageNumber(1);
   };
 
@@ -57,13 +57,8 @@ export default function OrdersPage() {
 
   const handleStatusUpdated = (label) => {
     fetchOrders();
-    Modal.getInstance(document.getElementById("orderDetailModal"))?.hide();
-    const toastEl = document.getElementById("orderStatusToast");
-    if (toastEl) {
-      document.getElementById("orderStatusToastBody").textContent =
-        `Order status updated to ${label}.`;
-      Toast.getOrCreateInstance(toastEl).show();
-    }
+    setSelectedOrder(null);
+    toast.success(`Order status updated to ${label}.`);
   };
 
 
@@ -76,17 +71,20 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {/* Status Filter */}
-      <div className="mb-3 d-flex gap-2 flex-wrap">
-        {STATUS_OPTIONS.map((s) => (
-          <button
-            key={s.label}
-            className={`btn btn-sm rounded-pill ${statusFilter === s.value ? "btn-primary" : "btn-outline-secondary"}`}
-            onClick={() => handleStatusFilter(s.value)}
-          >
-            {s.label}
-          </button>
-        ))}
+      {/* Status Filter + Rows per page */}
+      <div className="mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div className="d-flex gap-2 flex-wrap">
+          {STATUS_OPTIONS.map((s) => (
+            <button
+              key={s.label}
+              className={`btn btn-sm rounded-pill ${statusFilter === s.value ? "btn-primary" : "btn-outline-secondary"}`}
+              onClick={() => handleStatusFilter(s.value)}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <PageSizeSelector pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
       </div>
 
       <div className="card border-0 shadow-sm mb-4">
@@ -149,30 +147,15 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
-
-      <OrderDetailModal order={selectedOrder} onStatusUpdated={handleStatusUpdated} />
-
-      {/* Success toast */}
-      <div className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 1100 }}>
-        <div
-          id="orderStatusToast"
-          className="toast align-items-center text-bg-success border-0"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div className="d-flex">
-            <div className="toast-body" id="orderStatusToastBody" />
-            <button
-              type="button"
-              className="btn-close btn-close-white me-2 m-auto"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            />
-          </div>
-        </div>
+      <div className="d-flex justify-content-center mt-3">
+        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
       </div>
+
+      <OrderDetailModal
+        order={selectedOrder}
+        onStatusUpdated={handleStatusUpdated}
+        onClose={() => setSelectedOrder(null)}
+      />
     </>
   );
 }

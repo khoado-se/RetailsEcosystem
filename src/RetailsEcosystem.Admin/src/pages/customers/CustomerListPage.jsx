@@ -1,18 +1,25 @@
 import { useState, useCallback } from "react";
 import { useCustomers } from "../../features/customer/useCustomers";
 import CustomerTable from "../../features/customer/CustomerTable";
+import PageSizeSelector from "../../components/ui/PageSizeSelector";
 
 export default function CustomerListPage() {
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
-  const { customers, totalPage, loading, fetchCustomers } = useCustomers(pageNumber, search);
+  const { customers, totalPage, loading, fetchCustomers } = useCustomers(pageNumber, search, pageSize);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setPageNumber(1);
     setSearch(searchInput.trim());
+  };
+
+  const handlePageSizeChange = (size) => {
+    setPageSize(size);
+    setPageNumber(1);
   };
 
   const handleStatusChange = useCallback(() => {
@@ -38,6 +45,12 @@ export default function CustomerListPage() {
             <i className="bi bi-search"></i>
           </button>
         </form>
+      </div>
+
+      <div className="card border-0 shadow-sm mb-4">
+        <div className="card-body py-3 d-flex justify-content-end">
+          <PageSizeSelector pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
+        </div>
       </div>
 
       {loading ? (

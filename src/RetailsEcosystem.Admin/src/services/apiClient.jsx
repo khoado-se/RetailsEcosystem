@@ -23,6 +23,11 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Shared promise for in-flight refresh — prevents concurrent 401s from each
+// calling /auth/refresh independently (race condition: first call rotates the
+// refresh token, making every subsequent call fail and logging the user out).
+let refreshPromise = null;
+
 // Response Interceptor: Handle 401s and Refresh Token
 apiClient.interceptors.response.use(
   (response) => response,
@@ -34,25 +39,27 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // Attempt to refresh the token via cookie
-        const res = await axios.post(
-          `${ENV.VITE_HOST_URL}/auth/refresh`,
-          {},
-          { withCredentials: true }
-        );
+        // Deduplicate: all concurrent 401s share one refresh call.
+        // refreshPromise is cleared in .finally() so the next genuine
+        // expiry (after a successful retry) starts a fresh refresh.
+        if (!refreshPromise) {
+          refreshPromise = axios
+            .post(`${ENV.VITE_HOST_URL}/auth/refresh`, {}, { withCredentials: true })
+            .finally(() => { refreshPromise = null; });
+        }
 
+        const res = await refreshPromise;
         const newAccessToken = res.data.accessToken;
         tokenService.setToken(newAccessToken);
 
-        // Update the header of the failed request and retry
+        // Retry the original request with the new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return apiClient(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed (e.g., refresh token expired) -> logout
+      } catch {
+        // Refresh failed (token expired / revoked) — clear state and redirect
         tokenService.clearToken();
-        // Redirect to login using window location to avoid circular dependency
         window.location.href = "/login";
-        return Promise.reject(refreshError);
+        return Promise.reject(error);
       }
     }
 

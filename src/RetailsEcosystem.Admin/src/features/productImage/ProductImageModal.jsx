@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { Modal } from "bootstrap";
+import toast from "react-hot-toast";
 import { getProductImages, uploadProductImage, deleteProductImage } from "./productImageApi";
 
 export default function ProductImageModal({ productId, productName, onClose }) {
@@ -9,6 +11,27 @@ export default function ProductImageModal({ productId, productName, onClose }) {
   const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
+  const modalRef = useRef(null);
+
+  // Show/hide driven by productId — single source of truth, no data-bs-toggle
+  useEffect(() => {
+    if (!modalRef.current) return;
+    const instance = Modal.getOrCreateInstance(modalRef.current);
+    if (productId) {
+      instance.show();
+    } else {
+      instance.hide();
+    }
+  }, [productId]);
+
+  // Sync all Bootstrap close paths (X, Escape, click-outside) back to React
+  useEffect(() => {
+    const el = modalRef.current;
+    if (!el) return;
+    const handler = () => onClose?.();
+    el.addEventListener("hidden.bs.modal", handler);
+    return () => el.removeEventListener("hidden.bs.modal", handler);
+  }, [onClose]);
 
   useEffect(() => {
     if (!productId) return;
@@ -52,6 +75,7 @@ export default function ProductImageModal({ productId, productName, onClose }) {
       setImages(newImages.data);
       setFiles([]);
       if (inputRef.current) inputRef.current.value = "";
+      toast.success("Image uploaded successfully.");
     } catch {
       setError("Upload failed. Please try again.");
     } finally {
@@ -65,6 +89,7 @@ export default function ProductImageModal({ productId, productName, onClose }) {
     try {
       await deleteProductImage(imageId);
       setImages((prev) => prev.filter((img) => img.id !== imageId));
+      toast.success("Image deleted.");
     } catch {
       setError("Delete failed. Please try again.");
     } finally {
@@ -76,6 +101,7 @@ export default function ProductImageModal({ productId, productName, onClose }) {
     <div
       className="modal fade"
       id="productImageModal"
+      ref={modalRef}
       tabIndex="-1"
       aria-labelledby="productImageModalLabel"
       aria-hidden="true"
@@ -91,7 +117,6 @@ export default function ProductImageModal({ productId, productName, onClose }) {
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
-              onClick={onClose}
             />
           </div>
 
@@ -210,7 +235,6 @@ export default function ProductImageModal({ productId, productName, onClose }) {
               type="button"
               className="btn btn-secondary"
               data-bs-dismiss="modal"
-              onClick={onClose}
             >
               Close
             </button>

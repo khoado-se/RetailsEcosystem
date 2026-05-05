@@ -76,7 +76,9 @@ export default function CustomerTable({ customers, pageNumber, setPageNumber, to
         </div>
       </div>
 
-      <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+      <div className="d-flex justify-content-center mt-3">
+        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
+      </div>
     </>
   );
 }

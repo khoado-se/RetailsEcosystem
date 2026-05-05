@@ -1,14 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Modal } from "bootstrap";
+import toast from "react-hot-toast";
 import { getProductById, updateProduct } from "./productApi";
 import ProductForm from "./ProductForm";
 
-export default function EditProductModal({ productId, onSuccess }) {
+export default function EditProductModal({ productId, onSuccess, onClose }) {
   const [form, setForm] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const modalRef = useRef(null);
+
+  // Show/hide modal in response to productId — single source of truth
+  useEffect(() => {
+    if (!modalRef.current) return;
+    const instance = Modal.getOrCreateInstance(modalRef.current);
+    if (productId) {
+      instance.show();
+    } else {
+      instance.hide();
+    }
+  }, [productId]);
+
+  // Sync Bootstrap's close events (X button, click-outside, Escape) back to React
+  useEffect(() => {
+    const el = modalRef.current;
+    if (!el) return;
+    const handleHidden = () => onClose?.();
+    el.addEventListener("hidden.bs.modal", handleHidden);
+    return () => el.removeEventListener("hidden.bs.modal", handleHidden);
+  }, [onClose]);
 
   useEffect(() => {
     if (!productId) return;
     let active = true;
+    setLoading(true);
+    setForm(null);
     getProductById(productId)
       .then((res) => {
         if (!active) return;
@@ -38,7 +64,10 @@ export default function EditProductModal({ productId, onSuccess }) {
   const handleSubmit = async () => {
     if (!form) return;
     const categoryId = Number(form.categoryId);
-    if (!categoryId) return alert("Please select a category.");
+    if (!categoryId) {
+      toast.error("Please select a category.");
+      return;
+    }
     const payload = {
       id: form.id,
       name: form.name.trim(),
@@ -47,12 +76,22 @@ export default function EditProductModal({ productId, onSuccess }) {
       categoryId,
       isFeatured: form.isFeatured,
     };
-    await updateProduct(form.id, payload);
-    onSuccess();
+
+    setIsSubmitting(true);
+    try {
+      await updateProduct(form.id, payload);
+      toast.success("Product updated successfully.");
+      onSuccess();
+      Modal.getOrCreateInstance(modalRef.current).hide();
+    } catch {
+      toast.error("Failed to update product.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="modal fade" id="editProductModal" tabIndex="-1" aria-hidden="true">
+    <div className="modal fade" id="editProductModal" ref={modalRef} tabIndex="-1" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
@@ -73,9 +112,11 @@ export default function EditProductModal({ productId, onSuccess }) {
             <button
               className="btn btn-primary"
               onClick={handleSubmit}
-              data-bs-dismiss="modal"
-              disabled={!form}
+              disabled={!form || isSubmitting}
             >
+              {isSubmitting && (
+                <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" />
+              )}
               Save Changes
             </button>
           </div>

@@ -22,7 +22,8 @@ namespace RetailsEcosystem.Customer.Application.Services
             var categoryDtos = categories.Select(c => new CategoryDto
             {
                 Id = c.Id,
-                Name = c.Name
+                Name = c.Name,
+                Description = c.Description ?? string.Empty
             }).ToList();
 
             int totalCategories = await _categoryRepository.GetTotalCategoriesAsync();
@@ -39,7 +40,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             var category = new Category
             {
                 Name = dto.Name,
-                Description = dto.Description
+                Description = dto.Description ?? string.Empty
             };
 
             var id = await _categoryRepository.CreateAsync(category);
@@ -58,7 +59,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             {
                 Id = dto.Id,
                 Name = dto.Name,
-                Description = dto.Description
+                Description = dto.Description ?? string.Empty
             };
 
             await _categoryRepository.UpdateAsync(category);

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Modal } from "bootstrap";
 import { updateOrderStatus } from "./orderApi";
 import { formatCurrency, formatDateTime } from "../../utils/format";
 
@@ -26,10 +27,31 @@ const VALID_NEXT_STATUSES = {
   4: [],     // Cancelled — terminal
 };
 
-export default function OrderDetailModal({ order, onStatusUpdated }) {
+export default function OrderDetailModal({ order, onStatusUpdated, onClose }) {
   const [selectedStatus, setSelectedStatus] = useState(order?.status ?? 0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const modalRef = useRef(null);
+
+  // Show/hide driven by order prop — single source of truth
+  useEffect(() => {
+    if (!modalRef.current) return;
+    const instance = Modal.getOrCreateInstance(modalRef.current);
+    if (order) {
+      instance.show();
+    } else {
+      instance.hide();
+    }
+  }, [order]);
+
+  // Sync all Bootstrap close paths (X, Escape, click-outside) back to React
+  useEffect(() => {
+    const el = modalRef.current;
+    if (!el) return;
+    const handler = () => onClose?.();
+    el.addEventListener("hidden.bs.modal", handler);
+    return () => el.removeEventListener("hidden.bs.modal", handler);
+  }, [onClose]);
 
   useEffect(() => {
     if (order) {
@@ -60,7 +82,7 @@ export default function OrderDetailModal({ order, onStatusUpdated }) {
 
 
   return (
-    <div className="modal fade" id="orderDetailModal" tabIndex={-1}>
+    <div className="modal fade" id="orderDetailModal" ref={modalRef} tabIndex={-1}>
       <div className="modal-dialog modal-lg modal-dialog-scrollable">
         <div className="modal-content">
           {order && (
