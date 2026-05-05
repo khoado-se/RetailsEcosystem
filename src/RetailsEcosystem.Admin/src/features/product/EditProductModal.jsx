@@ -37,12 +37,14 @@ export default function EditProductModal({ productId, onSuccess }) {
 
   const handleSubmit = async () => {
     if (!form) return;
+    const categoryId = Number(form.categoryId);
+    if (!categoryId) return alert("Please select a category.");
     const payload = {
       id: form.id,
       name: form.name.trim(),
       description: form.description || null,
       price: Number(form.price),
-      categoryId: Number(form.categoryId),
+      categoryId,
       isFeatured: form.isFeatured,
     };
     await updateProduct(form.id, payload);

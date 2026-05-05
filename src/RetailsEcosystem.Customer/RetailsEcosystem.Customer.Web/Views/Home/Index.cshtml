@@ -20,7 +20,7 @@
                             var desc = sp.Description?.Length > 100
                                 ? sp.Description[..100] + "…"
                                 : sp.Description ?? string.Empty;
-                            var url  = Url.Action("ProductDetails", "Products", new { productId = sp.Id }) ?? "#";
+                            var url  = Url.Action("ProductDetails", "Products", new { id = sp.Id }) ?? "#";
                             var bg   = i == 0 ? "#f0f5fb" : "#f5f0fb";
 
                             var vm = new PromoBannerViewModel
@@ -51,7 +51,7 @@
                     @if (featureProducts?.Count > 2)
                     {
                         var sb    = featureProducts[2];
-                        var sbUrl = Url.Action("ProductDetails", "Products", new { productId = sb.Id }) ?? "#";
+                        var sbUrl = Url.Action("ProductDetails", "Products", new { id = sb.Id }) ?? "#";
                         var sbVm  = new PromoBannerViewModel
                         {
                             Category        = sb.Category?.Name,
@@ -93,7 +93,7 @@
 
                 @{
                     var pb1     = featureProducts[3];
-                    var pb1Url  = Url.Action("ProductDetails", "Products", new { productId = pb1.Id }) ?? "#";
+                    var pb1Url  = Url.Action("ProductDetails", "Products", new { id = pb1.Id }) ?? "#";
                     var pb1Desc = pb1.Description?.Length > 90
                         ? pb1.Description[..90] + "…"
                         : pb1.Description ?? string.Empty;
@@ -117,7 +117,7 @@
                 @if (featureProducts.Count > 4)
                 {
                     var pb2     = featureProducts[4];
-                    var pb2Url  = Url.Action("ProductDetails", "Products", new { productId = pb2.Id }) ?? "#";
+                    var pb2Url  = Url.Action("ProductDetails", "Products", new { id = pb2.Id }) ?? "#";
                     var pb2Desc = pb2.Description?.Length > 90
                         ? pb2.Description[..90] + "…"
                         : pb2.Description ?? string.Empty;
@@ -195,7 +195,7 @@
                             </div>
                             <div class="card-body">
                                 <p class="card-category">@product.Category?.Name</p>
-                                <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@product.Id"
+                                <a asp-controller="Products" asp-action="ProductDetails" asp-route-id="@product.Id"
                                    class="card-product-name">@product.Name</a>
                                 <p class="card-price">@product.Price.ToString("C0")</p>
                                 <button class="btn btn-add-cart"

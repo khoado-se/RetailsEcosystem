@@ -155,7 +155,8 @@ namespace RetailsEcosystem.Customer.Application.Services
                 throw new KeyNotFoundException("Product is not found!");
             }
 
-            Category category = await _categoryRepo.GetCategoryByIdAsync(productDto.CategoryId);
+            var category = await _categoryRepo.GetCategoryByIdAsync(productDto.CategoryId)
+                ?? throw new KeyNotFoundException($"Category {productDto.CategoryId} not found.");
 
             var updateProduct = new Product
             {
@@ -166,6 +167,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 UpdatedDate = productDto.UpdatedDate,
                 Price = productDto.Price,
                 IsFeatured = productDto.IsFeatured,
+                CategoryId = category.Id,
                 Category = category
             };
 

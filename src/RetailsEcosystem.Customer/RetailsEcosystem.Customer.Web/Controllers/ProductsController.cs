@@ -29,9 +29,9 @@ namespace RetailsEcosystem.Customer.Web.Controllers
         }
 
         [Breadcrumb("Product Details",parentName: "Shop", parentAction: nameof(ProductIndex))]
-        public async Task<IActionResult> ProductDetails(int productId)
+        public async Task<IActionResult> ProductDetails(int id)
         {
-            var productDto = await _productService.GetByIdAsync(productId);
+            var productDto = await _productService.GetByIdAsync(id);
             if (productDto == null)
             {
                 return NotFound();

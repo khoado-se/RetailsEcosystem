@@ -8,6 +8,7 @@ namespace RetailsEcosystem.Customer.Shared
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
         public int TotalPage { get; set; }
+        public int TotalCount { get; set; }
 
         public PagedResult() { }
         public PagedResult(IEnumerable<T> Items, PagedRequest pagedRequest, int totalItems)
@@ -16,6 +17,7 @@ namespace RetailsEcosystem.Customer.Shared
             PageNumber = pagedRequest.PageNumber;
             PageSize = pagedRequest.PageSize;
             TotalPage = (int)Math.Ceiling((double)totalItems / pagedRequest.PageSize);
+            TotalCount = totalItems;
         }
     }
 }

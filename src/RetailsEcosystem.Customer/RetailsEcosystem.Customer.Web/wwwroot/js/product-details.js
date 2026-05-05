@@ -4,13 +4,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const current = document.getElementById('current');
     if (!current) return;
-    const thumbnails = document.querySelectorAll('.images .img');
+    const thumbnails = document.querySelectorAll('.pdp-thumb');
     if (thumbnails.length === 0) return;
+    thumbnails[0].classList.add('pdp-thumb--active');
     thumbnails.forEach(img => {
         img.addEventListener('click', e => {
-            thumbnails.forEach(i => i.style.opacity = '1');
-            current.src = e.target.src;
-            e.target.style.opacity = '0.6';
+            thumbnails.forEach(i => i.classList.remove('pdp-thumb--active'));
+            current.src = e.currentTarget.src;
+            e.currentTarget.classList.add('pdp-thumb--active');
         });
     });
 });
