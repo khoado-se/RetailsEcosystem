@@ -1,12 +1,12 @@
 using CloudinaryDotNet;
+using FluentValidation;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
+using RetailsEcosystem.Customer.API.Extensions;
+using RetailsEcosystem.Customer.API.Middleware;
 using RetailsEcosystem.Customer.API.Options;
 using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Infrastructure;
-using RetailsEcosystem.Customer.API.Extensions;
-using RetailsEcosystem.Customer.API.Middleware;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +48,7 @@ builder.Services.AddResponseCaching();
 builder.Services.AddValidatorsFromAssembly(typeof(RetailsEcosystem.Customer.Application.Validators.RegisterDtoValidator).Assembly);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerAuthentication();
 
 var app = builder.Build();
 
@@ -60,8 +60,12 @@ app.UseResponseCaching();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.EnablePersistAuthorization();
+    });
 }
+
 app.UseCors("ProductionPolicy");
 
 app.UseStaticFiles();
