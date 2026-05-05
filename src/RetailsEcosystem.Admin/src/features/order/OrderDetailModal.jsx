@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { updateOrderStatus } from "./orderApi";
+import { formatCurrency, formatDateTime } from "../../utils/format";
 
 const STATUS_OPTIONS = [
   { value: 0, label: "Pending" },
@@ -57,8 +58,6 @@ export default function OrderDetailModal({ order, onStatusUpdated }) {
     }
   };
 
-  const fmt = (date) =>
-    date ? new Date(date).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }) : "—";
 
   return (
     <div className="modal fade" id="orderDetailModal" tabIndex={-1}>
@@ -80,7 +79,7 @@ export default function OrderDetailModal({ order, onStatusUpdated }) {
                   </div>
                   <div className="col-sm-6">
                     <div className="text-muted small">Placed</div>
-                    <div className="fw-semibold">{fmt(order.createdDate)}</div>
+                    <div className="fw-semibold">{formatDateTime(order.createdDate)}</div>
                   </div>
                   <div className="col-sm-6">
                     <div className="text-muted small">Shipping Address</div>
@@ -89,7 +88,7 @@ export default function OrderDetailModal({ order, onStatusUpdated }) {
                   <div className="col-sm-6">
                     <div className="text-muted small">Total</div>
                     <div className="fw-semibold">
-                      {Number(order.totalAmount).toLocaleString("en-US", { style: "currency", currency: "USD" })}
+                      {formatCurrency(order.totalAmount)}
                     </div>
                   </div>
                 </div>
@@ -143,10 +142,10 @@ export default function OrderDetailModal({ order, onStatusUpdated }) {
                         <td>{item.productName}</td>
                         <td className="text-center">{item.quantity}</td>
                         <td className="text-center">
-                          {Number(item.unitPrice).toLocaleString("en-US", { style: "currency", currency: "USD" })}
+                          {formatCurrency(item.unitPrice)}
                         </td>
                         <td className="text-end fw-semibold">
-                          {Number(item.lineTotal).toLocaleString("en-US", { style: "currency", currency: "USD" })}
+                          {formatCurrency(item.lineTotal)}
                         </td>
                       </tr>
                     ))}
@@ -155,7 +154,7 @@ export default function OrderDetailModal({ order, onStatusUpdated }) {
                     <tr className="fw-bold">
                       <td colSpan={3} className="text-end">Grand Total</td>
                       <td className="text-end">
-                        {Number(order.totalAmount).toLocaleString("en-US", { style: "currency", currency: "USD" })}
+                        {formatCurrency(order.totalAmount)}
                       </td>
                     </tr>
                   </tfoot>

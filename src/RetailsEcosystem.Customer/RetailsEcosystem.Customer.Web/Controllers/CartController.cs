@@ -113,6 +113,32 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             return Ok(new { itemCount = cart.ItemCount });
         }
 
+        // GET /cart/summary — populates the header dropdown
+        [HttpGet("summary")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Summary()
+        {
+            var token = User.FindFirstValue("access_token");
+            if (string.IsNullOrEmpty(token))
+                return Ok(new { itemCount = 0, total = 0, items = Array.Empty<object>() });
+
+            var cart = await _cartService.GetCartAsync(token);
+            return Ok(new
+            {
+                itemCount = cart.ItemCount,
+                total = cart.Total,
+                items = cart.Items.Select(i => new
+                {
+                    id = i.Id,
+                    productName = i.ProductName,
+                    productImageUrl = i.ProductImageUrl,
+                    quantity = i.Quantity,
+                    unitPrice = i.UnitPrice,
+                    lineTotal = i.LineTotal
+                })
+            });
+        }
+
         public record AddItemRequest(int ProductId, int Quantity);
         public record UpdateItemRequest(int Quantity);
     }

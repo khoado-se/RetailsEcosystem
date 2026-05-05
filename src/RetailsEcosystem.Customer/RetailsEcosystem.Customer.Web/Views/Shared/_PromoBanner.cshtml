@@ -22,7 +22,7 @@
         @if (Model.Price.HasValue)
         {
             <div class="promo-price">
-                <span class="promo-price-prefix">Only</span>@Model.Price.Value.ToString("N0") ₫
+                <span class="promo-price-prefix">Only</span>@Model.Price.Value.ToString("C0")
             </div>
         }
         @if (!string.IsNullOrEmpty(Model.ButtonUrl))

@@ -197,7 +197,7 @@
                                 <p class="card-category">@product.Category?.Name</p>
                                 <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@product.Id"
                                    class="card-product-name">@product.Name</a>
-                                <p class="card-price">@product.Price.ToString("N0") ₫</p>
+                                <p class="card-price">@product.Price.ToString("C0")</p>
                                 <button class="btn btn-add-cart"
                                         data-action="add-to-cart"
                                         data-product-id="@product.Id"

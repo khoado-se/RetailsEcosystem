@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Chart from "chart.js/auto";
 import { getOrderStats } from "../../features/order/orderApi";
+import { formatCurrency } from "../../utils/format";
 import "./DashboardPage.css";
 
 export default function DashboardPage() {
@@ -50,7 +51,7 @@ export default function DashboardPage() {
           y: {
             beginAtZero: true,
             ticks: {
-              callback: (v) => `$${Number(v).toLocaleString()}`,
+              callback: (v) => formatCurrency(v),
             },
           },
         },
@@ -61,10 +62,7 @@ export default function DashboardPage() {
     return () => chartInstance.current?.destroy();
   }, [stats]);
 
-  const fmt = (val) =>
-    val != null
-      ? Number(val).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
-      : "—";
+  const fmt = (val) => val != null ? formatCurrency(val) : "—";
 
   return (
     <>

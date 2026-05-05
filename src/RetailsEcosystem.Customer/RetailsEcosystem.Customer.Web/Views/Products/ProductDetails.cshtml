@@ -39,7 +39,7 @@
                class="text-decoration-none text-muted">@Model.Category.Name</a>
         </p>
         <h1 class="fs-3 fw-bold mb-2">@Model.Name</h1>
-        <p class="fs-2 fw-bold text-primary-brand mb-3">@Model.Price.ToString("N0") ₫</p>
+        <p class="fs-2 fw-bold text-primary-brand mb-3">@Model.Price.ToString("C0")</p>
 
         @if (Model.StockQuantity > 0)
         {

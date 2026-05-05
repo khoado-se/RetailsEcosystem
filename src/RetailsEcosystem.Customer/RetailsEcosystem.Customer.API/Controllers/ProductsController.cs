@@ -19,8 +19,6 @@ namespace RetailsEcosystem.Customer.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any,
-                       VaryByQueryKeys = ["pageNumber", "pageSize", "categoryId", "search"])]
         public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts(int pageNumber = 1, int pageSize = 8, int? categoryId = null, string? search = null)
         {
             var result = await _productService.GetAllProductAsync(new PagedRequest
@@ -93,8 +91,6 @@ namespace RetailsEcosystem.Customer.API.Controllers
 
         [HttpGet("featured")]
         [AllowAnonymous]
-        [ResponseCache(Duration = 1800, Location = ResponseCacheLocation.Any,
-                       VaryByQueryKeys = ["pageNumber", "pageSize"])]
         public async Task<ActionResult<PagedResult<ProductDto>>> GetFeatureProducts(int pageNumber = 1, int pageSize = 4)
         {
             var result = await _productService.GetFeaturedProductsAsync(new PagedRequest

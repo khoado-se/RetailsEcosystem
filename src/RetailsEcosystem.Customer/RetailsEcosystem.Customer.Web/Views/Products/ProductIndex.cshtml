@@ -110,7 +110,7 @@ else
                         <a asp-controller="Products" asp-action="ProductDetails"
                            asp-route-productId="@item.Id"
                            class="card-product-name">@item.Name</a>
-                        <p class="card-price">@item.Price.ToString("N0") ₫</p>
+                        <p class="card-price">@item.Price.ToString("C0")</p>
 
                         @if (User.Identity?.IsAuthenticated == true)
                         {

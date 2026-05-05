@@ -1,7 +1,5 @@
 // Cart page — quantity controls, remove, and summary refresh.
 
-const fmt = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
-
 let _qtyAbortController = null;
 
 document.addEventListener('click', async e => {
@@ -80,15 +78,15 @@ function refreshCartUI(cart) {
         const qtyEl = document.getElementById('qty-' + i.id);
         const lineEl = document.getElementById('line-' + i.id);
         if (qtyEl) qtyEl.value = i.quantity;
-        if (lineEl) lineEl.textContent = fmt(line);
+        if (lineEl) lineEl.textContent = fmtCurrency(line);
     });
     const summaryCount = document.getElementById('summary-count');
     const summaryTotal = document.getElementById('summary-total');
     const grandTotal = document.getElementById('grand-total');
     if (summaryCount) summaryCount.textContent = count;
-    if (summaryTotal) summaryTotal.textContent = fmt(total);
-    if (grandTotal) grandTotal.textContent = fmt(total);
-    updateHeaderCartCount(count);
+    if (summaryTotal) summaryTotal.textContent = fmtCurrency(total);
+    if (grandTotal) grandTotal.textContent = fmtCurrency(total);
+    renderHeaderCart({ itemCount: count, total: total, items: cart.items });
 }
 
 function showAlert(type, msg) {

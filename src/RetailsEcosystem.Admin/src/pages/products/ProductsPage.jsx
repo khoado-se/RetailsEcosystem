@@ -131,7 +131,7 @@ export default function ProductsPage() {
 
       <CreateProductModal
         onSuccess={() => {
-          fetchProducts();
+          setSelectedCategoryId(""); // Refresh table by reset category, it will refetch product table
           setPageNumber(1);
         }}
       />

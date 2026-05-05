@@ -4,6 +4,7 @@ import { useOrders } from "../../features/order/useOrders";
 import OrderDetailModal from "../../features/order/OrderDetailModal";
 import Pagination from "../../components/ui/Pagination";
 import { getOrderById } from "../../features/order/orderApi";
+import { formatCurrency, formatDate } from "../../utils/format";
 
 const STATUS_OPTIONS = [
   { value: null, label: "All" },
@@ -65,10 +66,6 @@ export default function OrdersPage() {
     }
   };
 
-  const fmt = (date) =>
-    date
-      ? new Date(date).toLocaleDateString("en-US", { dateStyle: "medium" })
-      : "—";
 
   return (
     <>
@@ -123,13 +120,10 @@ export default function OrdersPage() {
                     <tr key={order.id}>
                       <td className="fw-semibold">#{order.id}</td>
                       <td className="text-muted small">{order.userEmail || order.userId}</td>
-                      <td className="text-muted small">{fmt(order.createdDate)}</td>
+                      <td className="text-muted small">{formatDate(order.createdDate)}</td>
                       <td className="text-center">{order.items?.length ?? 0}</td>
                       <td className="text-end fw-semibold">
-                        {Number(order.totalAmount).toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
+                        {formatCurrency(order.totalAmount)}
                       </td>
                       <td className="text-center">
                         <span className={`badge ${STATUS_BADGE[order.status]}`}>

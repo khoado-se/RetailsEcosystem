@@ -3,9 +3,15 @@ using RetailsEcosystem.Customer.Web.Attributes;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using RetailsEcosystem.Customer.Web.Options;
 using RetailsEcosystem.Customer.Web.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiSettings = builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>()!;
+
+var culture = new CultureInfo(builder.Configuration.GetValue<string>("Currency:CultureInfo")!);
+
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>

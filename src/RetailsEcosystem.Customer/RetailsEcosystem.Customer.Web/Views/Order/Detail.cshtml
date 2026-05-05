@@ -155,15 +155,15 @@
                                             </div>
                                         </td>
                                         <td class="text-center">@item.Quantity</td>
-                                        <td class="text-center">@item.UnitPrice.ToString("C")</td>
-                                        <td class="text-end fw-semibold">@item.LineTotal.ToString("C")</td>
+                                        <td class="text-center">@item.UnitPrice.ToString("C0")</td>
+                                        <td class="text-end fw-semibold">@item.LineTotal.ToString("C0")</td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr class="fw-bold border-top">
                                     <td colspan="3" class="text-end">Grand Total</td>
-                                    <td class="text-end">@Model.TotalAmount.ToString("C")</td>
+                                    <td class="text-end">@Model.TotalAmount.ToString("C0")</td>
                                 </tr>
                             </tfoot>
                         </table>

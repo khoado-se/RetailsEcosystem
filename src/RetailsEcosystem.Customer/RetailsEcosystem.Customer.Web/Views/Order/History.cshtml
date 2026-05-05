@@ -64,7 +64,7 @@
                                     <td class="fw-semibold">#@order.Id</td>
                                     <td class="text-muted small">@order.CreatedDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
                                     <td class="text-center">@order.Items.Count</td>
-                                    <td class="text-end fw-semibold">@order.TotalAmount.ToString("C")</td>
+                                    <td class="text-end fw-semibold">@order.TotalAmount.ToString("C0")</td>
                                     <td class="text-center">
                                         @{
                                             var badgeClass = order.Status switch
