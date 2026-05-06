@@ -90,9 +90,10 @@ namespace RetailsEcosystem.Customer.Application.Services
             if (item.Cart.UserId != userId)
                 throw new UnauthorizedAccessException("Cart item does not belong to this user.");
 
-            item.Cart.Items.Remove(item);
+            var cart = item.Cart;
+            cart.Items.Remove(item);
             await _cartRepo.SaveAsync();
-            return MapToDto(item.Cart);
+            return MapToDto(cart);
         }
 
         public async Task ClearCartAsync(string userId)

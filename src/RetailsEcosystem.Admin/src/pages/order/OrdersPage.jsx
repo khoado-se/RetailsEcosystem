@@ -94,6 +94,7 @@ export default function OrdersPage() {
           ) : error ? (
             <div className="text-center py-5 text-danger">{error}</div>
           ) : (
+            <div className="table-responsive">
             <table className="table table-hover align-middle mb-0">
               <thead>
                 <tr>
@@ -143,6 +144,7 @@ export default function OrdersPage() {
                 )}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </div>

@@ -1,28 +1,61 @@
-// Cart page — quantity controls, remove, and summary refresh.
+// Cart page — quantity controls, remove, clear, and summary refresh.
 
 let _qtyAbortController = null;
+let _pendingRemoveId = null;
 
-document.addEventListener('click', async e => {
-    const decBtn = e.target.closest('[data-action="qty-dec"]');
-    const incBtn = e.target.closest('[data-action="qty-inc"]');
-    const removeBtn = e.target.closest('[data-action="remove-item"]');
-
-    if (decBtn) {
-        const id = decBtn.dataset.itemId;
-        const current = parseInt(document.getElementById('qty-' + id).value);
-        await updateQty(id, current - 1, decBtn);
-    } else if (incBtn) {
-        const id = incBtn.dataset.itemId;
-        const current = parseInt(document.getElementById('qty-' + id).value);
-        await updateQty(id, current + 1, incBtn);
-    } else if (removeBtn) {
-        await removeItem(removeBtn.dataset.itemId, removeBtn);
+$(document).on('click', '[data-action="qty-dec"]', async function () {
+    const id = $(this).data('item-id');
+    const current = parseInt($('#qty-' + id).val());
+    if (current - 1 < 1) {
+        _pendingRemoveId = id;
+        $('#confirmRemoveModal').modal('show');
+        return;
     }
+    await updateQty(id, current - 1, this);
 });
 
-document.addEventListener('change', async e => {
-    const input = e.target.closest('[data-action="qty-change"]');
-    if (input) await updateQty(input.dataset.itemId, parseInt(input.value), null);
+$(document).on('click', '[data-action="qty-inc"]', async function () {
+    const id = $(this).data('item-id');
+    const current = parseInt($('#qty-' + id).val());
+    await updateQty(id, current + 1, this);
+});
+
+$(document).on('click', '[data-action="remove-item"]', function () {
+    _pendingRemoveId = $(this).data('item-id');
+    $('#confirmRemoveModal').modal('show');
+});
+
+$(document).on('change', '[data-action="qty-change"]', async function () {
+    const id = $(this).data('item-id');
+    const qty = parseInt($(this).val());
+    if (qty < 1) {
+        $('#qty-' + id).val(1);
+        _pendingRemoveId = id;
+        $('#confirmRemoveModal').modal('show');
+        return;
+    }
+    await updateQty(id, qty, null);
+});
+
+$(document).on('click', '#confirmRemoveBtn', async function () {
+    if (_pendingRemoveId === null) return;
+    const id = _pendingRemoveId;
+    $(this).prop('disabled', true);
+    $('#confirmRemoveModal').modal('hide');
+    await removeItem(id, this);
+    _pendingRemoveId = null;
+});
+
+$('#confirmRemoveModal').on('hidden.bs.modal', function () {
+    $('#confirmRemoveBtn').prop('disabled', false);
+});
+
+$(document).on('click', '#clearCartBtn', function () {
+    $('#confirmClearModal').modal('show');
+});
+
+$(document).on('click', '#confirmClearBtn', function () {
+    $('#clearCartForm').trigger('submit');
 });
 
 async function updateQty(itemId, qty, triggerBtn) {
@@ -31,7 +64,7 @@ async function updateQty(itemId, qty, triggerBtn) {
     if (_qtyAbortController) _qtyAbortController.abort();
     _qtyAbortController = new AbortController();
 
-    if (triggerBtn) triggerBtn.disabled = true;
+    if (triggerBtn) $(triggerBtn).prop('disabled', true);
     try {
         const res = await fetch('/cart/items/' + itemId, {
             method: 'PUT',
@@ -48,24 +81,24 @@ async function updateQty(itemId, qty, triggerBtn) {
     } catch (err) {
         if (err.name !== 'AbortError') showAlert('danger', 'Failed to update quantity.');
     } finally {
-        if (triggerBtn) triggerBtn.disabled = false;
+        if (triggerBtn) $(triggerBtn).prop('disabled', false);
         _qtyAbortController = null;
     }
 }
 
 async function removeItem(itemId, btn) {
-    btn.disabled = true;
+    $(btn).prop('disabled', true);
     try {
         const res = await fetch('/cart/items/' + itemId, { method: 'DELETE' });
         if (!res.ok) { showAlert('danger', 'Failed to remove item.'); return; }
         const cart = await res.json();
-        document.getElementById('cart-row-' + itemId)?.remove();
+        $('#cart-row-' + itemId).remove();
         refreshCartUI(cart);
         if (cart.items.length === 0) location.reload();
     } catch {
         showAlert('danger', 'Failed to remove item. Please try again.');
     } finally {
-        btn.disabled = false;
+        $(btn).prop('disabled', false);
     }
 }
 
@@ -75,25 +108,19 @@ function refreshCartUI(cart) {
         const line = i.unitPrice * i.quantity;
         total += line;
         count += i.quantity;
-        const qtyEl = document.getElementById('qty-' + i.id);
-        const lineEl = document.getElementById('line-' + i.id);
-        if (qtyEl) qtyEl.value = i.quantity;
-        if (lineEl) lineEl.textContent = fmtCurrency(line);
+        $('#qty-' + i.id).val(i.quantity);
+        $('#line-' + i.id).text(fmtCurrency(line));
     });
-    const summaryCount = document.getElementById('summary-count');
-    const summaryTotal = document.getElementById('summary-total');
-    const grandTotal = document.getElementById('grand-total');
-    if (summaryCount) summaryCount.textContent = count;
-    if (summaryTotal) summaryTotal.textContent = fmtCurrency(total);
-    if (grandTotal) grandTotal.textContent = fmtCurrency(total);
+    $('#summary-count').text(count);
+    $('#summary-total').text(fmtCurrency(total));
+    $('#grand-total').text(fmtCurrency(total));
     renderHeaderCart({ itemCount: count, total: total, items: cart.items });
 }
 
 function showAlert(type, msg) {
-    const el = document.getElementById('cart-alert');
-    if (!el) return;
-    el.className = 'alert alert-' + type;
-    el.textContent = msg;
-    el.classList.remove('d-none');
-    setTimeout(() => el.classList.add('d-none'), 4000);
+    $('#cart-alert')
+        .attr('class', 'alert alert-' + type)
+        .text(msg)
+        .removeClass('d-none');
+    setTimeout(() => $('#cart-alert').addClass('d-none'), 4000);
 }

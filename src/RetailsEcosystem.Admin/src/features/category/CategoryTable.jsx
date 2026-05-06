@@ -2,7 +2,8 @@ export default function CategoryTable({ categories, onEdit, onDelete }) {
   return (
     <div className="card border-0 shadow-sm">
       <div className="card-body p-0">
-        <table className="table table-hover align-middle mb-0">
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0">
           <thead>
             <tr>
               <th>Name</th>
@@ -41,6 +42,7 @@ export default function CategoryTable({ categories, onEdit, onDelete }) {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

@@ -4,20 +4,14 @@ const fmtCurrency = n =>
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(n);
 
 function updateHeaderCartCount(count) {
-    const countEl = document.getElementById('header-cart-count');
-    const labelEl = document.getElementById('header-cart-label');
-    if (countEl) countEl.textContent = count;
-    if (labelEl) labelEl.textContent = count;
+    $('#header-cart-count, #header-cart-label').text(count);
 }
 
 function renderHeaderCart(data) {
     updateHeaderCartCount(data.itemCount ?? 0);
 
-    const list  = document.getElementById('header-cart-list');
-    const total = document.getElementById('header-cart-total');
-
-    if (list) {
-        list.innerHTML = data.items?.length
+    $('#header-cart-list').html(
+        data.items?.length
             ? data.items.map(i => `
                 <li>
                     <div class="cart-img-head">
@@ -31,45 +25,47 @@ function renderHeaderCart(data) {
                         <span class="quantity">${i.quantity} &times; ${fmtCurrency(i.unitPrice)}</span>
                     </div>
                 </li>`).join('')
-            : '<li class="text-center text-muted py-2 small">Your cart is empty.</li>';
-    }
+            : '<li class="text-center text-muted py-2 small">Your cart is empty.</li>'
+    );
 
-    if (total) total.textContent = fmtCurrency(data.total ?? 0);
+    $('#header-cart-total').text(fmtCurrency(data.total ?? 0));
 }
 
-// User menu — click to open, click outside to close.
-(function () {
-    const menu = document.querySelector('.user-menu');
-    if (!menu) return;
-    const trigger = menu.querySelector('.user-menu__trigger');
-    if (!trigger) return;
-    trigger.addEventListener('click', e => {
+$(function () {
+    // User menu — click to open, click outside to close.
+    $('.user-menu__trigger').on('click', function (e) {
         e.stopPropagation();
-        menu.classList.toggle('is-open');
+        $('.user-menu').toggleClass('is-open');
     });
-    document.addEventListener('click', () => menu.classList.remove('is-open'));
-})();
+    $(document).on('click', function () {
+        $('.user-menu').removeClass('is-open');
+    });
 
-// Sticky header compact state on scroll (hysteresis prevents flicker near threshold).
-(function () {
-    const header = document.querySelector('header.header');
-    if (!header) return;
+    // Sticky header compact state on scroll (hysteresis prevents flicker near threshold).
     const COLLAPSE_AT = 80;
     const EXPAND_AT = 56;
     let compact = false;
-    const onScroll = () => {
-        const y = window.scrollY;
+    function onScroll() {
+        const y = $(window).scrollTop();
         if (!compact && y > COLLAPSE_AT) {
             compact = true;
-            header.classList.add('header--compact');
+            $('header.header').addClass('header--compact');
         } else if (compact && y < EXPAND_AT) {
             compact = false;
-            header.classList.remove('header--compact');
+            $('header.header').removeClass('header--compact');
         }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    }
+    $(window).on('scroll', onScroll);
     onScroll();
-})();
+});
+
+function showToast(type, message) {
+    const $toast = $('#site-toast');
+    $toast.removeClass('text-bg-success text-bg-danger text-bg-warning text-bg-info');
+    $toast.addClass('text-bg-' + type);
+    $('#site-toast-body').text(message);
+    bootstrap.Toast.getOrCreateInstance($toast[0], { delay: 4000 }).show();
+}
 
 // Refresh header cart on every page load.
 (async () => {

@@ -6,6 +6,7 @@ import CategoryForm from "../../features/category/CategoryForm";
 import { deleteCategory } from "../../features/category/categoryApi";
 import Pagination from "../../components/ui/Pagination";
 import PageSizeSelector from "../../components/ui/PageSizeSelector";
+import ConfirmModal from "../../components/ui/ConfirmModal";
 
 export default function CategoriesPage() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,6 +14,7 @@ export default function CategoriesPage() {
   const [showForm, setShowForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { categories, totalPage, loading, error, fetchCategories } =
     useCategories(pageNumber, pageSize);
@@ -31,8 +33,11 @@ export default function CategoriesPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this category?")) return;
+  const handleDelete = (id) => setDeleteTarget(id);
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteTarget;
+    setDeleteTarget(null);
     try {
       await deleteCategory(id);
       toast.success("Category deleted.");
@@ -152,6 +157,16 @@ export default function CategoriesPage() {
           category={selectedCategory}
           onSuccess={handleSuccess}
           onClose={() => setShowForm(false)}
+        />
+      )}
+
+      {deleteTarget !== null && (
+        <ConfirmModal
+          title="Delete Category"
+          message="Delete this category? This action cannot be undone."
+          confirmLabel="Delete"
+          onConfirm={handleDeleteConfirm}
+          onClose={() => setDeleteTarget(null)}
         />
       )}
     </>

@@ -67,10 +67,9 @@
 
                                 @if (Model.Status == OrderStatus.Pending)
                                 {
-                                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post"
-                                          onsubmit="return confirm('Cancel this order?')">
+                                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" id="cancelOrderForm">
                                         @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm px-3">
+                                        <button type="button" class="btn btn-outline-danger rounded-pill btn-sm px-3" id="cancelOrderBtn">
                                             Cancel Order
                                         </button>
                                     </form>
@@ -174,3 +173,24 @@
         </div>
     </div>
 </section>
+
+<!-- Confirm Cancel Order Modal -->
+<div class="modal fade" id="confirmCancelOrderModal" tabindex="-1" aria-labelledby="confirmCancelOrderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="confirmCancelOrderLabel">Cancel Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">Cancel this order? This action cannot be undone.</div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Keep Order</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" id="confirmCancelOrderBtn">Cancel Order</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/order-detail.js" asp-append-version="true"></script>
+}

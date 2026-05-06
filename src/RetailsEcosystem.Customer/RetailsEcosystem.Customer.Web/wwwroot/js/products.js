@@ -1,13 +1,10 @@
 // Product listing page — Add to Cart.
 
-document.addEventListener('click', async e => {
-    const btn = e.target.closest('[data-action="add-to-cart"]');
-    if (!btn) return;
-
-    const productId = parseInt(btn.dataset.productId);
-    const original = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Adding…';
+$(document).on('click', '[data-action="add-to-cart"]', async function () {
+    const productId = parseInt($(this).data('product-id'));
+    const $btn = $(this);
+    const original = $btn.text();
+    $btn.prop('disabled', true).text('Adding…');
 
     try {
         const res = await fetch('/cart/items', {
@@ -18,16 +15,14 @@ document.addEventListener('click', async e => {
         if (res.ok) {
             const data = await res.json();
             updateHeaderCartCount(data.itemCount);
-            btn.textContent = 'Added!';
-            setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+            $btn.text('Added!');
+            setTimeout(() => $btn.text(original).prop('disabled', false), 1500);
         } else {
             const err = await res.json().catch(() => ({}));
             alert(err.message || 'Could not add item.');
-            btn.textContent = original;
-            btn.disabled = false;
+            $btn.text(original).prop('disabled', false);
         }
     } catch {
-        btn.textContent = original;
-        btn.disabled = false;
+        $btn.text(original).prop('disabled', false);
     }
 });

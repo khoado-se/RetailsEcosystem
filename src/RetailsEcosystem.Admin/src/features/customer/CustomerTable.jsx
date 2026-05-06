@@ -21,6 +21,7 @@ export default function CustomerTable({ customers, pageNumber, setPageNumber, to
     <>
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body p-0">
+          <div className="table-responsive">
           <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
@@ -73,6 +74,7 @@ export default function CustomerTable({ customers, pageNumber, setPageNumber, to
               )}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
 

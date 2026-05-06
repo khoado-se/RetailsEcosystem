@@ -15,14 +15,7 @@ export default function Header({ onToggleSidebar }) {
         <img src="/brand/logo-full-dark.svg" alt="RetailsEcosystem" style={{ height: "28px" }} />
       </a>
 
-      <button
-        className="btn btn-link text-white d-md-none px-3"
-        type="button"
-        onClick={onToggleSidebar}
-        aria-label="Toggle navigation"
-      >
-        <i className="bi bi-list fs-5" />
-      </button>
+     
 
       <div className="navbar-nav ms-auto d-flex align-items-center flex-row gap-2 px-3">
         {user && (
@@ -42,6 +35,15 @@ export default function Header({ onToggleSidebar }) {
           </button>
         </div>
       </div>
+
+       <button
+        className="btn btn-link text-white d-md-none px-3"
+        type="button"
+        onClick={onToggleSidebar}
+        aria-label="Toggle navigation"
+      >
+        <i className="bi bi-list fs-5" />
+      </button>
     </header>
   );
 }

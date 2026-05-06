@@ -1,12 +1,18 @@
+import { useState } from "react";
 import toast from "react-hot-toast";
 import Pagination from "../../components/ui/Pagination";
 import { ENV } from "../../configs/env";
 import { deleteProduct } from "./productApi";
+import ConfirmModal from "../../components/ui/ConfirmModal";
 
 export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, loading, onEdit, onDeleted, onImages, onClearFilters }) {
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const handleDelete = async (product) => {
-    if (!window.confirm(`Delete "${product.name}"?`)) return;
+  const handleDelete = (product) => setDeleteTarget(product);
+
+  const handleDeleteConfirm = async () => {
+    const product = deleteTarget;
+    setDeleteTarget(null);
     try {
       await deleteProduct(product.id);
       toast.success("Product deleted.");
@@ -34,6 +40,15 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
         <div className="d-flex justify-content-center mt-3">
           <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
         </div>
+        {deleteTarget && (
+          <ConfirmModal
+            title="Delete Product"
+            message={`Delete "${deleteTarget.name}"? This action cannot be undone.`}
+            confirmLabel="Delete"
+            onConfirm={handleDeleteConfirm}
+            onClose={() => setDeleteTarget(null)}
+          />
+        )}
       </>
     );
   }
@@ -42,6 +57,7 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
     <>
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body p-0">
+          <div className="table-responsive">
           <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
@@ -79,24 +95,27 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                   <td className="text-end">
                     <button
                       className="btn btn-outline-secondary btn-sm me-2"
+                      title="Images"
                       onClick={() => onImages(product.id, product.name)}
                     >
-                      <i className="bi bi-images me-1" />
-                      Images
+                      <i className="bi bi-images" />
+                      <span className="d-none d-sm-inline ms-1">Images</span>
                     </button>
                     <button
                       className="btn btn-primary btn-sm me-2"
+                      title="Edit"
                       onClick={() => onEdit(product.id)}
                     >
-                      <i className="bi bi-pencil me-1" />
-                      Edit
+                      <i className="bi bi-pencil" />
+                      <span className="d-none d-sm-inline ms-1">Edit</span>
                     </button>
                     <button
                       className="btn btn-danger btn-sm"
+                      title="Delete"
                       onClick={() => handleDelete(product)}
                     >
-                      <i className="bi bi-trash me-1" />
-                      Delete
+                      <i className="bi bi-trash" />
+                      <span className="d-none d-sm-inline ms-1">Delete</span>
                     </button>
                   </td>
                 </tr>
@@ -104,11 +123,22 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
             </tbody>
           </table>
         </div>
+        </div>
       </div>
 
       <div className="d-flex justify-content-center mt-3">
         <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalPage={totalPage} />
       </div>
+
+      {deleteTarget && (
+        <ConfirmModal
+          title="Delete Product"
+          message={`Delete "${deleteTarget.name}"? This action cannot be undone.`}
+          confirmLabel="Delete"
+          onConfirm={handleDeleteConfirm}
+          onClose={() => setDeleteTarget(null)}
+        />
+      )}
     </>
   );
 }

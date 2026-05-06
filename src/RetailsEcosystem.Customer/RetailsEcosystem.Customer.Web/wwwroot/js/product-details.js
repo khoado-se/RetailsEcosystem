@@ -1,46 +1,46 @@
 // Product details page — gallery, quantity picker, and Add to Cart.
 
-// Gallery thumbnail click
-document.addEventListener('DOMContentLoaded', () => {
-    const current = document.getElementById('current');
-    if (!current) return;
-    const thumbnails = document.querySelectorAll('.pdp-thumb');
-    if (thumbnails.length === 0) return;
-    thumbnails[0].classList.add('pdp-thumb--active');
-    thumbnails.forEach(img => {
-        img.addEventListener('click', e => {
-            thumbnails.forEach(i => i.classList.remove('pdp-thumb--active'));
-            current.src = e.currentTarget.src;
-            e.currentTarget.classList.add('pdp-thumb--active');
+$(function () {
+    // Gallery thumbnail click
+    const $current = $('#current');
+    if ($current.length) {
+        const $thumbs = $('.pdp-thumb');
+        $thumbs.first().addClass('pdp-thumb--active');
+        $thumbs.on('click', function () {
+            $thumbs.removeClass('pdp-thumb--active');
+            $current.attr('src', $(this).attr('src'));
+            $(this).addClass('pdp-thumb--active');
         });
-    });
-});
-
-document.addEventListener('click', async e => {
-    if (e.target.closest('[data-action="qty-dec"]')) {
-        adjustQty(-1);
-    } else if (e.target.closest('[data-action="qty-inc"]')) {
-        adjustQty(1);
-    } else if (e.target.closest('[data-action="add-to-cart"]')) {
-        await addToCart(e.target.closest('[data-action="add-to-cart"]'));
     }
 });
 
+$(document).on('click', '[data-action="qty-dec"]', function () {
+    adjustQty(-1);
+});
+
+$(document).on('click', '[data-action="qty-inc"]', function () {
+    adjustQty(1);
+});
+
+$(document).on('click', '[data-action="add-to-cart"]', async function () {
+    await addToCart(this);
+});
+
 function adjustQty(delta) {
-    const input = document.getElementById('quantity');
-    if (!input) return;
-    const next = parseInt(input.value) + delta;
-    if (next >= parseInt(input.min) && next <= parseInt(input.max)) {
-        input.value = next;
+    const $input = $('#quantity');
+    if (!$input.length) return;
+    const next = parseInt($input.val()) + delta;
+    if (next >= parseInt($input.attr('min')) && next <= parseInt($input.attr('max'))) {
+        $input.val(next);
     }
 }
 
 async function addToCart(btn) {
-    const productId = parseInt(btn.dataset.productId);
-    const qty = parseInt(document.getElementById('quantity')?.value) || 1;
-    const original = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Adding…';
+    const $btn = $(btn);
+    const productId = parseInt($btn.data('product-id'));
+    const qty = parseInt($('#quantity').val()) || 1;
+    const original = $btn.text();
+    $btn.prop('disabled', true).text('Adding…');
 
     try {
         const res = await fetch('/cart/items', {
@@ -48,24 +48,15 @@ async function addToCart(btn) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ productId, quantity: qty })
         });
-        const alertEl = document.getElementById('details-alert');
         if (res.ok) {
             const data = await res.json();
             updateHeaderCartCount(data.itemCount);
-            if (alertEl) {
-                alertEl.className = 'alert alert-success';
-                alertEl.textContent = 'Added ' + qty + ' item(s) to your cart.';
-            }
+            showToast('success', 'Added ' + qty + ' item(s) to your cart.');
         } else {
             const err = await res.json().catch(() => ({}));
-            if (alertEl) {
-                alertEl.className = 'alert alert-danger';
-                alertEl.textContent = err.message || 'Could not add item.';
-            }
+            showToast('danger', err.message || 'Could not add item.');
         }
-        if (alertEl) setTimeout(() => alertEl.className = 'alert d-none', 4000);
     } catch {}
 
-    btn.textContent = original;
-    btn.disabled = false;
+    $btn.text(original).prop('disabled', false);
 }

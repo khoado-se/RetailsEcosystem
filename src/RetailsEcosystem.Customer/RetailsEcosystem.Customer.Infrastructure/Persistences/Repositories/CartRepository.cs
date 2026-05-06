@@ -37,6 +37,9 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         {
             return await _context.CartItems
                 .Include(i => i.Cart)
+                    .ThenInclude(c => c.Items)
+                        .ThenInclude(ci => ci.Product)
+                            .ThenInclude(p => p.Images)
                 .Include(i => i.Product)
                     .ThenInclude(p => p.Images)
                 .FirstOrDefaultAsync(i => i.Id == cartItemId);
