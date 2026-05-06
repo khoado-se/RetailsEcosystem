@@ -2,180 +2,164 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── CategorySelectDropdown ──────────────────────────────────────────────────
-  // Panel is appended to <body> and positioned with getBoundingClientRect() so
-  // no ancestor overflow or stacking context can clip it.
-
+  // ── CategorySelectDropdown ────────────────────────────────────────────────
   class CategorySelectDropdown {
     constructor(mountEl) {
-      this.el           = mountEl;
-      this.apiUrl       = mountEl.dataset.apiUrl || '/categories/paged';
-      this.placeholder  = mountEl.dataset.placeholder || 'All Categories';
-      this.selectedId   = mountEl.dataset.selectedId || '';
-      this.selectedName = mountEl.dataset.selectedName || '';
-      this.page    = 1;
-      this.hasMore = true;
-      this.loading = false;
-      this.items   = [];
-      this.open    = false;
-      this._scrollHandler = null;
-
+      this.mount       = mountEl;
+      this.apiUrl      = mountEl.dataset.apiUrl;
+      this.placeholder = mountEl.dataset.placeholder || 'All Categories';
+      this.selectedId  = mountEl.dataset.selectedId   || '';
+      this.selectedName= mountEl.dataset.selectedName || '';
+      this.page        = 1;
+      this.pageSize    = 10;
+      this.loading     = false;
+      this.done        = false;
+      this._onResize = () => this._positionPanel();
+      this._onScroll = (e) => {
+        if (this.panel.contains(e.target)) return;
+        this._close();
+      };
       this._buildDOM();
       this._bindEvents();
-      mountEl._csInstance = this;
+      if (this.selectedId) {
+        this._fetchNext(); // pre-load so selected item appears highlighted on open
+      }
     }
 
     _buildDOM() {
-      // Trigger button — looks like a form-select, stays in the mount element
+      // Trigger button
       this.trigger = document.createElement('button');
       this.trigger.type = 'button';
-      this.trigger.className = 'cs-trigger form-select text-start';
-      this.trigger.textContent = (this.selectedId && this.selectedName)
-        ? this.selectedName
-        : this.placeholder;
+      this.trigger.className = 'cs-trigger btn btn-outline-secondary btn-sm w-100';
+      this.trigger.innerHTML = `<span class="cs-trigger-label">${this.selectedName || this.placeholder}</span><i class="lni lni-chevron-down cs-trigger-caret"></i>`;
+      this.mount.appendChild(this.trigger);
 
-      // Panel appended to <body> so no ancestor clips it
+      // Hidden input picked up by the surrounding <form>
+      this.hiddenInput = document.createElement('input');
+      this.hiddenInput.type  = 'hidden';
+      this.hiddenInput.name  = 'categoryId';
+      this.hiddenInput.value = this.selectedId;
+      this.mount.appendChild(this.hiddenInput);
+
+      // Panel (appended to body so it escapes any overflow:hidden ancestors)
       this.panel = document.createElement('div');
       this.panel.className = 'cs-panel';
       this.panel.hidden = true;
       document.body.appendChild(this.panel);
 
-      // Sentinel div — IntersectionObserver target for infinite scroll
+      // "All Categories" option at top
+      this._prependAllOption();
+
+      // Sentinel for IntersectionObserver-based infinite scroll
       this.sentinel = document.createElement('div');
       this.sentinel.className = 'cs-sentinel';
+      this.panel.appendChild(this.sentinel);
 
       // Loading spinner
-      this.spinner = document.createElement('div');
-      this.spinner.className = 'cs-loading';
-      this.spinner.hidden = true;
-      this.spinner.innerHTML =
-        '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>';
+      this.loadingEl = document.createElement('div');
+      this.loadingEl.className = 'cs-loading';
+      this.loadingEl.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading…</span></div>';
+      this.loadingEl.hidden = true;
+      this.panel.appendChild(this.loadingEl);
 
-      this.panel.appendChild(this.sentinel);
-      this.panel.appendChild(this.spinner);
-
-      // Hidden input carries the value on form submit — stays in mount element
-      this.hiddenInput = document.createElement('input');
-      this.hiddenInput.type  = 'hidden';
-      this.hiddenInput.name  = 'categoryId';
-      this.hiddenInput.value = this.selectedId;
-
-      this.el.appendChild(this.trigger);
-      this.el.appendChild(this.hiddenInput);
-
-      // IntersectionObserver on the panel's sentinel (panel is in body, always unclipped)
-      this._observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && this.hasMore && !this.loading) {
-          this._fetchNext();
-        }
-      }, { threshold: 0.1 });
-      this._observer.observe(this.sentinel);
+      // IntersectionObserver fires _fetchNext when sentinel scrolls into view
+      this._observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) this._fetchNext();
+      }, { root: this.panel, threshold: 0.1 });
     }
 
     _bindEvents() {
       this.trigger.addEventListener('click', () => {
-        this.open ? this._close() : this._openPanel();
+        if (this.panel.hidden) this._openPanel();
+        else this._close();
       });
 
-      // Close when user clicks outside both the mount element and the body panel
-      document.addEventListener('mousedown', (e) => {
-        if (!this.el.contains(e.target) && !this.panel.contains(e.target)) {
-          this._close();
-        }
-      });
+      this._outsideHandler = e => {
+        if (!this.panel.contains(e.target) && !this.mount.contains(e.target)) this._close();
+      };
     }
 
     _positionPanel() {
       const rect = this.trigger.getBoundingClientRect();
-      this.panel.style.position = 'fixed';
-      this.panel.style.top      = `${rect.bottom + 2}px`;
-      this.panel.style.left     = `${rect.left}px`;
-      this.panel.style.width    = `${rect.width}px`;
-      // this.panel.style.zIndex   = '9999';
+      this.panel.style.top   = `${rect.bottom + 4}px`;
+      this.panel.style.left  = `${rect.left}px`;
+      this.panel.style.width = `${rect.width}px`;
     }
 
     _openPanel() {
-      this.open = true;
       this._positionPanel();
       this.panel.hidden = false;
-
-      if (this.items.length === 0) {
-        this._prependAllOption();
-        this._fetchNext();
-      }
-
-      // Keep panel aligned while page scrolls or window resizes
-      this._scrollHandler = () => this._positionPanel();
-      window.addEventListener('scroll', this._scrollHandler, { passive: true });
-      window.addEventListener('resize', this._scrollHandler, { passive: true });
+      this.trigger.setAttribute('aria-expanded', 'true');
+      this._observer.observe(this.sentinel);
+      document.addEventListener('mousedown', this._outsideHandler);
+      window.addEventListener('resize', this._onResize);
+      window.addEventListener('scroll', this._onScroll, true);
     }
 
     _close() {
-      this.open = false;
       this.panel.hidden = true;
-      if (this._scrollHandler) {
-        window.removeEventListener('scroll', this._scrollHandler);
-        window.removeEventListener('resize', this._scrollHandler);
-        this._scrollHandler = null;
-      }
+      this.trigger.setAttribute('aria-expanded', 'false');
+      this._observer.unobserve(this.sentinel);
+      document.removeEventListener('mousedown', this._outsideHandler);
+      window.removeEventListener('resize', this._onResize);
+      window.removeEventListener('scroll', this._onScroll, true);
     }
 
     _prependAllOption() {
       const opt = this._makeOption('', this.placeholder, this.selectedId === '');
-      this.panel.insertBefore(opt, this.sentinel);
+      this.panel.insertBefore(opt, this.panel.firstChild);
     }
 
     _makeOption(id, name, isSelected) {
-      const opt = document.createElement('div');
-      opt.className = 'cs-option' + (isSelected ? ' cs-option--selected' : '');
-      opt.dataset.value = id;
-      opt.textContent = name;
-      opt.addEventListener('click', () => this._select(id, name));
-      return opt;
+      const el = document.createElement('div');
+      el.className = 'cs-option' + (isSelected ? ' cs-option--selected' : '');
+      el.textContent = name;
+      el.addEventListener('click', () => this._select(id, name));
+      return el;
     }
 
     async _fetchNext() {
-      if (this.loading || !this.hasMore) return;
+      if (this.loading || this.done) return;
       this.loading = true;
-      this.spinner.hidden = false;
+      this.loadingEl.hidden = false;
       try {
-        const res  = await fetch(`${this.apiUrl}?pageNumber=${this.page}&pageSize=10`);
+        const url = `${this.apiUrl}?pageNumber=${this.page}&pageSize=${this.pageSize}`;
+        const res  = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        const fetched = data.items || [];
-        fetched.forEach(item => {
-          const opt = this._makeOption(
-            String(item.id),
-            item.name,
-            String(item.id) === String(this.selectedId)
-          );
+        const items = data.items ?? data.Items ?? [];
+        items.forEach(cat => {
+          const isSelected = String(cat.id ?? cat.Id) === this.selectedId;
+          const opt = this._makeOption(String(cat.id ?? cat.Id), cat.name ?? cat.Name, isSelected);
           this.panel.insertBefore(opt, this.sentinel);
-          this.items.push(item);
         });
-        this.hasMore = this.page < data.totalPage;
+        if (items.length < this.pageSize) {
+          this.done = true;
+          this._observer.unobserve(this.sentinel);
+        }
         this.page++;
       } catch (err) {
-        console.error('[CategorySelect] fetch error:', err);
+        console.error('[CategorySelectDropdown] fetch error', err);
       } finally {
         this.loading = false;
-        this.spinner.hidden = true;
+        this.loadingEl.hidden = true;
       }
     }
 
     _select(id, name) {
-      this.selectedId = id;
+      this.selectedId   = id;
       this.hiddenInput.value = id;
-      this.trigger.textContent = id ? name : this.placeholder;
-
-      this.panel.querySelectorAll('.cs-option').forEach(o => {
-        o.classList.toggle('cs-option--selected', o.dataset.value === id);
+      this.trigger.querySelector('.cs-trigger-label').textContent = name || this.placeholder;
+      // Update selected highlight
+      this.panel.querySelectorAll('.cs-option').forEach(el => {
+        el.classList.toggle('cs-option--selected', el.textContent === (name || this.placeholder) && (id === '' ? el === this.panel.firstElementChild : true));
       });
-
+      this.mount.dispatchEvent(new CustomEvent('cs:change', { bubbles: true, detail: { id, name } }));
       this._close();
-      this.el.dispatchEvent(new CustomEvent('cs:change', { bubbles: true }));
     }
 
     reset() {
-      this._select('', '');
+      this._select('', this.placeholder);
     }
   }
 
@@ -184,127 +168,20 @@ document.addEventListener('DOMContentLoaded', () => {
     new CategorySelectDropdown(el);
   });
 
-
-  // ── MegaMenuInfiniteScroll ──────────────────────────────────────────────────
-  // Fetches categories lazily on hover; IntersectionObserver uses the list as
-  // root so it only fires when the user actually scrolls inside the visible menu.
-  // Observer is attached on mouseenter and detached on mouseleave to prevent
-  // phantom triggers while the menu is CSS-hidden.
-
-  class MegaMenuInfiniteScroll {
-    constructor(wrapperEl) {
-      this.wrapper      = wrapperEl;
-      this.list         = wrapperEl.querySelector('#mega-cat-list');
-      this.apiUrl       = wrapperEl.dataset.apiUrl || '/categories/paged';
-      this.page         = 1;
-      this.hasMore      = true;
-      this.loading      = false;
-      this.loaded       = false;
-      this.menuVisible  = false;
-      this._sentinel    = null;
-      this._observer    = null;
-      this._bindHover();
-    }
-
-    _bindHover() {
-      this.wrapper.addEventListener('mouseenter', () => {
-        this.menuVisible = true;
-        if (!this.loaded && !this.loading) this._fetchNext();
-        this._attachObserver();
-      });
-
-      this.wrapper.addEventListener('mouseleave', () => {
-        this.menuVisible = false;
-        this._detachObserver();
-      });
-    }
-
-    _attachObserver() {
-      if (this._observer || !this._sentinel) return;
-      this._observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && this.hasMore && !this.loading && this.menuVisible) {
-          this._fetchNext();
-        }
-      }, { root: this.list, threshold: 0.1 });
-      this._observer.observe(this._sentinel);
-    }
-
-    _detachObserver() {
-      if (!this._observer) return;
-      this._observer.disconnect();
-      this._observer = null;
-    }
-
-    _ensureSentinel() {
-      if (this._sentinel) return;
-      this._sentinel = document.createElement('li');
-      this._sentinel.style.height = '1px';
-      this.list.appendChild(this._sentinel);
-      // Attach observer now if menu is still visible
-      if (this.menuVisible) this._attachObserver();
-    }
-
-    async _fetchNext() {
-      if (this.loading || !this.hasMore) return;
-      this.loading = true;
-      try {
-        const res  = await fetch(`${this.apiUrl}?pageNumber=${this.page}&pageSize=12`);
-        const data = await res.json();
-        const items = data.items || [];
-        items.forEach(cat => {
-          const li = document.createElement('li');
-          const a  = document.createElement('a');
-          a.href        = `/Products/ProductIndex?categoryId=${cat.id}`;
-          a.textContent = cat.name;
-          li.appendChild(a);
-          if (this._sentinel) {
-            this.list.insertBefore(li, this._sentinel);
-          } else {
-            this.list.appendChild(li);
-          }
-        });
-        this.hasMore = this.page < (data.totalPage || 1);
-        this.page++;
-        this.loaded = true;
-        this._ensureSentinel();
-      } catch (err) {
-        console.error('[MegaMenu] fetch error:', err);
-      } finally {
-        this.loading = false;
-      }
-    }
-  }
-
-  const megaWrapper = document.querySelector('.mega-category-menu[data-api-url]');
-  if (megaWrapper) new MegaMenuInfiniteScroll(megaWrapper);
-
-
-  // ── Header search clear button ────────────────────────────────────────────────
+  // ── Header search clear button ────────────────────────────────────────────
   const form        = document.getElementById('header-search-form');
   const searchInput = document.getElementById('header-search-input');
   const clearBtn    = document.getElementById('header-search-clear');
   if (form && searchInput && clearBtn) {
-    function categoryInput() {
-      return form.querySelector('input[name="categoryId"]');
-    }
-
     function syncVisibility() {
-      const hasText = searchInput.value.trim().length > 0;
-      const hasCat  = (categoryInput()?.value ?? '') !== '';
-      clearBtn.hidden = !(hasText || hasCat);
+      clearBtn.hidden = searchInput.value.trim().length === 0;
     }
-
     searchInput.addEventListener('input', syncVisibility);
-    document.addEventListener('cs:change', syncVisibility);
-
     clearBtn.addEventListener('click', () => {
       searchInput.value = '';
-      const mountEl = form.querySelector('[data-category-select]');
-      if (mountEl && mountEl._csInstance) mountEl._csInstance.reset();
       syncVisibility();
       form.submit();
     });
-
     syncVisibility();
   }
 

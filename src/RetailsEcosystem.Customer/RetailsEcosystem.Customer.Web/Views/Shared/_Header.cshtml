@@ -30,7 +30,6 @@
                     <form method="get" asp-controller="Products" asp-action="ProductIndex"
                           class="header-search-form" id="header-search-form">
                         <div class="input-group">
-                            @await Component.InvokeAsync("CategoryMenu", new { viewName = "CategorySelect" })
                             <input type="text" name="search" id="header-search-input"
                                    class="form-control" placeholder="Search for products..."
                                    value="@(ViewBag.Search?.ToString() ?? "")">
@@ -143,10 +142,6 @@
         <div class="row align-items-center">
             <div class="col-12">
                 <div class="nav-inner">
-                    <!-- Start Mega Category Menu -->
-                    @await Component.InvokeAsync("CategoryMenu")
-                    <!-- End Mega Category Menu -->
-
                     <!-- Start Navbar -->
                     <nav class="navbar navbar-expand-lg">
                         <button class="navbar-toggler mobile-menu-btn" type="button"

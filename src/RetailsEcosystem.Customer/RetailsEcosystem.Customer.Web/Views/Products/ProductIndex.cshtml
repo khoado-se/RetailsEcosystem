@@ -6,6 +6,10 @@
 @{
     int? categoryId = ViewBag.CategoryId as int?;
     string? search = ViewBag.Search as string;
+    var selectedCatName = categoryId.HasValue
+        ? ((IEnumerable<CategoryDto>)ViewBag.Categories)
+              .FirstOrDefault(c => c.Id == categoryId)?.Name ?? ""
+        : "";
 }
 
 @* Filter Toolbar — search lives in the header *@
@@ -14,8 +18,13 @@
           class="d-flex flex-wrap align-items-center gap-2 flex-grow-1">
         <input type="hidden" name="search" value="@search" />
 
-        <div class="col-auto">
-            @await Component.InvokeAsync("CategoryMenu", new { viewName = "CategorySelect" })
+        <div class="col-auto" style="min-width: 180px;">
+            <div data-category-select
+                 data-selected-id="@(categoryId?.ToString() ?? "")"
+                 data-selected-name="@selectedCatName"
+                 data-placeholder="All Categories"
+                 data-api-url="@($"{ApiOptions.Value.BaseUrl.TrimEnd('/')}/api/categories")">
+            </div>
         </div>
 
         <button type="submit" class="btn btn-sm btn-primary">

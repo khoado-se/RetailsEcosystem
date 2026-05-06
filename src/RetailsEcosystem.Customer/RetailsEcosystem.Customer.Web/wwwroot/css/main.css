@@ -36,24 +36,6 @@
 .text-body-sm { font-size: 0.875rem; }
 .text-caption { font-size: 0.75rem; }
 
-/*======================================
-    Category Select Dropdown (CS)
-    Custom infinite-scroll dropdown replacing native <select>
-========================================*/
-.cs-wrapper  { position: relative; display: inline-block; width: 100%; }
-.cs-trigger  { width: 100%; text-align: left; cursor: pointer; background-color: #fff; }
-.cs-trigger:focus { outline: none; border-color: var(--clr-primary-500); box-shadow: 0 0 0 3px rgba(74,144,217,0.25); }
-.cs-panel    { position: absolute; z-index: 1050; width: 100%; max-height: 240px;
-               overflow-y: auto; background: #fff;
-               border: 1px solid var(--clr-neutral-200);
-               border-radius: var(--radius-md);
-               box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.cs-option   { padding: 8px 12px; cursor: pointer; font-size: 0.875rem; color: var(--clr-neutral-800); }
-.cs-option:hover          { background-color: var(--clr-primary-50); color: var(--clr-primary-700); }
-.cs-option--selected      { background-color: var(--clr-primary-500) !important; color: #fff !important; }
-.cs-sentinel { height: 1px; }
-.cs-loading  { display: flex; justify-content: center; padding: 8px; }
-
 /* Header search clear button */
 .header-search-clear { border-left: none; background: #fff; }
 .header-search-clear:hover { background-color: var(--clr-neutral-100); color: var(--clr-danger); }
@@ -2316,150 +2298,6 @@ top: -1px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-}
-
-.header .mega-category-menu {
-  position: relative;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  border-right: 1px solid #eee;
-  margin-right: 40px;
-  padding-right: 112px;
-  cursor: pointer;
-}
-
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
-  .header .mega-category-menu {
-    padding-right: 35px;
-  }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-  .header .mega-category-menu {
-    display: none;
-  }
-}
-
-@media (max-width: 767px) {
-  .header .mega-category-menu {
-    display: none;
-  }
-}
-
-.header .mega-category-menu .cat-button {
-  display: inline-block;
-  color: #081828;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.header .mega-category-menu .cat-button i {
-  display: inline-block;
-margin-right: 12px;
-font-size: 20px;
-position: relative;
-top: 2px;
-}
-
-.header .mega-category-menu:hover .sub-category {
-  opacity: 1;
-  visibility: visible;
-  top: 61px;
-}
-
-.header .mega-category-menu .sub-category {
-  position: absolute;
-  left: 0;
-  top: 68px;
-  width: 241px;
-  max-height: 360px;
-  overflow-y: auto;
-  height: auto;
-  border: 1px solid #eee;
-  background-color: #fff;
-  opacity: 0;
-  visibility: hidden;
-  border-radius: 0;
-  -webkit-transition: all 0.4s ease;
-  transition: all 0.4s ease;
-  padding: 15px 0;
-}
-
-.header .mega-category-menu .sub-category li {
-  display: block;
-  position: relative;
-}
-
-.header .mega-category-menu .sub-category li:hover .inner-sub-category {
-  opacity: 1;
-  visibility: visible;
-  top: 0;
-}
-
-.header .mega-category-menu .sub-category li .inner-sub-category {
-  padding: 15px 0;
-  position: absolute;
-  top: 8px;
-  width: 240px;
-  height: auto;
-  border: 1px solid #eee;
-  background-color: #fff;
-  border-radius: 0;
-  left: 239px;
-  opacity: 0;
-  visibility: hidden;
-  -webkit-transition: all 0.4s ease;
-  transition: all 0.4s ease;
-}
-
-.header .mega-category-menu .sub-category li .inner-sub-category li {
-  display: block;
-  position: relative;
-}
-
-.header .mega-category-menu .sub-category li .inner-sub-category li:last-child {
-  margin: 0;
-}
-
-.header .mega-category-menu .sub-category li .inner-sub-category li a {
-  color: #081828;
-  text-transform: capitalize;
-  font-size: 14px;
-  position: relative;
-  width: 100%;
-  padding: 8px 30px;
-}
-
-.header .mega-category-menu .sub-category li .inner-sub-category li a:hover {
-  color: #0167F3;
-}
-
-.header .mega-category-menu .sub-category li:last-child {
-  margin: 0;
-}
-
-.header .mega-category-menu .sub-category li a {
-  color: #081828;
-  text-transform: capitalize;
-  font-size: 14px;
-  position: relative;
-  width: 100%;
-  padding: 8px 30px;
-}
-
-.header .mega-category-menu .sub-category li a i {
-  font-size: 10px;
-  float: right;
-  position: relative;
-  top: 6px;
-}
-
-.header .mega-category-menu .sub-category li a:hover {
-  color: #0167F3;
 }
 
 .header .nav-social {
@@ -4900,3 +4738,23 @@ top: 2px;
     display: none;
   }
 }
+
+/*======================================
+    Category Select Dropdown (CS)
+========================================*/
+.cs-wrapper  { position: relative; display: inline-block; width: 100%; }
+.cs-trigger  { width: 100%; text-align: left; cursor: pointer; background-color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.cs-trigger-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-trigger-caret { font-size: 0.75rem; flex-shrink: 0; transition: transform 0.15s ease; }
+.cs-trigger[aria-expanded="true"] .cs-trigger-caret { transform: rotate(180deg); }
+.cs-trigger:focus { outline: none; border-color: var(--clr-primary-500); box-shadow: 0 0 0 3px rgba(74,144,217,0.25); }
+.cs-panel    { position: fixed; z-index: 98; max-height: 240px;
+               overflow-y: auto; background: #fff;
+               border: 1px solid var(--clr-neutral-200);
+               border-radius: var(--radius-md);
+               box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.cs-option   { padding: 8px 12px; cursor: pointer; font-size: 0.875rem; color: var(--clr-neutral-800); }
+.cs-option:hover     { background-color: var(--clr-primary-50); color: var(--clr-primary-700); }
+.cs-option--selected { background-color: var(--clr-primary-500) !important; color: #fff !important; }
+.cs-sentinel { height: 1px; }
+.cs-loading  { display: flex; justify-content: center; padding: 8px; }
