@@ -120,8 +120,7 @@ export default function OrderDetailModal({ order, onStatusUpdated, onClose }) {
                   <label className="form-label fw-semibold small">Update Status</label>
                   <div className="d-flex gap-2 align-items-center flex-wrap">
                     <select
-                      className="form-select"
-                      style={{ maxWidth: 200 }}
+                      className="form-select select-md"
                       value={selectedStatus}
                       onChange={(e) => setSelectedStatus(Number(e.target.value))}
                       disabled={isTerminal}

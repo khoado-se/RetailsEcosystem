@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useCustomers } from "../../features/customer/useCustomers";
 import CustomerTable from "../../features/customer/CustomerTable";
 import PageSizeSelector from "../../components/ui/PageSizeSelector";
@@ -7,14 +7,22 @@ export default function CustomerListPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const { customers, totalPage, loading, fetchCustomers } = useCustomers(pageNumber, search, pageSize);
+  const { customers, totalPage, loading, fetchCustomers } = useCustomers(pageNumber, debouncedSearch, pageSize);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+      setPageNumber(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const handleClearSearch = () => {
+    setSearchInput("");
+    setDebouncedSearch("");
     setPageNumber(1);
-    setSearch(searchInput.trim());
   };
 
   const handlePageSizeChange = (size) => {
@@ -33,23 +41,37 @@ export default function CustomerListPage() {
           <h1 className="page-header-title mb-0">Customers</h1>
           <p className="page-header-subtitle mb-0">Manage customer accounts</p>
         </div>
-        <form className="d-flex gap-2" onSubmit={handleSearch}>
-          <input
-            type="search"
-            className="form-control"
-            placeholder="Search by name or email…"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <button type="submit" className="btn btn-primary px-4">
-            <i className="bi bi-search"></i>
-          </button>
-        </form>
       </div>
 
       <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body py-3 d-flex justify-content-end">
-          <PageSizeSelector pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
+        <div className="card-body py-3">
+          <div className="row g-2 align-items-center">
+            <div className="col-12 col-md-6">
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0">
+                  <i className="bi bi-search text-muted" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control border-start-0"
+                  placeholder="Search customers by name or email..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="col-12 col-md-3">
+              {searchInput && (
+                <button className="btn btn-outline-secondary" onClick={handleClearSearch}>
+                  <i className="bi bi-x-lg me-1" />
+                  Clear
+                </button>
+              )}
+            </div>
+            <div className="col-12 col-md-3 d-flex justify-content-end">
+              <PageSizeSelector pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
+            </div>
+          </div>
         </div>
       </div>
 

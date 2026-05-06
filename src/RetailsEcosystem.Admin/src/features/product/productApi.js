@@ -1,13 +1,16 @@
 import apiClient from "../../services/apiClient";
 
 // GET
-export const getProducts = async ({ pageNumber, pageSize = 8, categoryId, search }) => {
+export const getProducts = async ({ pageNumber, pageSize = 8, categoryId, search, isFeatured, sortBy, sortDesc }) => {
   const res = await apiClient.get("/products", {
     params: {
       pageNumber,
       pageSize,
       ...(categoryId ? { categoryId } : {}),
       ...(search ? { search } : {}),
+      ...(isFeatured !== undefined && isFeatured !== null ? { isFeatured } : {}),
+      ...(sortBy ? { sortBy } : {}),
+      sortDesc: sortDesc ?? true,
     },
   });
 

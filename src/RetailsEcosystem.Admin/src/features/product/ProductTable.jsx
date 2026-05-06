@@ -5,7 +5,17 @@ import { ENV } from "../../configs/env";
 import { deleteProduct } from "./productApi";
 import ConfirmModal from "../../components/ui/ConfirmModal";
 
-export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, loading, onEdit, onDeleted, onImages, onClearFilters }) {
+function SortHeader({ column, label, sortBy, sortDesc, onSort }) {
+  const active = sortBy === column;
+  return (
+    <th style={{ cursor: "pointer", userSelect: "none", whiteSpace: "nowrap" }} onClick={() => onSort(column)}>
+      {label}
+      <i className={`bi ms-1 ${active ? (sortDesc ? "bi-arrow-down" : "bi-arrow-up") : "bi-arrow-down-up text-muted"}`} />
+    </th>
+  );
+}
+
+export default function ProductTable({ products, pageNumber, setPageNumber, totalPage, loading, onEdit, onDeleted, onImages, onClearFilters, sortBy, sortDesc, onSort }) {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const handleDelete = (product) => setDeleteTarget(product);
@@ -61,12 +71,12 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
           <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Price</th>
+                <SortHeader column="id" label="Id" sortBy={sortBy} sortDesc={sortDesc} onSort={onSort} />
+                <SortHeader column="name" label="Name" sortBy={sortBy} sortDesc={sortDesc} onSort={onSort} />
+                <SortHeader column="price" label="Price" sortBy={sortBy} sortDesc={sortDesc} onSort={onSort} />
                 <th>Featured</th>
                 <th>Image</th>
-                <th>Created Date</th>
+                <SortHeader column="createdDate" label="Created Date" sortBy={sortBy} sortDesc={sortDesc} onSort={onSort} />
                 <th className="text-end">Action</th>
               </tr>
             </thead>

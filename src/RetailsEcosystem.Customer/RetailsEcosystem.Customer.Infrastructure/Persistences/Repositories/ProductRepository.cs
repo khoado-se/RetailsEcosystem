@@ -36,21 +36,37 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductAsync(int pageNumber, int pageSize, int? categogyId, string? search = null)
+        public async Task<IEnumerable<Product>> GetAllProductAsync(
+            int pageNumber, int pageSize,
+            int? categoryId = null, string? search = null,
+            bool? isFeatured = null,
+            string? sortBy = null, bool sortDesc = true)
         {
-            IEnumerable<Product> products = await _context.Products
-                    .Include(p => p.Category)
-                    .Include(p => p.Images)
-                    .Where(p => (!categogyId.HasValue || p.Category.Id == categogyId.Value)
-                             && (string.IsNullOrWhiteSpace(search) || p.Name.Contains(search)))
-                    .AsNoTracking()
-                    .OrderByDescending(p => p.CreatedDate)
-                    .ThenByDescending(p => p.Id)
-                    .Skip(pageSize * (pageNumber - 1))
-                    .Take(pageSize)
-                    .ToListAsync();
+            var query = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .Where(p =>
+                    (!categoryId.HasValue || p.Category.Id == categoryId.Value) &&
+                    (string.IsNullOrWhiteSpace(search) || p.Name.Contains(search)) &&
+                    (!isFeatured.HasValue || p.IsFeatured == isFeatured.Value))
+                .AsNoTracking();
 
-            return products;
+            query = (sortBy?.ToLower(), sortDesc) switch
+            {
+                ("id",          true)  => query.OrderByDescending(p => p.Id),
+                ("id",          false) => query.OrderBy(p => p.Id),
+                ("name",        true)  => query.OrderByDescending(p => p.Name),
+                ("name",        false) => query.OrderBy(p => p.Name),
+                ("price",       true)  => query.OrderByDescending(p => p.Price),
+                ("price",       false) => query.OrderBy(p => p.Price),
+                ("createddate", false) => query.OrderBy(p => p.CreatedDate).ThenBy(p => p.Id),
+                _                      => query.OrderByDescending(p => p.CreatedDate).ThenByDescending(p => p.Id),
+            };
+
+            return await query
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Product?> GetProductByIdAsync(int productId)
@@ -61,18 +77,17 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
-        public async Task<int> GetProductCountAsync(int? categoryId = null, bool isFeature = false, string? search = null)
+        public async Task<int> GetProductCountAsync(int? categoryId = null, bool isFeature = false, string? search = null, bool? isFeatured = null)
         {
             if (isFeature)
                 return await _context.Products.CountAsync(p => p.IsFeatured);
 
-            var query = _context.Products.AsQueryable();
-            if (categoryId.HasValue)
-                query = query.Where(p => p.Category.Id == categoryId.Value);
-            if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(p => p.Name.Contains(search));
-
-            return await query.CountAsync();
+            return await _context.Products
+                .Where(p =>
+                    (!categoryId.HasValue || p.Category.Id == categoryId.Value) &&
+                    (string.IsNullOrWhiteSpace(search) || p.Name.Contains(search)) &&
+                    (!isFeatured.HasValue || p.IsFeatured == isFeatured.Value))
+                .CountAsync();
         }
 
         public async Task RemoveProductAsync(int productId)

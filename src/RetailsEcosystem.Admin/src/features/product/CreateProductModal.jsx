@@ -3,6 +3,7 @@ import { Modal } from "bootstrap";
 import toast from "react-hot-toast";
 import { createProduct } from "./productApi";
 import ProductForm from "./ProductForm";
+import { validateProductForm } from "./validateProductForm";
 
 const EMPTY_FORM = {
   name: "",
@@ -12,12 +13,23 @@ const EMPTY_FORM = {
   isFeatured: false,
 };
 
-export default function CreateProductModal({ onSuccess, onClose }) {
+export default function CreateProductModal({ isOpen, onSuccess, onClose }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const modalRef = useRef(null);
 
-  // Reset form and notify parent on any close path (X, Escape, click-outside, submit)
+  // Drive Bootstrap modal open/close from isOpen prop — no data-API involved
+  useEffect(() => {
+    if (!modalRef.current) return;
+    const instance = Modal.getOrCreateInstance(modalRef.current);
+    if (isOpen) {
+      instance.show();
+    } else {
+      instance.hide();
+    }
+  }, [isOpen]);
+
+  // Reset form and notify parent on any close path (X, Escape, click-outside)
   useEffect(() => {
     const el = modalRef.current;
     if (!el) return;
@@ -35,6 +47,9 @@ export default function CreateProductModal({ onSuccess, onClose }) {
   };
 
   const handleSubmit = async () => {
+    const errors = validateProductForm(form);
+    if (errors.length) { toast.error(errors[0]); return; }
+
     const payload = {
       name: form.name.trim(),
       description: form.description || null,
@@ -48,7 +63,7 @@ export default function CreateProductModal({ onSuccess, onClose }) {
       await createProduct(payload);
       toast.success("Product created successfully.");
       onSuccess();
-      Modal.getOrCreateInstance(modalRef.current).hide();
+      onClose();
     } catch {
       toast.error("Failed to create product.");
     } finally {

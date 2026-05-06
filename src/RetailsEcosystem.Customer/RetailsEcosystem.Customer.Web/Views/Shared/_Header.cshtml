@@ -27,10 +27,17 @@
                     </a>
                 </div>
                 <div class="col-lg-7 col-md-5 d-none d-md-block">
-                    <form method="get" asp-controller="Products" asp-action="ProductIndex" class="header-search-form">
+                    <form method="get" asp-controller="Products" asp-action="ProductIndex"
+                          class="header-search-form" id="header-search-form">
                         <div class="input-group">
                             @await Component.InvokeAsync("CategoryMenu", new { viewName = "CategorySelect" })
-                            <input type="text" name="search" class="form-control" placeholder="Search for products...">
+                            <input type="text" name="search" id="header-search-input"
+                                   class="form-control" placeholder="Search for products..."
+                                   value="@(ViewBag.Search?.ToString() ?? "")">
+                            <button type="button" class="btn btn-outline-secondary header-search-clear"
+                                    id="header-search-clear" aria-label="Clear search" hidden>
+                                <i class="lni lni-close"></i>
+                            </button>
                             <button class="btn btn-primary" type="submit" aria-label="Search">
                                 <i class="lni lni-search-alt"></i>
                             </button>

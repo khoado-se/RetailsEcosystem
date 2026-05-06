@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getProducts } from "./productApi";
 
-export const useProducts = (pageNumber, categoryId, search, pageSize = 10) => {
+export const useProducts = (pageNumber, categoryId, search, pageSize = 10, isFeatured, sortBy, sortDesc = true) => {
   const [data, setData] = useState({
     items: [],
     totalPage: 0,
@@ -13,7 +13,7 @@ export const useProducts = (pageNumber, categoryId, search, pageSize = 10) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await getProducts({ pageNumber, pageSize, categoryId, search });
+      const res = await getProducts({ pageNumber, pageSize, categoryId, search, isFeatured, sortBy, sortDesc });
       setData({
         items: res.items ?? [],
         totalPage: res.totalPage ?? 0,
@@ -23,7 +23,7 @@ export const useProducts = (pageNumber, categoryId, search, pageSize = 10) => {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, pageSize, categoryId, search]);
+  }, [pageNumber, pageSize, categoryId, search, isFeatured, sortBy, sortDesc]);
 
   useEffect(() => {
     fetchProducts();

@@ -1,6 +1,6 @@
 import { useProducts } from "../../features/product/useProducts.js";
-import { useCategories } from "../../features/category/useCategories.js";
 import { useState, useEffect } from "react";
+import CategorySelect from "../../features/category/CategorySelect.jsx";
 import PageSizeSelector from "../../components/ui/PageSizeSelector.jsx";
 import CreateProductModal from "../../features/product/CreateProductModal.jsx";
 import EditProductModal from "../../features/product/EditProductModal.jsx";
@@ -10,15 +10,21 @@ import ProductImageModal from "../../features/productImage/ProductImageModal.jsx
 export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
   const [imageProduct, setImageProduct] = useState(null);
 
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [sortBy, setSortBy] = useState("createdDate");
+  const [sortDesc, setSortDesc] = useState(true);
 
-  const { categories } = useCategories(1, 200);
-  const { products, totalPage, loading, error, fetchProducts } = useProducts(pageNumber, selectedCategoryId || undefined, debouncedSearch || undefined, pageSize);
+  const { products, totalPage, loading, error, fetchProducts } = useProducts(
+    pageNumber, selectedCategoryId || undefined, debouncedSearch || undefined, pageSize,
+    featuredOnly || undefined, sortBy, sortDesc
+  );
 
   // Debounce search input — waits 300ms after last keystroke
   useEffect(() => {
@@ -29,15 +35,23 @@ export default function ProductsPage() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  const handleCategoryChange = (e) => {
-    setSelectedCategoryId(e.target.value);
-    setPageNumber(1);
-  };
-
   const handleClearFilters = () => {
     setSearchInput("");
     setDebouncedSearch("");
     setSelectedCategoryId("");
+    setFeaturedOnly(false);
+    setSortBy("createdDate");
+    setSortDesc(true);
+    setPageNumber(1);
+  };
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortDesc((d) => !d);
+    } else {
+      setSortBy(column);
+      setSortDesc(true);
+    }
     setPageNumber(1);
   };
 
@@ -46,7 +60,7 @@ export default function ProductsPage() {
     setPageNumber(1);
   };
 
-  const hasFilters = searchInput || selectedCategoryId;
+  const hasFilters = searchInput || selectedCategoryId || featuredOnly;
 
   return (
     <>
@@ -57,8 +71,7 @@ export default function ProductsPage() {
         </div>
         <button
           className="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#createProductModal"
+          onClick={() => setIsCreateOpen(true)}
         >
           <i className="bi bi-plus-lg me-1" />
           Create Product
@@ -81,34 +94,46 @@ export default function ProductsPage() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                 />
+                {searchInput && (
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary border-start-0"
+                    onClick={() => setSearchInput("")}
+                    aria-label="Clear search"
+                  >
+                    <i className="bi bi-x-lg" />
+                  </button>
+                )}
               </div>
             </div>
             <div className="col-12 col-md-3">
-              <select
-                className="form-select"
+              <CategorySelect
                 value={selectedCategoryId}
-                onChange={handleCategoryChange}
-              >
-                <option value="">All Categories</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(id) => { setSelectedCategoryId(id); setPageNumber(1); }}
+                initialCategoryName=""
+              />
             </div>
             <div className="col-12 col-md-2">
+              <button
+                className={`btn w-100 ${featuredOnly ? "btn-primary" : "btn-outline-secondary"}`}
+                onClick={() => { setFeaturedOnly((f) => !f); setPageNumber(1); }}
+              >
+                <i className="bi bi-star-fill me-1" />
+                Featured
+              </button>
+            </div>
+            <div className="col-12 col-md-1">
               {hasFilters && (
                 <button
                   className="btn btn-outline-secondary w-100"
                   onClick={handleClearFilters}
                 >
                   <i className="bi bi-x-lg me-1" />
-                  Clear Filters
+                  Clear
                 </button>
               )}
             </div>
-            <div className="col-12 col-md-3 d-flex justify-content-end">
+            <div className="col-12 col-md-2 d-flex justify-content-end">
               <PageSizeSelector pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
             </div>
           </div>
@@ -137,14 +162,18 @@ export default function ProductsPage() {
         onDeleted={() => { fetchProducts(); setPageNumber(1); }}
         onImages={(id, name) => setImageProduct({ id, name })}
         onClearFilters={hasFilters ? handleClearFilters : undefined}
+        sortBy={sortBy}
+        sortDesc={sortDesc}
+        onSort={handleSort}
       />
 
       <CreateProductModal
+        isOpen={isCreateOpen}
         onSuccess={() => {
-          setSelectedCategoryId(""); // Refresh table by reset category, it will refetch product table
+          setSelectedCategoryId("");
           setPageNumber(1);
         }}
-        onClose={() => {}}
+        onClose={() => setIsCreateOpen(false)}
       />
 
       <EditProductModal

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import Pagination from "../../components/ui/Pagination";
 import { updateCustomerStatus } from "./customerApi";
 
@@ -7,11 +8,13 @@ export default function CustomerTable({ customers, pageNumber, setPageNumber, to
 
   const handleToggleStatus = async (customer) => {
     setUpdatingId(customer.id);
+    const next = !customer.isActive;
     try {
-      await updateCustomerStatus(customer.id, !customer.isActive);
+      await updateCustomerStatus(customer.id, next);
+      toast.success(`Customer ${next ? "activated" : "deactivated"} successfully.`);
       onStatusChange();
-    } catch (err) {
-      console.error("Failed to update status:", err);
+    } catch {
+      toast.error(`Failed to ${next ? "activate" : "deactivate"} customer.`);
     } finally {
       setUpdatingId(null);
     }

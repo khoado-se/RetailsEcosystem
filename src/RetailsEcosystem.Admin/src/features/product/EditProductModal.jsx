@@ -3,6 +3,7 @@ import { Modal } from "bootstrap";
 import toast from "react-hot-toast";
 import { getProductById, updateProduct } from "./productApi";
 import ProductForm from "./ProductForm";
+import { validateProductForm } from "./validateProductForm";
 
 export default function EditProductModal({ productId, onSuccess, onClose }) {
   const [form, setForm] = useState(null);
@@ -45,6 +46,7 @@ export default function EditProductModal({ productId, onSuccess, onClose }) {
           description: p.description ?? "",
           price: p.price ?? "",
           categoryId: p.category?.id ?? "",
+          categoryName: p.category?.name ?? "",
           isFeatured: p.isFeatured ?? false,
         });
         setLoading(false);
@@ -63,11 +65,10 @@ export default function EditProductModal({ productId, onSuccess, onClose }) {
 
   const handleSubmit = async () => {
     if (!form) return;
+    const errors = validateProductForm(form);
+    if (errors.length) { toast.error(errors[0]); return; }
+
     const categoryId = Number(form.categoryId);
-    if (!categoryId) {
-      toast.error("Please select a category.");
-      return;
-    }
     const payload = {
       id: form.id,
       name: form.name.trim(),

@@ -1,7 +1,9 @@
-import { useCategories } from "../../features/category/useCategories";
+import CategorySelect from "../../features/category/CategorySelect";
 
 export default function ProductForm({ form, handleChange }) {
-  const { categories } = useCategories();
+  const handleCategoryChange = (categoryId) => {
+    handleChange({ target: { name: "categoryId", value: categoryId } });
+  };
 
   return (
     <>
@@ -29,19 +31,11 @@ export default function ProductForm({ form, handleChange }) {
 
         <div className="mb-3">
           <label>Category</label>
-          <select
-            name="categoryId"
-            className="form-select"
+          <CategorySelect
             value={form.categoryId}
-            onChange={handleChange}
-          >
-            <option value="">-- Select --</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            onChange={handleCategoryChange}
+            initialCategoryName={form.categoryName}
+          />
         </div>
 
         <div className="mb-3">

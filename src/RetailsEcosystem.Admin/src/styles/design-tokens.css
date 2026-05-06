@@ -60,6 +60,24 @@
   --fs-caption:       0.75rem;
 }
 
+/* ── Select width utilities (replaces inline style={{}} on native selects) ─── */
+.select-auto { width: auto !important; }
+.select-md   { max-width: 200px !important; }
+
+/* ── Admin CategorySelect dropdown ───────────────────────────────────────── */
+.cs-admin-wrapper  { position: relative; }
+.cs-admin-trigger  { cursor: pointer; width: 100%; }
+.cs-admin-panel    { position: absolute; z-index: 1050; width: 100%; max-height: 240px; overflow-y: auto; }
+.cs-admin-sentinel { height: 1px; }
+.category-option             { padding: 8px 12px; cursor: pointer; font-size: var(--fs-body); }
+.category-option:hover       { background-color: var(--clr-primary-50); }
+.category-option--selected   { background-color: var(--clr-primary-500) !important; color: #fff !important; }
+
+/* ── Toast utility classes ────────────────────────────────── */
+.toast-base    { border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-card) !important; font-size: var(--fs-body) !important; }
+.toast-success { background: var(--clr-success) !important; color: #fff !important; }
+.toast-error   { background: var(--clr-danger)  !important; color: #fff !important; }
+
 /* ════════════════════════════════════════════════
    Bootstrap component overrides (Calm Blue theme)
    ════════════════════════════════════════════════ */

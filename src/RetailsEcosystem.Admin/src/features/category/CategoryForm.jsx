@@ -11,6 +11,7 @@ export default function CategoryForm({ category, onSuccess, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!name.trim()) { setError("Category name is required."); return; }
     setError(null);
     setLoading(true);
     try {

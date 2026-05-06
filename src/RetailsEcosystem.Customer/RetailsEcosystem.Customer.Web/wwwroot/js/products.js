@@ -19,7 +19,7 @@ $(document).on('click', '[data-action="add-to-cart"]', async function () {
             setTimeout(() => $btn.text(original).prop('disabled', false), 1500);
         } else {
             const err = await res.json().catch(() => ({}));
-            alert(err.message || 'Could not add item.');
+            showToast('danger', err.message || 'Could not add item.');
             $btn.text(original).prop('disabled', false);
         }
     } catch {

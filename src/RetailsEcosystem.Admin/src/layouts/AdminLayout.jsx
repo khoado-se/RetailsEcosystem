@@ -26,14 +26,14 @@ export default function AdminLayout() {
         position="top-right"
         toastOptions={{
           duration: 3000,
-          style: {
-            background: "#fff",
-            color: "#333",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
-          },
+          className: "toast-base",
           success: {
-            iconTheme: { primary: "#4A90D9", secondary: "#fff" },
+            className: "toast-base toast-success",
+            iconTheme: { primary: "#fff", secondary: "#2E9E6B" },
+          },
+          error: {
+            className: "toast-base toast-error",
+            iconTheme: { primary: "#fff", secondary: "#D94F4F" },
           },
         }}
       />

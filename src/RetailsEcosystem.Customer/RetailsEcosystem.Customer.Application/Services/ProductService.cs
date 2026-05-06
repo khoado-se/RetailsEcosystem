@@ -85,7 +85,8 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest, int? categoryId)
         {
             var products = await _productRepo
-                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize, categoryId, pagedRequest.Search);
+                .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize, categoryId, pagedRequest.Search,
+                    pagedRequest.IsFeatured, pagedRequest.SortBy, pagedRequest.SortDesc);
 
             var productDtos = products.Select(product => new ProductDto
             {
@@ -106,7 +107,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 ImageUrl = product.Images.FirstOrDefault()?.Url
             });
 
-            var productCount = await _productRepo.GetProductCountAsync(categoryId, search: pagedRequest.Search);
+            var productCount = await _productRepo.GetProductCountAsync(categoryId, search: pagedRequest.Search, isFeatured: pagedRequest.IsFeatured);
 
             return new PagedResult<ProductDto>(
                 productDtos,
