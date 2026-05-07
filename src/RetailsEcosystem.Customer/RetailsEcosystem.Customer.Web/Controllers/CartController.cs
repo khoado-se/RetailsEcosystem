@@ -130,6 +130,7 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 items = cart.Items.Select(i => new
                 {
                     id = i.Id,
+                    productId = i.ProductId,
                     productName = i.ProductName,
                     productImageUrl = i.ProductImageUrl,
                     quantity = i.Quantity,

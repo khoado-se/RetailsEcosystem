@@ -22,14 +22,27 @@ namespace RetailsEcosystem.Customer.Web.Controllers
         [Breadcrumb("Shop")]
         public async Task<IActionResult> ProductIndex([FromQuery] PagedRequest pagedRequest, [FromQuery] int? categoryId = null, [FromQuery] string? search = null)
         {
-            var productsDto = await _productService.GetAllAsync(pagedRequest, categoryId, search);
-            var categories  = await _categoryService.GetAllAsync(new PagedRequest { PageNumber = 1, PageSize = 200 });
+            var productsTask   = _productService.GetAllAsync(pagedRequest, categoryId, search);
+            var categoriesTask = _categoryService.GetAllAsync(new PagedRequest { PageNumber = 1, PageSize = 200 });
 
-            ViewBag.CategoryId  = categoryId;
-            ViewBag.Search      = search;
-            ViewBag.Categories  = categories.Items;
+            await Task.WhenAll(productsTask, categoriesTask);
 
-            return View(model: productsDto);
+            var categories = categoriesTask.Result;
+
+            string? selectedCategoryName = null;
+            if (categoryId.HasValue)
+            {
+                selectedCategoryName =
+                    categories.Items.FirstOrDefault(c => c.Id == categoryId)?.Name
+                    ?? (await _categoryService.GetByIdAsync(categoryId.Value))?.Name;
+            }
+
+            ViewBag.CategoryId           = categoryId;
+            ViewBag.Search               = search;
+            ViewBag.Categories           = categories.Items;
+            ViewBag.SelectedCategoryName = selectedCategoryName;
+
+            return View(model: productsTask.Result);
         }
 
         [Breadcrumb("Product Details",parentName: "Shop", parentAction: nameof(ProductIndex))]

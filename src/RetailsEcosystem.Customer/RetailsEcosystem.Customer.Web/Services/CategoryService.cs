@@ -9,6 +9,12 @@ namespace RetailsEcosystem.Customer.Web.Services
     {
         private readonly string CategoryUrl = "api/Categories";
         public CategoryService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+        public async Task<CategoryDto?> GetByIdAsync(int id)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{CategoryUrl}/{id}");
+            return await SendAsync<CategoryDto?>(request);
+        }
+
         public async Task<PagedResult<CategoryDto>> GetAllAsync(PagedRequest? pagedRequest)
         {
             StringBuilder url = new StringBuilder(CategoryUrl);

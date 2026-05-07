@@ -10,6 +10,8 @@ function updateHeaderCartCount(count) {
 function renderHeaderCart(data) {
     updateHeaderCartCount(data.itemCount ?? 0);
 
+    console.log(data.items);
+    
     $('#header-cart-list').html(
         data.items?.length
             ? data.items.map(i => `
@@ -21,7 +23,7 @@ function renderHeaderCart(data) {
                         </div>
                     </div>
                     <div class="content">
-                        <h4><a href="/Products/ProductDetails/${i.id}">${i.productName}</a></h4>
+                        <h4><a href="/Products/ProductDetails/${i.productId}">${i.productName}</a></h4>
                         <span class="quantity">${i.quantity} &times; ${fmtCurrency(i.unitPrice)}</span>
                     </div>
                 </li>`).join('')

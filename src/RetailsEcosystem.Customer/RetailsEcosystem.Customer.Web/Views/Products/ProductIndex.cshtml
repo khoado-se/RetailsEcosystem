@@ -6,10 +6,7 @@
 @{
     int? categoryId = ViewBag.CategoryId as int?;
     string? search = ViewBag.Search as string;
-    var selectedCatName = categoryId.HasValue
-        ? ((IEnumerable<CategoryDto>)ViewBag.Categories)
-              .FirstOrDefault(c => c.Id == categoryId)?.Name ?? ""
-        : "";
+    string selectedCatName = ViewBag.SelectedCategoryName as string ?? "";
 }
 
 @* Filter Toolbar — search lives in the header *@
