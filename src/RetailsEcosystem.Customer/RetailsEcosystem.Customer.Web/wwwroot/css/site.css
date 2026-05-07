@@ -43,7 +43,6 @@ html {
 }
 
 .header-search-form .form-control {
-  border-left: none;
   border-right: none;
   font-size: 0.9rem;
 }
