@@ -405,6 +405,11 @@ coverage*.json
 coverage*.xml
 coverage*.info
 
+# Vitest / Istanbul / V8 coverage output
+coverage/
+lcov-report/
+lcov.info
+
 # Visual Studio code coverage results
 
 # NCrunch
@@ -580,3 +585,5 @@ src/RetailsEcosystem.Admin/.env
 documents/
 .claude/
 CLAUDE.md
+
+coveragereport/

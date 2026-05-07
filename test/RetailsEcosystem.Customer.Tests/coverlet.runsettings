@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <!-- Include -->
+          <Include>
+            [RetailsEcosystem.Customer.Application]*
+            ,[RetailsEcosystem.Customer.API]*
+          </Include>
+
+          <!-- Exclude assemblies/namespaces -->
+          <Exclude>
+            [*Tests*]*
+            ,[*Infrastructure*]*
+            ,[*.OpenApi.Generated*]*
+            ,[*.Extensions*]*
+            ,[*.Middleware*]*
+            ,[*.Options*]*
+            ,[*]Program
+          </Exclude>
+
+          <!-- Optional: exclude files -->
+          <ExcludeByFile>
+            **/Migrations/*.cs
+            ,**/obj/**/*.cs
+            ,**/bin/**/*.cs
+          </ExcludeByFile>
+
+          <Format>cobertura</Format>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

@@ -27,9 +27,13 @@ describe("useProducts", () => {
     });
 
     expect(mockGetProducts).toHaveBeenCalledWith({
+      isFeatured: undefined,
       pageNumber: 1,
+      pageSize: 10,
       categoryId: null,
       search: null,
+      sortBy: undefined,
+      sortDesc: true,
     });
   });
 
