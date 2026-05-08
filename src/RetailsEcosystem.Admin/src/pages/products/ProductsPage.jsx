@@ -170,8 +170,8 @@ export default function ProductsPage() {
       <CreateProductModal
         isOpen={isCreateOpen}
         onSuccess={() => {
-          setSelectedCategoryId("");
           setPageNumber(1);
+          fetchProducts();
         }}
         onClose={() => setIsCreateOpen(false)}
       />
@@ -186,6 +186,7 @@ export default function ProductsPage() {
         productId={imageProduct?.id}
         productName={imageProduct?.name}
         onClose={() => setImageProduct(null)}
+        onChanged={() => fetchProducts()}
       />
     </>
   );

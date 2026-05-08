@@ -49,8 +49,8 @@ async function addToCart(btn) {
             body: JSON.stringify({ productId, quantity: qty })
         });
         if (res.ok) {
-            const data = await res.json();
-            updateHeaderCartCount(data.itemCount);
+            const summary = await fetch('/cart/summary');
+            if (summary.ok) renderHeaderCart(await summary.json());
             showToast('success', 'Added ' + qty + ' item(s) to your cart.');
         } else {
             const err = await res.json().catch(() => ({}));

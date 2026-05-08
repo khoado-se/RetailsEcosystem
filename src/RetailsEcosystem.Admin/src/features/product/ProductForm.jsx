@@ -1,6 +1,6 @@
 import CategorySelect from "../../features/category/CategorySelect";
 
-export default function ProductForm({ form, handleChange }) {
+export default function ProductForm({ form, handleChange, imageSection }) {
   const handleCategoryChange = (categoryId) => {
     handleChange({ target: { name: "categoryId", value: categoryId } });
   };
@@ -61,6 +61,8 @@ export default function ProductForm({ form, handleChange }) {
             Featured Product
           </label>
         </div>
+
+        {imageSection}
       </div>
     </>
   );

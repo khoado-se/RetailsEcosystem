@@ -77,7 +77,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
         {
             var createdProductId = await _productService.CreateProductAsync(product);
 
-            return CreatedAtAction("GetProduct", new { productId = createdProductId }, product);
+            return CreatedAtAction("GetProduct", new { productId = createdProductId }, new { id = createdProductId });
         }
 
         [HttpDelete("{productId}")]

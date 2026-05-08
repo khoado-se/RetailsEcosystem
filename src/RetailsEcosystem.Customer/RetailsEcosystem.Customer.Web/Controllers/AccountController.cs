@@ -48,7 +48,7 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized
                                                 || ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return View(model);
             }
         }

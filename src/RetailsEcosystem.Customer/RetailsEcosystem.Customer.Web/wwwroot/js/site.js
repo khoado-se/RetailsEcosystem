@@ -10,8 +10,6 @@ function updateHeaderCartCount(count) {
 function renderHeaderCart(data) {
     updateHeaderCartCount(data.itemCount ?? 0);
 
-    console.log(data.items);
-    
     $('#header-cart-list').html(
         data.items?.length
             ? data.items.map(i => `

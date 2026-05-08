@@ -3,12 +3,10 @@ import { Modal } from "bootstrap";
 import toast from "react-hot-toast";
 import { getProductImages, uploadProductImage, deleteProductImage } from "./productImageApi";
 
-export default function ProductImageModal({ productId, productName, onClose }) {
+export default function ProductImageModal({ productId, productName, onClose, onChanged }) {
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
   const modalRef = useRef(null);
@@ -63,38 +61,38 @@ export default function ProductImageModal({ productId, productName, onClose }) {
     setFiles(selected);
   };
 
-  const handleUpload = async () => {
+  const handleUpload = () => {
     if (files.length === 0) return;
-    setUploading(true);
-    setError(null);
-    try {
-      const formData = new FormData();
-      files.forEach((f) => formData.append("files", f));
-      await uploadProductImage(productId, formData);
-      const newImages = await getProductImages(productId);
-      setImages(newImages.data);
-      setFiles([]);
-      if (inputRef.current) inputRef.current.value = "";
-      toast.success("Image uploaded successfully.");
-    } catch {
-      setError("Upload failed. Please try again.");
-    } finally {
-      setUploading(false);
-    }
+    const formData = new FormData();
+    files.forEach((f) => formData.append("files", f));
+
+    setFiles([]);
+    if (inputRef.current) inputRef.current.value = "";
+
+    uploadProductImage(productId, formData)
+      .then(() => getProductImages(productId))
+      .then((res) => {
+        setImages(res.data);
+        toast.success("Images uploaded successfully.");
+        onChanged?.();
+      })
+      .catch(() => {
+        setError("Upload failed. Please try again.");
+      });
   };
 
-  const handleDelete = async (imageId) => {
-    setDeletingId(imageId);
-    setError(null);
-    try {
-      await deleteProductImage(imageId);
-      setImages((prev) => prev.filter((img) => img.id !== imageId));
-      toast.success("Image deleted.");
-    } catch {
-      setError("Delete failed. Please try again.");
-    } finally {
-      setDeletingId(null);
-    }
+  const handleDelete = (imageId) => {
+    setImages((prev) => prev.filter((img) => img.id !== imageId));
+
+    deleteProductImage(imageId)
+      .then(() => {
+        toast.success("Image deleted.");
+        onChanged?.();
+      })
+      .catch(() => {
+        setError("Delete failed. Image restored.");
+        getProductImages(productId).then((res) => setImages(res.data)).catch(() => {});
+      });
   };
 
   return (
@@ -155,17 +153,9 @@ export default function ProductImageModal({ productId, productName, onClose }) {
                       lineHeight: 1,
                     }}
                     onClick={() => handleDelete(img.id)}
-                    disabled={deletingId === img.id}
                     title="Delete image"
                   >
-                    {deletingId === img.id ? (
-                      <span
-                        className="spinner-border spinner-border-sm"
-                        role="status"
-                      />
-                    ) : (
-                      <i className="bi bi-trash" />
-                    )}
+                    <i className="bi bi-trash" />
                   </button>
                 </div>
               ))}
@@ -210,22 +200,10 @@ export default function ProductImageModal({ productId, productName, onClose }) {
               <button
                 className="btn btn-primary btn-sm"
                 onClick={handleUpload}
-                disabled={files.length === 0 || uploading}
+                disabled={files.length === 0}
               >
-                {uploading ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-1"
-                      role="status"
-                    />
-                    Uploading…
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-cloud-upload me-1" />
-                    Upload {files.length > 0 ? `${files.length} file${files.length > 1 ? "s" : ""}` : ""}
-                  </>
-                )}
+                <i className="bi bi-cloud-upload me-1" />
+                Upload {files.length > 0 ? `${files.length} file${files.length > 1 ? "s" : ""}` : ""}
               </button>
             </div>
           </div>

@@ -13,8 +13,9 @@ $(document).on('click', '[data-action="add-to-cart"]', async function () {
             body: JSON.stringify({ productId, quantity: 1 })
         });
         if (res.ok) {
-            const data = await res.json();
-            updateHeaderCartCount(data.itemCount);
+            const summary = await fetch('/cart/summary');
+            if (summary.ok) renderHeaderCart(await summary.json());
+
             $btn.text('Added!');
             setTimeout(() => $btn.text(original).prop('disabled', false), 1500);
         } else {

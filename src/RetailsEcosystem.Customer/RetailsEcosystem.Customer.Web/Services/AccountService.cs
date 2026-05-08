@@ -22,7 +22,25 @@ namespace RetailsEcosystem.Customer.Web.Services
         {
             var body = JsonContent.Create(new { email, password });
             var response = await _httpClient.PostAsync("api/auth/login", body);
-            response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var raw = await response.Content.ReadAsStringAsync();
+                string message;
+                try
+                {
+                    using var doc = JsonDocument.Parse(raw);
+                    message = doc.RootElement.TryGetProperty("detail", out var d)
+                        ? d.GetString() ?? "Invalid email or password."
+                        : "Invalid email or password.";
+                }
+                catch
+                {
+                    message = "Invalid email or password.";
+                }
+                throw new HttpRequestException(message, null, response.StatusCode);
+            }
+
             var json = await response.Content.ReadAsStringAsync();
             var dto = JsonSerializer.Deserialize<AuthResponseDto>(json, _jsonOptions)!;
             return (dto, ExtractRefreshTokenFromResponse(response));

@@ -25,7 +25,8 @@ export default function LoginPage() {
       navigate(from, { replace: true });
     } catch (err) {
       setError(
-        err.response?.data?.errors?.join(", ") ||
+        err.response?.data?.detail ||
+          err.response?.data?.errors?.join(", ") ||
           err.response?.data?.title ||
           "Failed to login. Please check your credentials."
       );
