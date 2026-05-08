@@ -9,7 +9,7 @@ import OrdersPage from "../pages/order/OrdersPage";
 import ProductsPage from "../pages/products/ProductsPage";
 import CategoriesPage from "../pages/categories/CategoriesPage";
 import CustomerListPage from "../pages/customers/CustomerListPage";
-import NotFoundPage from "../pages/notfound/NotFoundPage";
+import NotFoundPage from "../pages/error/notfound/NotFoundPage";
 
 export default function AppRoute() {
   return (
