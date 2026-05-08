@@ -4,122 +4,259 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles {
+    <style>
+        .profile-identity-panel {
+            background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%);
+            border-right: 1px solid rgba(0, 0, 0, .06);
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-form-panel {
+            padding: 2.5rem 2.5rem;
+        }
+
+        .profile-avatar-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 20px rgba(74, 144, 217, .20);
+            flex-shrink: 0;
+        }
+
+        .profile-avatar-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar-initials {
+            width: 100%;
+            height: 100%;
+            background: #4A90D9;
+            color: #fff;
+            font-size: 2.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #64748b;
+            margin-bottom: .35rem;
+            display: block;
+        }
+
+        /* Two-class specificity beats Bootstrap's .form-control without !important */
+        .profile-form-panel .form-control {
+            height: 48px;
+            border-radius: 10px;
+            border-color: #e2e8f0;
+            background-color: #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        .profile-form-panel textarea.form-control {
+            height: auto;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .profile-form-panel .form-control:focus {
+            background-color: #fff;
+            border-color: #4A90D9;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, .15);
+        }
+
+        .profile-form-panel .form-control:disabled,
+        .profile-form-panel .form-control[readonly] {
+            background-color: #f1f3f5;
+            color: #94a3b8;
+            cursor: default;
+            opacity: 1;
+        }
+
+        @@media (max-width: 991.98px) {
+            .profile-identity-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(0, 0, 0, .06);
+                padding: 2rem 1.5rem;
+            }
+
+            .profile-form-panel {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+}
+
 <section class="section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-7 col-md-9 col-12">
+    <div class="container" style="max-width: 960px">
 
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="alert alert-success d-flex align-items-start gap-2 rounded-3 py-2 px-3 mb-4" role="alert">
-                        <i class="lni lni-checkmark-circle flex-shrink-0 mt-1 text-caption"></i>
-                        <span class="text-body-sm">@TempData["SuccessMessage"]</span>
-                    </div>
-                }
+        @* ── Success alert ───────────────────────────────────────────── *@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success d-flex align-items-center gap-2
+                        rounded-3 py-2 px-3 mb-4 shadow-sm" role="alert">
+                <i class="lni lni-checkmark-circle text-success flex-shrink-0"></i>
+                <span class="small">@TempData["SuccessMessage"]</span>
+            </div>
+        }
 
-                <!-- Profile Card -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-4">
-                        <h2 class="text-page-title mb-1">My Profile</h2>
-                        <p class="text-muted text-body-sm mb-4">Keep your personal information up to date.</p>
+        @* ── Validation summary ──────────────────────────────────────── *@
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger d-flex align-items-start gap-2
+                        rounded-3 py-2 px-3 mb-4" role="alert">
+                <i class="lni lni-warning flex-shrink-0 mt-1"></i>
+                <span class="small">@Html.ValidationSummary(false)</span>
+            </div>
+        }
 
-                        @if (!ViewData.ModelState.IsValid)
+        @* ── Main profile card ───────────────────────────────────────── *@
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+            <div class="row g-0">
+
+                @* Left — identity panel *@
+                <div class="col-lg-4 profile-identity-panel">
+                    <div class="profile-avatar-ring mb-3" id="avatar-preview-container">
+                        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                         {
-                            <div class="alert alert-danger d-flex align-items-start gap-2 rounded-3 py-2 px-3 mb-4" role="alert">
-                                <i class="lni lni-warning flex-shrink-0 mt-1 text-caption"></i>
-                                <span class="text-body-sm">@Html.ValidationSummary(false)</span>
+                            <img src="@Model.AvatarUrl" alt="@Model.FullName" />
+                        }
+                        else
+                        {
+                            <div class="profile-avatar-initials" id="avatar-initials">
+                                @(Model.FullName.Length > 0
+                                    ? Model.FullName[0].ToString().ToUpper()
+                                    : "?")
                             </div>
                         }
-
-                        <form asp-action="Profile" asp-controller="Account" method="post">
-                            @Html.AntiForgeryToken()
-
-                            <div class="mb-3">
-                                <label asp-for="FullName" class="form-label text-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="lni lni-user text-muted"></i>
-                                    </span>
-                                    <input asp-for="FullName" type="text"
-                                           class="form-control border-start-0 bg-light" />
-                                </div>
-                                <span asp-validation-for="FullName" class="text-danger text-caption"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="PhoneNumber" class="form-label text-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="lni lni-phone text-muted"></i>
-                                    </span>
-                                    <input asp-for="PhoneNumber" type="tel"
-                                           class="form-control border-start-0 bg-light"
-                                           placeholder="+1 234 567 8900" />
-                                </div>
-                                <span asp-validation-for="PhoneNumber" class="text-danger text-caption"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="Address" class="form-label text-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="lni lni-map-marker text-muted"></i>
-                                    </span>
-                                    <input asp-for="Address" type="text"
-                                           class="form-control border-start-0 bg-light"
-                                           placeholder="123 Main St, City" />
-                                </div>
-                                <span asp-validation-for="Address" class="text-danger text-caption"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="DateOfBirth" class="form-label text-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="lni lni-calendar text-muted"></i>
-                                    </span>
-                                    <input asp-for="DateOfBirth" type="date"
-                                           class="form-control border-start-0 bg-light" />
-                                </div>
-                                <span asp-validation-for="DateOfBirth" class="text-danger text-caption"></span>
-                            </div>
-
-                            <div class="mb-4">
-                                <label asp-for="AvatarUrl" class="form-label text-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="lni lni-image text-muted"></i>
-                                    </span>
-                                    <input asp-for="AvatarUrl" type="url"
-                                           class="form-control border-start-0 bg-light"
-                                           placeholder="https://example.com/avatar.jpg" />
-                                </div>
-                                <span asp-validation-for="AvatarUrl" class="text-danger text-caption"></span>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary fw-semibold">
-                                <i class="lni lni-save me-2"></i>Save Changes
-                            </button>
-                        </form>
                     </div>
+
+                    <h5 class="fw-bold mb-1 lh-sm" id="identity-name">@Model.FullName</h5>
+                    <p class="text-muted small mb-3" style="word-break: break-all">@Model.Email</p>
+
+                    <span class="badge rounded-pill text-bg-success mb-4 px-3 py-1"
+                          style="font-size: .72rem; font-weight: 600; letter-spacing: .04em">
+                        ACTIVE
+                    </span>
+
+                    <input type="file" id="avatar-file-input" accept="image/*" class="d-none" />
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-sm rounded-pill px-3"
+                            id="avatar-upload-btn">
+                        <i class="lni lni-camera me-1"></i>Change Photo
+                    </button>
+                    <p class="text-muted mt-2 mb-0" style="font-size: .7rem">
+                        Preview only — not saved
+                    </p>
                 </div>
 
-                <!-- Change Password Card -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <h3 class="text-section-title mb-3">Change Password</h3>
-                        <a asp-action="ChangePassword" asp-controller="Account"
-                           class="btn btn-outline-secondary fw-semibold">
-                            Change Password
-                        </a>
+                @* Right — form panel *@
+                <div class="col-lg-8 profile-form-panel">
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-1">My Profile</h4>
+                        <p class="text-muted small mb-0">
+                            Manage your personal information and preferences.
+                        </p>
                     </div>
+
+                    <form asp-action="Profile" asp-controller="Account"
+                          method="post" id="profile-form">
+                        @Html.AntiForgeryToken()
+                        <input asp-for="AvatarUrl" type="hidden" />
+
+                        @* Full Name *@
+                        <div class="mb-4">
+                            <label class="profile-label">Full Name</label>
+                            <input asp-for="FullName" type="text"
+                                   class="form-control"
+                                   placeholder="Your full name" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        @* Email — readonly display only *@
+                        <div class="mb-4">
+                            <label class="profile-label">Email Address</label>
+                            <input type="email" value="@Model.Email"
+                                   class="form-control"
+                                   readonly disabled
+                                   title="Email cannot be changed" />
+                        </div>
+
+                        @* Phone + DOB — side by side *@
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <label class="profile-label">Phone Number</label>
+                                <input asp-for="PhoneNumber" type="tel"
+                                       class="form-control"
+                                       placeholder="+1 234 567 8900" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="profile-label">Date of Birth</label>
+                                <input asp-for="DateOfBirth" type="date"
+                                       class="form-control" />
+                                <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        @* Address *@
+                        <div class="mb-4">
+                            <label class="profile-label">Address</label>
+                            <textarea asp-for="Address"
+                                      class="form-control"
+                                      rows="2"
+                                      placeholder="123 Main St, City, State, ZIP, Country"></textarea>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        @* Save *@
+                        <div class="d-flex justify-content-end pt-3 mt-2 border-top">
+                            <button type="submit"
+                                    class="btn btn-primary fw-semibold px-4 py-2 rounded-3"
+                                    id="save-btn">
+                                <i class="lni lni-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
         </div>
+
+        @* ── Password & Security card ────────────────────────────────── *@
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                    <div>
+                        <h6 class="fw-bold mb-1">Password &amp; Security</h6>
+                        <p class="text-muted small mb-0">Change your account login password.</p>
+                    </div>
+                    <a asp-action="ChangePassword" asp-controller="Account"
+                       class="btn btn-outline-secondary btn-sm fw-semibold rounded-3 px-3 flex-shrink-0">
+                        Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 
 @section Scripts {
+    <script src="~/js/profile.js" asp-append-version="true"></script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

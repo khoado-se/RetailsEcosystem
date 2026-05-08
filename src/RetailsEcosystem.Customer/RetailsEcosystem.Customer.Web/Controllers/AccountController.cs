@@ -94,9 +94,10 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             var customer = await _accountService.GetProfileAsync(token);
             var model = new ProfileViewModel
             {
-                FullName = customer.FullName,
-                AvatarUrl = customer.AvatarUrl,
-                Address = customer.Address,
+                FullName    = customer.FullName,
+                Email       = User.FindFirstValue(ClaimTypes.Email) ?? "",
+                AvatarUrl   = customer.AvatarUrl,
+                Address     = customer.Address,
                 PhoneNumber = customer.PhoneNumber,
                 DateOfBirth = customer.DateOfBirth
             };
@@ -132,7 +133,8 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                     .ToList();
                 var email = User.FindFirstValue(ClaimTypes.Email)!;
                 var existingRefreshToken = User.FindFirstValue("refresh_token");
-                await SignInAsync(token, model.FullName, email, roles, existingRefreshToken);
+                await SignInAsync(token, model.FullName, email, roles, existingRefreshToken,
+                    model.PhoneNumber);
 
                 TempData["SuccessMessage"] = "Profile updated successfully.";
                 return RedirectToAction(nameof(Profile));
@@ -196,13 +198,14 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             string fullName,
             string email,
             IEnumerable<string> roles,
-            string? refreshToken = null)
+            string? refreshToken = null,
+            string? phoneNumber = null)
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, fullName),
+                new(ClaimTypes.Name,  fullName),
                 new(ClaimTypes.Email, email),
-                new("access_token", accessToken)
+                new("access_token",   accessToken)
             };
 
             var expiry = JwtHelper.GetTokenExpiry(accessToken);
@@ -211,6 +214,9 @@ namespace RetailsEcosystem.Customer.Web.Controllers
 
             if (refreshToken is not null)
                 claims.Add(new("refresh_token", refreshToken));
+
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+                claims.Add(new("phone_number", phoneNumber));
 
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 

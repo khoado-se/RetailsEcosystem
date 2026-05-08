@@ -92,8 +92,19 @@
                                 <div class="user-menu__dropdown">
                                     <div class="user-menu__header">
                                         <span class="user-menu__name">@displayName</span>
+                                        @{
+                                            var userPhone = User.FindFirstValue("phone_number");
+                                            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                                        }
                                         <span class="user-menu__hotline">
-                                            <i class="lni lni-phone me-1"></i>(+100) 123 456 7890
+                                            @if (!string.IsNullOrWhiteSpace(userPhone))
+                                            {
+                                                <i class="lni lni-phone me-1"></i>@userPhone
+                                            }
+                                            else if (!string.IsNullOrWhiteSpace(userEmail))
+                                            {
+                                                <i class="lni lni-envelope me-1"></i>@userEmail
+                                            }
                                         </span>
                                     </div>
                                     <ul class="user-menu__list">
