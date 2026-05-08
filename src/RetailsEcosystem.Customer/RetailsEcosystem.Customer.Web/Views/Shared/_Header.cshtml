@@ -84,9 +84,19 @@
                         {
                             var displayName = User.FindFirstValue(ClaimTypes.Name) ?? "User";
                             var initial = displayName.Length > 0 ? displayName[0].ToString().ToUpper() : "U";
+                            var avatarUrl = User.FindFirstValue("avatar_url");
                             <div class="user-menu">
                                 <div class="user-menu__trigger" aria-label="User menu">
-                                    <div class="user-avatar">@initial</div>
+                                    <div class="user-avatar" id="header-user-avatar">
+                                        @if (!string.IsNullOrEmpty(avatarUrl))
+                                        {
+                                            <img src="@avatarUrl" alt="@displayName" />
+                                        }
+                                        else
+                                        {
+                                            @initial
+                                        }
+                                    </div>
                                     <i class="lni lni-chevron-down user-menu__caret"></i>
                                 </div>
                                 <div class="user-menu__dropdown">

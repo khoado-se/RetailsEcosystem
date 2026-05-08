@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using RetailsEcosystem.Customer.Shared.DTOs.Auth;
 using RetailsEcosystem.Customer.Shared.DTOs.Customer;
 
@@ -12,5 +13,6 @@ namespace RetailsEcosystem.Customer.Web.Interfaces
         Task<CustomerDto> GetProfileAsync(string accessToken);
         Task UpdateProfileAsync(string accessToken, UpdateProfileDto dto);
         Task ChangePasswordAsync(string accessToken, string currentPassword, string newPassword);
+        Task<string> UploadAvatarAsync(string accessToken, IFormFile file);
     }
 }

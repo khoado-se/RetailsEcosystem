@@ -92,6 +92,19 @@ namespace RetailsEcosystem.Customer.Application.Services
                 throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
 
+        public async Task UpdateAvatarAsync(string userId, string avatarUrl)
+        {
+            var user = await _userManager.FindByIdAsync(userId)
+                ?? throw new KeyNotFoundException($"User {userId} not found.");
+
+            user.AvatarUrl = avatarUrl;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                throw new InvalidOperationException(
+                    string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
+
         private static CustomerDto MapToDto(ApplicationUser user, IList<string> roles) => new()
         {
             Id = user.Id,

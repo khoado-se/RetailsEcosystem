@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Customer;
@@ -13,10 +14,14 @@ namespace RetailsEcosystem.Customer.API.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
+        private readonly IFileStorageService _fileService;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(
+            ICustomerService customerService,
+            IFileStorageService fileService)
         {
             _customerService = customerService;
+            _fileService = fileService;
         }
 
         // GET /api/customers/me
@@ -66,6 +71,20 @@ namespace RetailsEcosystem.Customer.API.Controllers
         {
             await _customerService.UpdateStatusAsync(id, dto.IsActive);
             return NoContent();
+        }
+
+        // POST /api/customers/me/avatar
+        [HttpPost("me/avatar")]
+        public async Task<IActionResult> UploadAvatar(IFormFile file)
+        {
+            if (file is null || file.Length == 0)
+                return BadRequest(new { error = "No file provided." });
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var urls = await _fileService.SaveFilesAsync([file]);
+            var url = urls[0];
+            await _customerService.UpdateAvatarAsync(userId, url);
+            return Ok(new { url });
         }
     }
 }

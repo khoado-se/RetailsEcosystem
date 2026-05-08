@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -109,6 +110,24 @@ namespace RetailsEcosystem.Customer.Web.Services
                 "application/json");
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<string> UploadAvatarAsync(string accessToken, IFormFile file)
+        {
+            await using var stream = file.OpenReadStream();
+            var content = new MultipartFormDataContent();
+            content.Add(new StreamContent(stream), "file", file.FileName);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/customers/me/avatar");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            request.Content = content;
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            return doc.RootElement.GetProperty("url").GetString()!;
         }
 
         private static string? ExtractRefreshTokenFromResponse(HttpResponseMessage response)

@@ -42,7 +42,9 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             try
             {
                 var (auth, refreshToken) = await _accountService.LoginAsync(model.Email, model.Password);
-                await SignInAsync(auth.AccessToken, auth.User.FullName, auth.User.Email, auth.User.Roles, refreshToken);
+                var profile = await _accountService.GetProfileAsync(auth.AccessToken);
+                await SignInAsync(auth.AccessToken, auth.User.FullName, auth.User.Email, auth.User.Roles,
+                    refreshToken, avatarUrl: profile.AvatarUrl);
                 return RedirectToLocal(model.ReturnUrl);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -134,7 +136,7 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 var email = User.FindFirstValue(ClaimTypes.Email)!;
                 var existingRefreshToken = User.FindFirstValue("refresh_token");
                 await SignInAsync(token, model.FullName, email, roles, existingRefreshToken,
-                    model.PhoneNumber);
+                    model.PhoneNumber, model.AvatarUrl);
 
                 TempData["SuccessMessage"] = "Profile updated successfully.";
                 return RedirectToAction(nameof(Profile));
@@ -174,6 +176,37 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             }
         }
 
+        // POST /account/profile/avatar
+        [HttpPost("profile/avatar")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadAvatar(IFormFile file)
+        {
+            if (file is null || file.Length == 0)
+                return BadRequest(new { error = "No file provided." });
+
+            var token = User.FindFirstValue("access_token")!;
+            try
+            {
+                var url = await _accountService.UploadAvatarAsync(token, file);
+
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                var fullName  = User.FindFirstValue(ClaimTypes.Name)!;
+                var email     = User.FindFirstValue(ClaimTypes.Email)!;
+                var roles     = User.Claims.Where(c => c.Type == ClaimTypes.Role)
+                                           .Select(c => c.Value).ToList();
+                var refreshTk = User.FindFirstValue("refresh_token");
+                var phone     = User.FindFirstValue("phone_number");
+                await SignInAsync(token, fullName, email, roles, refreshTk, phone, url);
+
+                return Ok(new { url });
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Failed to upload photo. Please try again." });
+            }
+        }
+
         // POST /account/logout
         [HttpPost("logout")]
         [ValidateAntiForgeryToken]
@@ -199,7 +232,8 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             string email,
             IEnumerable<string> roles,
             string? refreshToken = null,
-            string? phoneNumber = null)
+            string? phoneNumber = null,
+            string? avatarUrl = null)
         {
             var claims = new List<Claim>
             {
@@ -217,6 +251,9 @@ namespace RetailsEcosystem.Customer.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(phoneNumber))
                 claims.Add(new("phone_number", phoneNumber));
+
+            if (!string.IsNullOrWhiteSpace(avatarUrl))
+                claims.Add(new("avatar_url", avatarUrl));
 
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 

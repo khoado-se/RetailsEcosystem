@@ -209,3 +209,12 @@ header.header.header--compact {
     align-items: center;
     gap: 6px;
 }
+
+/* User avatar image */
+.user-avatar img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
