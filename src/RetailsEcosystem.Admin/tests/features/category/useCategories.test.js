@@ -48,6 +48,47 @@ describe("useCategories", () => {
     expect(result.current.categories).toEqual([]);
   });
 
+  it("falls back to [] when res.data.items is absent", async () => {
+    mockGetCategories.mockResolvedValue({ data: { totalPage: 2 } });
+
+    const { result } = renderHook(() => useCategories());
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.categories).toEqual([]);
+    expect(result.current.totalPage).toBe(2);
+  });
+
+  it("falls back to totalPage 1 when res.data.totalPage is absent", async () => {
+    mockGetCategories.mockResolvedValue({ data: { items: [] } });
+
+    const { result } = renderHook(() => useCategories());
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.totalPage).toBe(1);
+  });
+
+  it("uses err.response.data.title as error when present", async () => {
+    const err = new Error("ignored");
+    err.response = { data: { title: "Validation error" } };
+    mockGetCategories.mockRejectedValue(err);
+
+    const { result } = renderHook(() => useCategories());
+
+    await waitFor(() => expect(result.current.error).toBe("Validation error"));
+  });
+
+  it("falls back to static message when error has no title or message", async () => {
+    mockGetCategories.mockRejectedValue({});
+
+    const { result } = renderHook(() => useCategories());
+
+    await waitFor(() =>
+      expect(result.current.error).toBe("Failed to load categories.")
+    );
+  });
+
   it("fetchCategories increments tick and triggers a refetch", async () => {
     mockGetCategories.mockResolvedValue({
       data: { items: [{ id: 1, name: "Books" }] },

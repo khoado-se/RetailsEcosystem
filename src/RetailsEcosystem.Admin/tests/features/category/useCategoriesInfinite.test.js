@@ -130,6 +130,16 @@ describe("useCategoriesInfinite", () => {
     expect(result.current.items).toEqual([]);
   });
 
+  it("falls back to static message when error has no title or message", async () => {
+    mockGetCategories.mockRejectedValue({});
+
+    const { result } = renderHook(() => useCategoriesInfinite());
+
+    await act(async () => { await result.current.loadMore(); });
+
+    expect(result.current.error).toBe("Failed to load categories.");
+  });
+
   it("loadMore falls back to totalPage 1 when data.totalPage is absent", async () => {
     mockGetCategories.mockResolvedValue({
       data: { items: [{ id: 1 }] },

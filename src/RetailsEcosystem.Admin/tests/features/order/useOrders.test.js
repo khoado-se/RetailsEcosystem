@@ -53,6 +53,27 @@ describe("useOrders", () => {
     });
   });
 
+  it("falls back to [] and totalPage 1 when fields are absent in response", async () => {
+    mockGetOrders.mockResolvedValue({ data: {} });
+
+    const { result } = renderHook(() => useOrders(1, null));
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.orders).toEqual([]);
+    expect(result.current.totalPage).toBe(1);
+  });
+
+  it("falls back to static message when error has no message", async () => {
+    mockGetOrders.mockRejectedValue({});
+
+    const { result } = renderHook(() => useOrders(1, null));
+
+    await waitFor(() =>
+      expect(result.current.error).toBe("Failed to load orders.")
+    );
+  });
+
   it("fetchOrders triggers a manual refetch", async () => {
     mockGetOrders.mockResolvedValue({ data: { items: [], totalPage: 0 } });
 

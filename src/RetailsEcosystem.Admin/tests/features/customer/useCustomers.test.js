@@ -59,6 +59,17 @@ describe("useCustomers", () => {
     });
   });
 
+  it("falls back to empty items and 0 totalPage when fields are absent", async () => {
+    mockGetCustomers.mockResolvedValue({});
+
+    const { result } = renderHook(() => useCustomers(1, null));
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.customers).toEqual([]);
+    expect(result.current.totalPage).toBe(0);
+  });
+
   it("fetchCustomers triggers a manual refetch", async () => {
     mockGetCustomers.mockResolvedValue({ items: [], totalPage: 0 });
 

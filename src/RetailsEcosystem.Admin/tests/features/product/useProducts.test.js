@@ -93,6 +93,37 @@ describe("useProducts", () => {
     );
   });
 
+  it("falls back to [] and totalPage 0 when fields are absent in response", async () => {
+    mockGetProducts.mockResolvedValue({});
+
+    const { result } = renderHook(() => useProducts(1, null, null));
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.products).toEqual([]);
+    expect(result.current.totalPage).toBe(0);
+  });
+
+  it("uses err.response.data.title as error when present", async () => {
+    const err = new Error("ignored");
+    err.response = { data: { title: "Bad Request" } };
+    mockGetProducts.mockRejectedValue(err);
+
+    const { result } = renderHook(() => useProducts(1, null, null));
+
+    await waitFor(() => expect(result.current.error).toBe("Bad Request"));
+  });
+
+  it("falls back to static message when error has no title or message", async () => {
+    mockGetProducts.mockRejectedValue({});
+
+    const { result } = renderHook(() => useProducts(1, null, null));
+
+    await waitFor(() =>
+      expect(result.current.error).toBe("Failed to load products.")
+    );
+  });
+
   it("exposes fetchProducts to trigger manual refetch", async () => {
     mockGetProducts.mockResolvedValue({ items: [], totalPage: 0 });
 
