@@ -14,11 +14,11 @@
           <Exclude>
             [*Tests*]*
             ,[*Infrastructure*]*
-            ,[*.OpenApi.Generated*]*
-            ,[*.Extensions*]*
-            ,[*.Middleware*]*
-            ,[*.Options*]*
             ,[*]Program
+            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Extensions.*
+            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Filters.*
+            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Options.*
+            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Services.*
           </Exclude>
 
           <!-- Optional: exclude files -->

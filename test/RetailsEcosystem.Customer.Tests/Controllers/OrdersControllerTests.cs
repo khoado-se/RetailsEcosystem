@@ -150,4 +150,94 @@ public class OrdersControllerTests
         result.Result.Should().BeOfType<OkObjectResult>()
             .Which.StatusCode.Should().Be(200);
     }
+
+    [Fact]
+    public async Task GetOrders_WithStatusFilter_PassesStatusToService()
+    {
+        var pagedResult = new PagedResult<OrderDto>([], new PagedRequest { PageNumber = 1, PageSize = 10 }, 0);
+        _orderServiceMock.Setup(s => s.GetOrdersAsync("user-123", It.IsAny<string>(), It.IsAny<PagedRequest>(), OrderStatus.Pending))
+            .ReturnsAsync(pagedResult);
+
+        var result = await _sut.GetOrders(status: OrderStatus.Pending);
+
+        result.Result.Should().BeOfType<OkObjectResult>();
+        _orderServiceMock.Verify(s => s.GetOrdersAsync("user-123", It.IsAny<string>(), It.IsAny<PagedRequest>(), OrderStatus.Pending), Times.Once);
+    }
+
+    // ── GetStats ──────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetStats_ReturnsOkWithStats()
+    {
+        var stats = new OrderStatsDto { OrdersToday = 5, PendingOrders = 3 };
+        _orderServiceMock.Setup(s => s.GetStatsAsync()).ReturnsAsync(stats);
+
+        var result = await _sut.GetStats();
+
+        result.Result.Should().BeOfType<OkObjectResult>()
+            .Which.Value.Should().BeEquivalentTo(stats);
+    }
+
+    // ── InitiatePayment ───────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task InitiatePayment_Success_ReturnsOkWithPaymentUrl()
+    {
+        var payResult = new InitiatePaymentResult { PaymentUrl = "https://vnpay/pay?ref=1" };
+        _orderServiceMock.Setup(s => s.InitiateVnpayPaymentAsync(1, "user-123", It.IsAny<string>()))
+            .ReturnsAsync(payResult);
+
+        var result = await _sut.InitiatePayment(1);
+
+        result.Result.Should().BeOfType<OkObjectResult>()
+            .Which.Value.Should().BeEquivalentTo(payResult);
+    }
+
+    [Fact]
+    public async Task InitiatePayment_OrderNotFound_ReturnsNotFound()
+    {
+        _orderServiceMock.Setup(s => s.InitiateVnpayPaymentAsync(99, "user-123", It.IsAny<string>()))
+            .ThrowsAsync(new KeyNotFoundException());
+
+        var result = await _sut.InitiatePayment(99);
+
+        result.Result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task InitiatePayment_WrongUser_ReturnsForbid()
+    {
+        _orderServiceMock.Setup(s => s.InitiateVnpayPaymentAsync(2, "user-123", It.IsAny<string>()))
+            .ThrowsAsync(new UnauthorizedAccessException());
+
+        var result = await _sut.InitiatePayment(2);
+
+        result.Result.Should().BeOfType<ForbidResult>();
+    }
+
+    [Fact]
+    public async Task InitiatePayment_InvalidOperation_ReturnsBadRequest()
+    {
+        _orderServiceMock.Setup(s => s.InitiateVnpayPaymentAsync(3, "user-123", It.IsAny<string>()))
+            .ThrowsAsync(new InvalidOperationException("Max attempts reached."));
+
+        var result = await _sut.InitiatePayment(3);
+
+        result.Result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
+    }
+
+    // ── CancelOrder additional ────────────────────────────────────────────────
+
+    [Fact]
+    public async Task CancelOrder_InvalidOperation_ReturnsBadRequest()
+    {
+        _orderServiceMock.Setup(s => s.CancelOrderAsync(5, "user-123"))
+            .ThrowsAsync(new InvalidOperationException("Cannot cancel a delivered order."));
+
+        var result = await _sut.CancelOrder(5);
+
+        result.Result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
+    }
 }

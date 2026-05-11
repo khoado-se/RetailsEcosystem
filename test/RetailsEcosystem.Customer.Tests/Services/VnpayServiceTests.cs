@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using FluentAssertions;
@@ -141,5 +142,68 @@ public class VnpayServiceTests
         var url = sut.BuildPaymentUrl(order, "3-20260101", "127.0.0.1");
 
         url.Should().Contain(TestTmnCode);
+    }
+
+    // ── QueryTransactionAsync ────────────────────────────────────────────────
+
+    private sealed class FakeHttpHandler : HttpMessageHandler
+    {
+        private readonly HttpResponseMessage _response;
+        public FakeHttpHandler(HttpResponseMessage response) => _response = response;
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
+            => Task.FromResult(_response);
+    }
+
+    private static VnpayService BuildSutWithHttp(HttpResponseMessage response)
+    {
+        var options = Options.Create(TestSettings);
+        var client  = new HttpClient(new FakeHttpHandler(response));
+        var factory = new Mock<IHttpClientFactory>();
+        factory.Setup(f => f.CreateClient("VNPay")).Returns(client);
+        return new VnpayService(options, factory.Object);
+    }
+
+    [Fact]
+    public async Task QueryTransactionAsync_SuccessResponse_ReturnsPopulatedResult()
+    {
+        var json = """{"vnp_ResponseCode":"00","vnp_TransactionStatus":"00","vnp_TransactionNo":"12345","vnp_Amount":"5000000","vnp_Message":"Success"}""";
+        var sut  = BuildSutWithHttp(new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+        });
+
+        var result = await sut.QueryTransactionAsync("1-20260101", "20260101120000", "127.0.0.1");
+
+        result.ResponseCode.Should().Be("00");
+        result.TransactionNo.Should().Be("12345");
+        result.Amount.Should().Be(5_000_000);
+    }
+
+    [Fact]
+    public async Task QueryTransactionAsync_HttpFailure_ReturnsResponseCode99()
+    {
+        var sut = BuildSutWithHttp(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+
+        var result = await sut.QueryTransactionAsync("1-20260101", "20260101120000", "127.0.0.1");
+
+        result.ResponseCode.Should().Be("99");
+        result.Message.Should().Be("Query failed");
+    }
+
+    [Fact]
+    public async Task QueryTransactionAsync_MissingFields_ReturnsEmptyStrings()
+    {
+        var json = """{"vnp_ResponseCode":"01"}""";
+        var sut  = BuildSutWithHttp(new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+        });
+
+        var result = await sut.QueryTransactionAsync("1-20260101", "20260101120000", "127.0.0.1");
+
+        result.ResponseCode.Should().Be("01");
+        result.TransactionStatus.Should().BeEmpty();
+        result.TransactionNo.Should().BeEmpty();
+        result.Amount.Should().Be(0);
     }
 }

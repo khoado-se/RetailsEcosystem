@@ -87,4 +87,44 @@ public class CategoryServiceTests
 
         _categoryRepoMock.Verify(r => r.DeleteAsync(7), Times.Once);
     }
+
+    // ── Null-description branches ─────────────────────────────────────────────
+
+    [Fact]
+    public async Task CreateAsync_NullDescription_MapsToEmptyString()
+    {
+        var dto = new CreateCategoryDto { Name = "Empty Desc", Description = null };
+        _categoryRepoMock.Setup(r => r.CreateAsync(It.IsAny<Domain.Entities.Category>())).ReturnsAsync(1);
+
+        var result = await _sut.CreateAsync(dto);
+
+        result.Description.Should().Be(string.Empty);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_NullDescription_MapsToEmptyString()
+    {
+        var dto = new UpdateCategoryDto { Id = 3, Name = "Test", Description = null };
+
+        var result = await _sut.UpdateAsync(dto);
+
+        result.Description.Should().BeNull();
+        _categoryRepoMock.Verify(r => r.UpdateAsync(
+            It.Is<Domain.Entities.Category>(c => c.Description == string.Empty)), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_CategoryWithNullDescription_MapsToEmptyString()
+    {
+        var categories = new[]
+        {
+            new CategoryBuilder().WithId(1).WithName("NullDesc").WithDescription(null!).Build()
+        };
+        _categoryRepoMock.Setup(r => r.GetAllAsync(1, 10)).ReturnsAsync(categories);
+        _categoryRepoMock.Setup(r => r.GetTotalCategoriesAsync()).ReturnsAsync(1);
+
+        var result = await _sut.GetAllAsync(new PagedRequest { PageNumber = 1, PageSize = 10 });
+
+        result.Items.First().Description.Should().Be(string.Empty);
+    }
 }

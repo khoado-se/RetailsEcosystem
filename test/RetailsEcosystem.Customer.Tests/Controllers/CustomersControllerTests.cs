@@ -154,4 +154,40 @@ public class CustomersControllerTests
 
         await act.Should().ThrowAsync<KeyNotFoundException>();
     }
+
+    // ── UploadAvatar ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task UploadAvatar_WithFile_CallsStorageAndReturnsOkWithUrl()
+    {
+        var fileMock = new Mock<IFormFile>();
+        fileMock.Setup(f => f.Length).Returns(100);
+        _fileStorageMock.Setup(s => s.SaveFilesAsync(It.IsAny<List<IFormFile>>()))
+            .ReturnsAsync(["https://cdn.example.com/avatars/user-123.jpg"]);
+        _customerServiceMock.Setup(s => s.UpdateAvatarAsync("user-123", "https://cdn.example.com/avatars/user-123.jpg"))
+            .Returns(Task.CompletedTask);
+
+        var result = await _sut.UploadAvatar(fileMock.Object);
+
+        result.Should().BeOfType<OkObjectResult>();
+    }
+
+    [Fact]
+    public async Task UploadAvatar_NullFile_ReturnsBadRequest()
+    {
+        var result = await _sut.UploadAvatar(null!);
+
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Fact]
+    public async Task UploadAvatar_EmptyFile_ReturnsBadRequest()
+    {
+        var fileMock = new Mock<IFormFile>();
+        fileMock.Setup(f => f.Length).Returns(0);
+
+        var result = await _sut.UploadAvatar(fileMock.Object);
+
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
 }

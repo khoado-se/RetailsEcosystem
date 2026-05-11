@@ -240,4 +240,41 @@ public class CustomerServiceTests
 
         await act.Should().ThrowAsync<InvalidOperationException>();
     }
+
+    // ── UpdateAvatarAsync ─────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task UpdateAvatarAsync_ValidUser_SetsAvatarUrl()
+    {
+        var user = new CustomerBuilder().WithId("user-123").Build();
+        _userManagerMock.Setup(m => m.FindByIdAsync("user-123")).ReturnsAsync(user);
+        _userManagerMock.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+
+        await _sut.UpdateAvatarAsync("user-123", "https://cdn.example.com/avatar.jpg");
+
+        user.AvatarUrl.Should().Be("https://cdn.example.com/avatar.jpg");
+    }
+
+    [Fact]
+    public async Task UpdateAvatarAsync_UserNotFound_ThrowsKeyNotFoundException()
+    {
+        _userManagerMock.Setup(m => m.FindByIdAsync("unknown")).ReturnsAsync((ApplicationUser?)null);
+
+        var act = () => _sut.UpdateAvatarAsync("unknown", "https://cdn.example.com/avatar.jpg");
+
+        await act.Should().ThrowAsync<KeyNotFoundException>();
+    }
+
+    [Fact]
+    public async Task UpdateAvatarAsync_UpdateFails_ThrowsInvalidOperationException()
+    {
+        var user = new CustomerBuilder().WithId("user-123").Build();
+        var failResult = IdentityResult.Failed(new IdentityError { Description = "Update failed" });
+        _userManagerMock.Setup(m => m.FindByIdAsync("user-123")).ReturnsAsync(user);
+        _userManagerMock.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(failResult);
+
+        var act = () => _sut.UpdateAvatarAsync("user-123", "https://cdn.example.com/avatar.jpg");
+
+        await act.Should().ThrowAsync<InvalidOperationException>();
+    }
 }

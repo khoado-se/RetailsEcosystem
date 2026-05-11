@@ -3,6 +3,7 @@ using Moq;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
+using RetailsEcosystem.Customer.Shared.DTOs.ProductImage;
 
 namespace RetailsEcosystem.Customer.Tests.Services;
 
@@ -65,5 +66,50 @@ public class ProductImageServiceTests
         await _sut.DeleteImageAsync(5);
 
         _imageRepoMock.Verify(r => r.DeleteAsync(5), Times.Once);
+    }
+
+    // ── AddImageRangeAsync ────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task AddImageRangeAsync_CallsRepositoryWithUrls()
+    {
+        var urls = new List<string> { "https://example.com/img1.jpg", "https://example.com/img2.jpg" };
+        _imageRepoMock.Setup(r => r.AddImageRangeAsync(10, urls)).Returns(Task.CompletedTask);
+
+        await _sut.AddImageRangeAsync(10, urls);
+
+        _imageRepoMock.Verify(r => r.AddImageRangeAsync(10, urls), Times.Once);
+    }
+
+    // ── GetByProductIdAsync ───────────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetByProductIdAsync_ReturnsMappedDtos()
+    {
+        var images = new[]
+        {
+            new ProductImage { Id = 1, Url = "https://example.com/img1.jpg", ProductId = 10 },
+            new ProductImage { Id = 2, Url = "https://example.com/img2.jpg", ProductId = 10 }
+        };
+        _imageRepoMock.Setup(r => r.GetByProductIdAsync(10)).ReturnsAsync(images);
+
+        var result = await _sut.GetByProductIdAsync(10);
+
+        result.Should().HaveCount(2);
+        result.Should().ContainSingle(i => i.Id == 1 && i.Url == "https://example.com/img1.jpg");
+    }
+
+    // ── ExtractPublicId edge case ─────────────────────────────────────────────
+
+    [Fact]
+    public async Task DeleteImageAsync_UrlWithNoUploadSegment_ReturnsEmptyPublicId()
+    {
+        _imageRepoMock.Setup(r => r.GetByIdAsync(7))
+            .ReturnsAsync(new ProductImage { Id = 7, Url = "https://res.cloudinary.com/cloud/image/upload/", ProductId = 1 });
+        _imageRepoMock.Setup(r => r.DeleteAsync(7)).Returns(Task.CompletedTask);
+
+        var publicId = await _sut.DeleteImageAsync(7);
+
+        publicId.Should().BeEmpty();
     }
 }

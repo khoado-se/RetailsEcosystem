@@ -159,4 +159,31 @@ public class ProductServiceTests
         result!.ImageUrl.Should().BeNull();
         result.ImageUrls.Should().BeEmpty();
     }
+
+    // ── GetFeaturedProductsAsync ──────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetFeaturedProductsAsync_ReturnsPagedResult()
+    {
+        var products = new[] { new ProductBuilder().WithId(1).Build() };
+        _productRepoMock.Setup(r => r.GetFeaturedProductsAsync(1, 8)).ReturnsAsync(products);
+        _productRepoMock.Setup(r => r.GetProductCountAsync(null, true, null, null)).ReturnsAsync(1);
+
+        var result = await _sut.GetFeaturedProductsAsync(new PagedRequest { PageNumber = 1, PageSize = 8 });
+
+        result.Items.Should().HaveCount(1);
+        result.TotalPage.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetFeaturedProductsAsync_EmptyRepo_ReturnsEmptyPagedResult()
+    {
+        _productRepoMock.Setup(r => r.GetFeaturedProductsAsync(1, 8)).ReturnsAsync([]);
+        _productRepoMock.Setup(r => r.GetProductCountAsync(null, true, null, null)).ReturnsAsync(0);
+
+        var result = await _sut.GetFeaturedProductsAsync(new PagedRequest { PageNumber = 1, PageSize = 8 });
+
+        result.Items.Should().BeEmpty();
+        result.TotalPage.Should().Be(0);
+    }
 }
