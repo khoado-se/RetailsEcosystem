@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -13,12 +14,13 @@ namespace RetailsEcosystem.Customer.Tests.Controllers;
 
 public class CustomersControllerTests
 {
-    private readonly Mock<ICustomerService> _customerServiceMock = new();
+    private readonly Mock<ICustomerService>    _customerServiceMock = new();
+    private readonly Mock<IFileStorageService> _fileStorageMock     = new();
     private readonly CustomersController _sut;
 
     public CustomersControllerTests()
     {
-        _sut = new CustomersController(_customerServiceMock.Object);
+        _sut = new CustomersController(_customerServiceMock.Object, _fileStorageMock.Object);
         _sut.ControllerContext = new ControllerContext
         {
             HttpContext = new DefaultHttpContext

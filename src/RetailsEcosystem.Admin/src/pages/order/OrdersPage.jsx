@@ -24,6 +24,26 @@ const STATUS_BADGE = {
   4: "bg-secondary",
 };
 
+const PAYMENT_STATUS_LABEL = {
+  0: "Unpaid",
+  1: "Awaiting",
+  2: "Paid",
+  3: "Failed",
+  4: "Cancelled",
+  5: "Expired",
+  6: "Abandoned",
+};
+
+const PAYMENT_STATUS_CLASS = {
+  0: "bg-secondary bg-opacity-10 text-secondary",
+  1: "bg-warning bg-opacity-10 text-warning",
+  2: "bg-success bg-opacity-10 text-success",
+  3: "bg-danger bg-opacity-10 text-danger",
+  4: "bg-secondary bg-opacity-10 text-secondary",
+  5: "bg-secondary bg-opacity-10 text-secondary",
+  6: "bg-secondary bg-opacity-10 text-secondary",
+};
+
 export default function OrdersPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -103,6 +123,7 @@ export default function OrdersPage() {
                   <th>Date</th>
                   <th className="text-center">Items</th>
                   <th className="text-end">Total</th>
+                  <th className="text-center">Payment</th>
                   <th className="text-center">Status</th>
                   <th className="text-end">Action</th>
                 </tr>
@@ -110,7 +131,7 @@ export default function OrdersPage() {
               <tbody>
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center text-muted py-5">
+                    <td colSpan={8} className="text-center text-muted py-5">
                       No orders found.
                     </td>
                   </tr>
@@ -123,6 +144,18 @@ export default function OrdersPage() {
                       <td className="text-center">{order.items?.length ?? 0}</td>
                       <td className="text-end fw-semibold">
                         {formatCurrency(order.totalAmount)}
+                      </td>
+                      <td className="text-center">
+                        <div className="d-flex flex-column align-items-center gap-1">
+                          <span className={`badge ${order.paymentMethod === 1 ? "bg-info bg-opacity-10 text-info" : "bg-secondary bg-opacity-10 text-secondary"}`}>
+                            {order.paymentMethod === 1 ? "VNPay" : "COD"}
+                          </span>
+                          {order.paymentMethod === 1 && (
+                            <span className={`badge ${PAYMENT_STATUS_CLASS[order.paymentStatus] ?? "bg-secondary bg-opacity-10 text-secondary"}`}>
+                              {PAYMENT_STATUS_LABEL[order.paymentStatus] ?? "Unknown"}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="text-center">
                         <span className={`badge ${STATUS_BADGE[order.status]}`}>

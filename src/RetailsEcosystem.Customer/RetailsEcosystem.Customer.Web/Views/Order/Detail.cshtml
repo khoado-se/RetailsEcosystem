@@ -51,19 +51,45 @@
                                     Placed on @Model.CreatedDate.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-3 flex-wrap">
                                 @{
                                     var badgeClass = Model.Status switch
                                     {
-                                        OrderStatus.Pending => "bg-warning text-dark",
+                                        OrderStatus.Pending   => "bg-warning text-dark",
                                         OrderStatus.Confirmed => "bg-info text-dark",
-                                        OrderStatus.Shipped => "bg-primary",
+                                        OrderStatus.Shipped   => "bg-primary",
                                         OrderStatus.Delivered => "bg-success",
                                         OrderStatus.Cancelled => "bg-secondary",
                                         _ => "bg-secondary"
                                     };
+
+                                    var paymentBadgeClass = Model.PaymentMethod == PaymentMethod.COD
+                                        ? "bg-secondary bg-opacity-10 text-secondary"
+                                        : Model.PaymentStatus switch
+                                        {
+                                            PaymentStatus.Paid            => "bg-success bg-opacity-10 text-success",
+                                            PaymentStatus.AwaitingPayment => "bg-warning bg-opacity-10 text-warning",
+                                            PaymentStatus.Failed          => "bg-danger bg-opacity-10 text-danger",
+                                            _                             => "bg-secondary bg-opacity-10 text-secondary",
+                                        };
+
+                                    var paymentBadgeText = Model.PaymentMethod == PaymentMethod.COD
+                                        ? "COD"
+                                        : Model.PaymentStatus switch
+                                        {
+                                            PaymentStatus.Paid            => "Paid",
+                                            PaymentStatus.AwaitingPayment => "Awaiting Payment",
+                                            PaymentStatus.Failed          => "Payment Failed",
+                                            PaymentStatus.Cancelled       => "Payment Cancelled",
+                                            PaymentStatus.Expired         => "Payment Expired",
+                                            PaymentStatus.Abandoned       => "Payment Abandoned",
+                                            _                             => "Unpaid",
+                                        };
                                 }
                                 <span class="badge @badgeClass fs-6 px-3 py-2">@Model.StatusLabel</span>
+                                <span class="badge @paymentBadgeClass fs-6 px-3 py-2">
+                                    <i class="lni lni-credit-cards me-1"></i>@paymentBadgeText
+                                </span>
 
                                 @if (Model.Status == OrderStatus.Pending)
                                 {
@@ -76,6 +102,82 @@
                                 }
                             </div>
                         </div>
+
+                        @{
+                            var retryablePayment = Model.PaymentMethod == PaymentMethod.VNPay
+                                && Model.PaymentStatus is PaymentStatus.Pending
+                                                       or PaymentStatus.AwaitingPayment
+                                                       or PaymentStatus.Failed
+                                                       or PaymentStatus.Cancelled
+                                                       or PaymentStatus.Expired
+                                                       or PaymentStatus.Abandoned;
+
+                            var bannerAlertClass = Model.PaymentStatus switch
+                            {
+                                PaymentStatus.Failed   => "alert-danger",
+                                PaymentStatus.Cancelled or PaymentStatus.Expired or PaymentStatus.Abandoned => "alert-secondary",
+                                _ => "alert-warning",
+                            };
+                            var bannerIcon = Model.PaymentStatus switch
+                            {
+                                PaymentStatus.Failed    => "lni-close",
+                                PaymentStatus.Cancelled => "lni-ban",
+                                PaymentStatus.Expired   => "lni-timer",
+                                PaymentStatus.Abandoned => "lni-exit",
+                                _ => "lni-alarm",
+                            };
+                            var bannerTitle = Model.PaymentStatus switch
+                            {
+                                PaymentStatus.Failed    => "Payment failed",
+                                PaymentStatus.Cancelled => "Payment cancelled",
+                                PaymentStatus.Expired   => "Payment session expired",
+                                PaymentStatus.Abandoned => "Payment not completed",
+                                _ => "Payment pending",
+                            };
+                            var bannerDetail = Model.PaymentStatus switch
+                            {
+                                PaymentStatus.AwaitingPayment => Model.PaymentExpiresAt.HasValue
+                                    ? $"Awaiting VNPay payment. Expires {Model.PaymentExpiresAt.Value.ToLocalTime():MMM dd, HH:mm}."
+                                    : "Awaiting VNPay payment.",
+                                PaymentStatus.Failed    => "Your last payment attempt was unsuccessful. You can try again.",
+                                PaymentStatus.Cancelled => "You cancelled the payment. You can retry below.",
+                                PaymentStatus.Expired   => "The payment window expired. Start a new payment to complete this order.",
+                                PaymentStatus.Abandoned => "This order has not been paid. You can retry below.",
+                                _ => "This order requires payment via VNPay.",
+                            };
+                        }
+                        @if (retryablePayment)
+                        {
+                            const int maxAttempts = 3;
+                            var attemptsLeft = maxAttempts - Model.PaymentAttemptCount;
+                            var exhausted    = attemptsLeft <= 0;
+
+                            <div class="alert @bannerAlertClass border-0 rounded-3 mt-3 mb-0 d-flex align-items-center gap-3 flex-wrap">
+                                <i class="lni @bannerIcon flex-shrink-0 fs-5"></i>
+                                <div class="flex-grow-1">
+                                    <strong>@bannerTitle</strong> — @bannerDetail
+                                    @if (!exhausted)
+                                    {
+                                        <span class="text-muted small ms-2">
+                                            @attemptsLeft attempt@(attemptsLeft == 1 ? "" : "s") remaining.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger small ms-2">No payment attempts remaining. Please contact support.</span>
+                                    }
+                                </div>
+                                @if (!exhausted)
+                                {
+                                    <form asp-action="RetryPayment" asp-route-id="@Model.Id" method="post" class="flex-shrink-0">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">
+                                            <i class="lni lni-credit-cards me-1"></i>Pay Now
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        }
 
                         <!-- Status Timeline -->
                         <div class="mt-4">

@@ -9,5 +9,7 @@ namespace RetailsEcosystem.Customer.Web.Interfaces
         Task<PagedResult<OrderDto>> GetOrdersAsync(string accessToken, int pageNumber, int pageSize);
         Task<OrderDto> GetOrderByIdAsync(string accessToken, int orderId);
         Task<OrderDto> CancelOrderAsync(string accessToken, int orderId);
+        Task<InitiatePaymentResult> InitiatePaymentAsync(string accessToken, int orderId);
+        Task ConfirmReturnAsync(string accessToken, Dictionary<string, string> parameters);
     }
 }

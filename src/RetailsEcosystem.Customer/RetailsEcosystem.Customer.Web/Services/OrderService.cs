@@ -60,5 +60,28 @@ namespace RetailsEcosystem.Customer.Web.Services
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<OrderDto>(json, _jsonOptions)!;
         }
+
+        public async Task<InitiatePaymentResult> InitiatePaymentAsync(string accessToken, int orderId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"api/orders/{orderId}/pay");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<InitiatePaymentResult>(json, _jsonOptions)!;
+        }
+
+        public async Task ConfirmReturnAsync(string accessToken, Dictionary<string, string> parameters)
+        {
+            var content = new StringContent(
+                JsonSerializer.Serialize(parameters), Encoding.UTF8, "application/json");
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/vnpay/confirm-return")
+            {
+                Content = content
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

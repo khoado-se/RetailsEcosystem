@@ -54,6 +54,32 @@
                                 <span asp-validation-for="ShippingAddress" class="text-danger small"></span>
                             </div>
 
+                            <div class="mb-4">
+                                <p class="fw-semibold mb-2 small">Phương thức thanh toán</p>
+                                <div class="d-flex flex-column gap-2" id="paymentMethodGroup">
+                                    <label class="d-flex align-items-center gap-3 p-3 border rounded-3 cursor-pointer payment-option active border-primary"
+                                           data-for="pmCOD">
+                                        <input class="form-check-input mt-0" type="radio" name="PaymentMethod"
+                                               id="pmCOD" value="0" checked>
+                                        <i class="lni lni-coin fs-5 text-muted"></i>
+                                        <div>
+                                            <div class="fw-semibold small">Thanh toán khi nhận hàng (COD)</div>
+                                            <div class="text-muted" style="font-size:0.78rem">Trả tiền mặt khi nhận hàng</div>
+                                        </div>
+                                    </label>
+                                    <label class="d-flex align-items-center gap-3 p-3 border rounded-3 cursor-pointer payment-option"
+                                           data-for="pmVNPay">
+                                        <input class="form-check-input mt-0" type="radio" name="PaymentMethod"
+                                               id="pmVNPay" value="1">
+                                        <i class="lni lni-credit-cards fs-5 text-muted"></i>
+                                        <div>
+                                            <div class="fw-semibold small">Thanh toán qua VNPay</div>
+                                            <div class="text-muted" style="font-size:0.78rem">Thẻ ATM, Visa, MasterCard, QR Code</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
                             <button type="submit" id="place-order-btn"
                                     class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
                                 <i class="lni lni-checkmark me-2"></i> Place Order

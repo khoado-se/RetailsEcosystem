@@ -19,6 +19,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<PaymentAttempt> PaymentAttempts { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -96,6 +97,17 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
 
                 entity.Property(o => o.TotalAmount).HasPrecision(18, 0);
                 entity.Property(o => o.Status).HasConversion<int>();
+                entity.Property(o => o.PaymentMethod)
+                      .HasConversion<int>()
+                      .HasDefaultValue(RetailsEcosystem.Customer.Shared.Enums.PaymentMethod.COD);
+                entity.Property(o => o.PaymentStatus)
+                      .HasConversion<int>()
+                      .HasDefaultValue(RetailsEcosystem.Customer.Shared.Enums.PaymentStatus.Pending);
+                entity.Property(o => o.VnpayTxnRef).HasMaxLength(100).IsRequired(false);
+                entity.Property(o => o.VnpayTransactionNo).HasMaxLength(100).IsRequired(false);
+                entity.Property(o => o.PaymentAttemptCount).HasDefaultValue(0);
+                entity.Property(o => o.PaymentExpiresAt).IsRequired(false);
+                entity.Property(o => o.LastPaymentAttemptAt).IsRequired(false);
             });
 
             modelBuilder.Entity<OrderItem>(entity =>
@@ -111,6 +123,22 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(i => i.UnitPrice).HasPrecision(18, 0);
+            });
+
+            // ── PaymentAttempt relationships ──────────────────────────────────────
+            modelBuilder.Entity<PaymentAttempt>(entity =>
+            {
+                entity.HasOne(a => a.Order)
+                      .WithMany()
+                      .HasForeignKey(a => a.OrderId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(a => a.TxnRef).IsUnique()
+                      .HasDatabaseName("IX_PaymentAttempts_TxnRef");
+                entity.HasIndex(a => a.OrderId)
+                      .HasDatabaseName("IX_PaymentAttempts_OrderId");
+
+                entity.Property(a => a.Status).HasConversion<int>();
             });
 
             // ── Performance indexes ───────────────────────────────────────────────

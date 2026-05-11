@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.Shared.DTOs.Order;
+using RetailsEcosystem.Customer.Shared.Enums;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using RetailsEcosystem.Customer.Web.Models.Order;
 using System.Security.Claims;
@@ -17,7 +18,7 @@ namespace RetailsEcosystem.Customer.Web.Controllers
         public OrderController(IOrderService orderService, ICartService cartService)
         {
             _orderService = orderService;
-            _cartService = cartService;
+            _cartService  = cartService;
         }
 
         // GET /orders/checkout
@@ -51,8 +52,16 @@ namespace RetailsEcosystem.Customer.Web.Controllers
             {
                 var order = await _orderService.CreateOrderAsync(token, new CreateOrderDto
                 {
-                    ShippingAddress = model.ShippingAddress
+                    ShippingAddress = model.ShippingAddress,
+                    PaymentMethod   = model.PaymentMethod,
                 });
+
+                if (model.PaymentMethod == PaymentMethod.VNPay)
+                {
+                    var result = await _orderService.InitiatePaymentAsync(token, order.Id);
+                    return Redirect(result.PaymentUrl);
+                }
+
                 return RedirectToAction(nameof(Confirmation), new { id = order.Id });
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -60,6 +69,29 @@ namespace RetailsEcosystem.Customer.Web.Controllers
                 model.Cart = await _cartService.GetCartAsync(token);
                 ModelState.AddModelError(string.Empty, "Order could not be placed. Please check stock availability.");
                 return View(model);
+            }
+        }
+
+        // POST /orders/{id}/retry-payment — re-initiate VNPay for an AwaitingPayment order
+        [HttpPost("{id}/retry-payment")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RetryPayment(int id)
+        {
+            var token = User.FindFirstValue("access_token")!;
+            try
+            {
+                var result = await _orderService.InitiatePaymentAsync(token, id);
+                return Redirect(result.PaymentUrl);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["ErrorMessage"] = "Payment could not be initiated. Please try again or contact support.";
+                return RedirectToAction(nameof(Detail), new { id });
+            }
+            catch (HttpRequestException)
+            {
+                TempData["ErrorMessage"] = "Unable to initiate payment. Please try again.";
+                return RedirectToAction(nameof(Detail), new { id });
             }
         }
 

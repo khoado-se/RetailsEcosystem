@@ -102,6 +102,31 @@ namespace RetailsEcosystem.Customer.API.Controllers
             }
         }
 
+        // POST /api/orders/{id}/pay — initiate VNPay payment, returns redirect URL
+        [HttpPost("{id}/pay")]
+        public async Task<ActionResult<InitiatePaymentResult>> InitiatePayment(int id)
+        {
+            var userId    = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
+            try
+            {
+                var result = await _orderService.InitiateVnpayPaymentAsync(id, userId, ipAddress);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         // DELETE /api/orders/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult<OrderDto>> CancelOrder(int id)

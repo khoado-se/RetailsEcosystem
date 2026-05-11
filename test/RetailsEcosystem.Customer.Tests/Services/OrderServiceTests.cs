@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -11,13 +12,23 @@ namespace RetailsEcosystem.Customer.Tests.Services;
 
 public class OrderServiceTests
 {
-    private readonly Mock<IOrderRepository> _orderRepoMock = new();
-    private readonly Mock<ICartRepository> _cartRepoMock = new();
+    private readonly Mock<IOrderRepository>          _orderRepoMock   = new();
+    private readonly Mock<ICartRepository>           _cartRepoMock    = new();
+    private readonly Mock<IPaymentAttemptRepository> _attemptRepoMock = new();
+    private readonly Mock<IVnpayService>             _vnpayServiceMock = new();
     private readonly OrderService _sut;
 
     public OrderServiceTests()
     {
-        _sut = new OrderService(_orderRepoMock.Object, _cartRepoMock.Object);
+        _vnpayServiceMock
+            .Setup(v => v.BuildPaymentUrl(It.IsAny<OrderDto>(), It.IsAny<string>(), It.IsAny<string>()))
+            .Returns("https://sandbox.vnpay.vn/pay?mock=1");
+
+        _sut = new OrderService(
+            _orderRepoMock.Object,
+            _cartRepoMock.Object,
+            _attemptRepoMock.Object,
+            _vnpayServiceMock.Object);
     }
 
     // ── CreateOrderAsync ─────────────────────────────────────────────────────
@@ -30,7 +41,7 @@ public class OrderServiceTests
         var act = () => _sut.CreateOrderAsync("user1", new CreateOrderDto());
 
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Cart is empty.");
+            .WithMessage("Your cart is empty.");
     }
 
     [Fact]
@@ -42,7 +53,7 @@ public class OrderServiceTests
         var act = () => _sut.CreateOrderAsync("user1", new CreateOrderDto());
 
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Cart is empty.");
+            .WithMessage("Your cart is empty.");
     }
 
     [Fact]

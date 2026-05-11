@@ -53,6 +53,7 @@
                                 <th>Date</th>
                                 <th class="text-center">Items</th>
                                 <th class="text-end">Total</th>
+                                <th class="text-center">Payment</th>
                                 <th class="text-center">Status</th>
                                 <th></th>
                             </tr>
@@ -67,11 +68,36 @@
                                     <td class="text-end fw-semibold">@order.TotalAmount.ToString("C0")</td>
                                     <td class="text-center">
                                         @{
+                                            var pClass = order.PaymentMethod == PaymentMethod.COD
+                                                ? "bg-secondary bg-opacity-10 text-secondary"
+                                                : order.PaymentStatus switch
+                                                {
+                                                    PaymentStatus.Paid            => "bg-success bg-opacity-10 text-success",
+                                                    PaymentStatus.AwaitingPayment => "bg-warning bg-opacity-10 text-warning",
+                                                    PaymentStatus.Failed          => "bg-danger bg-opacity-10 text-danger",
+                                                    _                             => "bg-secondary bg-opacity-10 text-secondary",
+                                                };
+                                            var pText = order.PaymentMethod == PaymentMethod.COD
+                                                ? "COD"
+                                                : order.PaymentStatus switch
+                                                {
+                                                    PaymentStatus.Paid            => "Paid",
+                                                    PaymentStatus.AwaitingPayment => "Awaiting",
+                                                    PaymentStatus.Failed          => "Failed",
+                                                    PaymentStatus.Cancelled       => "Cancelled",
+                                                    PaymentStatus.Expired         => "Expired",
+                                                    _                             => "Unpaid",
+                                                };
+                                        }
+                                        <span class="badge @pClass">@pText</span>
+                                    </td>
+                                    <td class="text-center">
+                                        @{
                                             var badgeClass = order.Status switch
                                             {
-                                                OrderStatus.Pending => "bg-warning text-dark",
+                                                OrderStatus.Pending   => "bg-warning text-dark",
                                                 OrderStatus.Confirmed => "bg-info text-dark",
-                                                OrderStatus.Shipped => "bg-primary",
+                                                OrderStatus.Shipped   => "bg-primary",
                                                 OrderStatus.Delivered => "bg-success",
                                                 OrderStatus.Cancelled => "bg-secondary",
                                                 _ => "bg-secondary"
@@ -80,10 +106,29 @@
                                         <span class="badge @badgeClass">@order.StatusLabel</span>
                                     </td>
                                     <td class="text-end">
-                                        <a asp-action="Detail" asp-route-id="@order.Id"
+                                        <div class="d-flex justify-content-end gap-2">
+                                            @if (order.PaymentMethod == PaymentMethod.VNPay
+                                                && order.PaymentAttemptCount < 3
+                                                && order.PaymentStatus is PaymentStatus.Pending
+                                                                       or PaymentStatus.AwaitingPayment
+                                                                       or PaymentStatus.Failed
+                                                                       or PaymentStatus.Cancelled
+                                                                       or PaymentStatus.Expired
+                                                                       or PaymentStatus.Abandoned)
+                                            {
+                                                <form asp-controller="Order" asp-action="RetryPayment"
+                                                      asp-route-id="@order.Id" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">
+                                                        Pay
+                                                    </button>
+                                                </form>
+                                            }
+                                            <a asp-action="Detail" asp-route-id="@order.Id"
                                                class="btn btn-sm btn-outline-secondary rounded-pill">
-                                            View
-                                        </a>
+                                                View
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             }

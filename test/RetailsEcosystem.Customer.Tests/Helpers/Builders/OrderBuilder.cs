@@ -8,38 +8,53 @@ public class OrderBuilder
     private int _id = 1;
     private string _userId = "user-123";
     private OrderStatus _status = OrderStatus.Pending;
+    private PaymentMethod _paymentMethod = PaymentMethod.COD;
+    private PaymentStatus _paymentStatus = PaymentStatus.Pending;
+    private int _attemptCount = 0;
+    private string? _txnRef = null;
+    private DateTime? _paymentExpiresAt = null;
     private decimal _totalAmount = 50.00m;
     private string _shippingAddress = "123 Test St";
     private List<OrderItem> _items = [];
 
-    public OrderBuilder WithId(int id) { _id = id; return this; }
-    public OrderBuilder WithUserId(string userId) { _userId = userId; return this; }
-    public OrderBuilder WithStatus(OrderStatus status) { _status = status; return this; }
-    public OrderBuilder WithTotalAmount(decimal total) { _totalAmount = total; return this; }
+    public OrderBuilder WithId(int id)                          { _id               = id;      return this; }
+    public OrderBuilder WithUserId(string userId)               { _userId           = userId;  return this; }
+    public OrderBuilder WithStatus(OrderStatus status)          { _status           = status;  return this; }
+    public OrderBuilder WithTotalAmount(decimal total)          { _totalAmount      = total;   return this; }
+    public OrderBuilder WithPaymentMethod(PaymentMethod method) { _paymentMethod    = method;  return this; }
+    public OrderBuilder WithPaymentStatus(PaymentStatus status) { _paymentStatus    = status;  return this; }
+    public OrderBuilder WithPaymentAttemptCount(int count)      { _attemptCount     = count;   return this; }
+    public OrderBuilder WithVnpayTxnRef(string txnRef)          { _txnRef           = txnRef;  return this; }
+    public OrderBuilder WithPaymentExpiresAt(DateTime? expires) { _paymentExpiresAt = expires; return this; }
 
     public OrderBuilder WithItem(int productId = 1, string productName = "Test Product", decimal unitPrice = 10m, int qty = 2)
     {
         _items.Add(new OrderItem
         {
-            Id = _items.Count + 1,
-            OrderId = _id,
-            ProductId = productId,
+            Id          = _items.Count + 1,
+            OrderId     = _id,
+            ProductId   = productId,
             ProductName = productName,
-            UnitPrice = unitPrice,
-            Quantity = qty
+            UnitPrice   = unitPrice,
+            Quantity    = qty
         });
         return this;
     }
 
     public Order Build() => new()
     {
-        Id = _id,
-        UserId = _userId,
-        Status = _status,
-        TotalAmount = _totalAmount,
-        ShippingAddress = _shippingAddress,
-        Items = _items,
-        CreatedDate = DateTime.UtcNow,
-        UpdatedDate = DateTime.UtcNow
+        Id                  = _id,
+        UserId              = _userId,
+        Status              = _status,
+        PaymentMethod       = _paymentMethod,
+        PaymentStatus       = _paymentStatus,
+        PaymentAttemptCount = _attemptCount,
+        VnpayTxnRef         = _txnRef,
+        PaymentExpiresAt    = _paymentExpiresAt,
+        TotalAmount         = _totalAmount,
+        ShippingAddress     = _shippingAddress,
+        Items               = _items,
+        CreatedDate         = DateTime.UtcNow,
+        UpdatedDate         = DateTime.UtcNow
     };
 }

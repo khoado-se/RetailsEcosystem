@@ -9,6 +9,12 @@ namespace RetailsEcosystem.Customer.Shared.DTOs.Order
         public string UserEmail { get; set; } = string.Empty;
         public OrderStatus Status { get; set; }
         public string StatusLabel => Status.ToString();
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
+        public string? VnpayTxnRef { get; set; }
+        public string? VnpayTransactionNo { get; set; }
+        public DateTime? PaymentExpiresAt { get; set; }
+        public int PaymentAttemptCount { get; set; }
         public decimal TotalAmount { get; set; }
         public string ShippingAddress { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; }

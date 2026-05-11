@@ -11,7 +11,9 @@ using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Infrastructure.Identity;
 using RetailsEcosystem.Customer.Infrastructure.Persistences;
+using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories;
+using RetailsEcosystem.Customer.Shared.Settings;
 
 namespace RetailsEcosystem.Customer.Infrastructure
 {
@@ -96,7 +98,13 @@ namespace RetailsEcosystem.Customer.Infrastructure
 
             // ── Order services ────────────────────────────────────────────────
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IPaymentAttemptRepository, PaymentAttemptRepository>();
             services.AddScoped<IOrderService, OrderService>();
+
+            // ── VNPay services ────────────────────────────────────────────────
+            services.Configure<VnpaySettings>(configuration.GetSection("VnpaySettings"));
+            services.AddHttpClient("VNPay");
+            services.AddScoped<IVnpayService, VnpayService>();
 
             return services;
         }

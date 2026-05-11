@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using RetailsEcosystem.Customer.Shared.Settings;
 using RetailsEcosystem.Customer.Web.Attributes;
 using RetailsEcosystem.Customer.Web.Interfaces;
 using RetailsEcosystem.Customer.Web.Options;
@@ -44,6 +45,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.Configure<VnpaySettings>(builder.Configuration.GetSection("VnpaySettings"));
+builder.Services.AddScoped<IVnpayWebService, VnpayWebService>();
 
 var app = builder.Build();
 
