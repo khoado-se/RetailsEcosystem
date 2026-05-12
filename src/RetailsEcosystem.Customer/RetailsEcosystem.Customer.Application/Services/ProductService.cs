@@ -1,4 +1,5 @@
-﻿using RetailsEcosystem.Customer.Application.Exceptions;
+﻿using Mapster;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -61,31 +62,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<ProductDto?> FindProductByIdAsync(int productId)
         {
             var product = await _productRepo.GetProductByIdAsync(productId);
-
-            if (product == null)
-                return null;
-
-            var categoryDto = new CategoryDto
-            {
-                Id = product.Category.Id,
-                Name = product.Category.Name,
-            };
-
-            return new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                CreatedDate = product.CreatedDate,
-                Description = product.Description,
-                UpdatedDate = product.UpdatedDate,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
-                IsFeatured = product.IsFeatured,
-                SoldCount = product.SoldCount,
-                Category = categoryDto,
-                ImageUrl = product.Images.FirstOrDefault()?.Url,
-                ImageUrls = product.Images.Select(i => i.Url).ToList()
-            };
+            return product?.Adapt<ProductDto>();
         }
 
         public async Task<PagedResult<ProductDto>> GetAllProductAsync(PagedRequest pagedRequest, int? categoryId)
@@ -94,24 +71,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 .GetAllProductAsync(pagedRequest.PageNumber, pagedRequest.PageSize, categoryId, pagedRequest.Search,
                     pagedRequest.IsFeatured, pagedRequest.SortBy, pagedRequest.SortDesc);
 
-            var productDtos = products.Select(product => new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                CreatedDate = product.CreatedDate,
-                Description = product.Description,
-                UpdatedDate = product.UpdatedDate,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
-                IsFeatured = product.IsFeatured,
-                SoldCount = product.SoldCount,
-                Category = new CategoryDto
-                {
-                    Id = product.Category.Id,
-                    Name = product.Category.Name,
-                },
-                ImageUrl = product.Images.FirstOrDefault()?.Url
-            });
+            var productDtos = products.Select(p => p.Adapt<ProductDto>());
 
             var productCount = await _productRepo.GetProductCountAsync(categoryId, search: pagedRequest.Search, isFeatured: pagedRequest.IsFeatured);
 
@@ -126,24 +86,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             var products = await _productRepo
                 .GetFeaturedProductsAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
 
-            var productDtos = products.Select(product => new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                CreatedDate = product.CreatedDate,
-                Description = product.Description,
-                UpdatedDate = product.UpdatedDate,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
-                IsFeatured = product.IsFeatured,
-                SoldCount = product.SoldCount,
-                Category = new CategoryDto
-                {
-                    Id = product.Category.Id,
-                    Name = product.Category.Name,
-                },
-                ImageUrl = product.Images.FirstOrDefault()?.Url
-            });
+            var productDtos = products.Select(p => p.Adapt<ProductDto>());
 
             var productCount = await _productRepo.GetProductCountAsync(isFeature: true);
 

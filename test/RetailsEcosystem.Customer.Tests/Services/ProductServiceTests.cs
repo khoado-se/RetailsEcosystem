@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Application.Mappings;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -20,6 +21,7 @@ public class ProductServiceTests
 
     public ProductServiceTests()
     {
+        MappingConfig.Configure();
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
         _sut = new ProductService(_productRepoMock.Object, _categoryRepoMock.Object, _unitOfWorkMock.Object);
     }

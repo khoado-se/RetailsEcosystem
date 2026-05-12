@@ -2,6 +2,7 @@ using FluentAssertions;
 using Moq;
 using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Application.Mappings;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -26,6 +27,7 @@ public class OrderServiceTests
             .Setup(v => v.BuildPaymentUrl(It.IsAny<OrderDto>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns("https://sandbox.vnpay.vn/pay?mock=1");
 
+        MappingConfig.Configure();
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
         _sut = new OrderService(

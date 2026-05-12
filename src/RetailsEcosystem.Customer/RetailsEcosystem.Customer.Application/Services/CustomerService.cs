@@ -1,3 +1,4 @@
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
@@ -106,17 +107,11 @@ namespace RetailsEcosystem.Customer.Application.Services
                     string.Join("; ", result.Errors.Select(e => e.Description)));
         }
 
-        private static CustomerDto MapToDto(ApplicationUser user, IList<string> roles) => new()
+        private static CustomerDto MapToDto(ApplicationUser user, IList<string> roles)
         {
-            Id = user.Id,
-            Email = user.Email ?? string.Empty,
-            FullName = user.FullName,
-            AvatarUrl = user.AvatarUrl,
-            Address = user.Address,
-            PhoneNumber = user.PhoneNumber,
-            DateOfBirth = user.DateOfBirth,
-            IsActive = user.IsActive,
-            Roles = roles
-        };
+            var dto = user.Adapt<CustomerDto>();
+            dto.Roles = roles;
+            return dto;
+        }
     }
 }

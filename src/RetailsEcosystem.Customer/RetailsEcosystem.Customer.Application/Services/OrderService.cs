@@ -1,3 +1,4 @@
+using Mapster;
 using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
@@ -341,31 +342,6 @@ namespace RetailsEcosystem.Customer.Application.Services
         public Task<PaymentAttempt?> GetPaymentAttemptByTxnRefAsync(string txnRef) =>
             _attemptRepo.GetByTxnRefAsync(txnRef);
 
-        private static OrderDto MapToDto(Order order) => new()
-        {
-            Id                 = order.Id,
-            UserId             = order.UserId,
-            UserEmail          = order.User?.Email ?? string.Empty,
-            Status             = order.Status,
-            PaymentMethod      = order.PaymentMethod,
-            PaymentStatus      = order.PaymentStatus,
-            VnpayTxnRef        = order.VnpayTxnRef,
-            VnpayTransactionNo  = order.VnpayTransactionNo,
-            PaymentExpiresAt    = order.PaymentExpiresAt,
-            PaymentAttemptCount = order.PaymentAttemptCount,
-            TotalAmount        = order.TotalAmount,
-            ShippingAddress    = order.ShippingAddress,
-            CreatedDate        = order.CreatedDate,
-            UpdatedDate        = order.UpdatedDate,
-            Items = order.Items.Select(i => new OrderItemDto
-            {
-                Id              = i.Id,
-                ProductId       = i.ProductId,
-                ProductName     = i.ProductName,
-                UnitPrice       = i.UnitPrice,
-                Quantity        = i.Quantity,
-                ProductImageUrl = i.Product?.Images.FirstOrDefault()?.Url,
-            }).ToList(),
-        };
+        private static OrderDto MapToDto(Order order) => order.Adapt<OrderDto>();
     }
 }

@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Application.Mappings;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -18,6 +19,7 @@ public class CategoryServiceTests
 
     public CategoryServiceTests()
     {
+        MappingConfig.Configure();
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
         _sut = new CategoryService(_categoryRepoMock.Object, _unitOfWorkMock.Object);
     }
@@ -116,7 +118,7 @@ public class CategoryServiceTests
 
         var result = await _sut.UpdateAsync(dto);
 
-        result.Description.Should().BeNull();
+        result.Description.Should().Be(string.Empty);
         _categoryRepoMock.Verify(r => r.UpdateAsync(
             It.Is<Domain.Entities.Category>(c => c.Description == string.Empty)), Times.Once);
     }

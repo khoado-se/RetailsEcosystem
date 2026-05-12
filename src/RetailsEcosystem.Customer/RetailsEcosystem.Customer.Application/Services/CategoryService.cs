@@ -1,3 +1,4 @@
+using Mapster;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -22,12 +23,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         {
             IEnumerable<Category> categories = await _categoryRepository
                 .GetAllAsync(pagedRequest.PageNumber, pagedRequest.PageSize);
-            var categoryDtos = categories.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Description = c.Description ?? string.Empty
-            }).ToList();
+            var categoryDtos = categories.Select(c => c.Adapt<CategoryDto>()).ToList();
 
             int totalCategories = await _categoryRepository.GetTotalCategoriesAsync();
 
@@ -49,12 +45,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             await _categoryRepository.CreateAsync(category);
             await _unitOfWork.SaveChangesAsync();
 
-            return new CategoryDto
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description
-            };
+            return category.Adapt<CategoryDto>();
         }
 
         public async Task<CategoryDto> UpdateAsync(UpdateCategoryDto dto)
@@ -69,12 +60,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             await _categoryRepository.UpdateAsync(category);
             await _unitOfWork.SaveChangesAsync();
 
-            return new CategoryDto
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Description = dto.Description
-            };
+            return category.Adapt<CategoryDto>();
         }
 
         public async Task DeleteAsync(int id)

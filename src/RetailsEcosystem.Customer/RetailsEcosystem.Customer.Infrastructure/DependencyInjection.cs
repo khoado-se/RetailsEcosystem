@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using RetailsEcosystem.Customer.Application.Interfaces;
+using RetailsEcosystem.Customer.Application.Mappings;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -108,6 +109,8 @@ namespace RetailsEcosystem.Customer.Infrastructure
             services.Configure<VnpaySettings>(configuration.GetSection("VnpaySettings"));
             services.AddHttpClient("VNPay");
             services.AddScoped<IVnpayService, VnpayService>();
+
+            MappingConfig.Configure();
 
             return services;
         }

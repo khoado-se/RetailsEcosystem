@@ -4,6 +4,7 @@ using RetailsEcosystem.Customer.Application.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using RetailsEcosystem.Customer.Application.Mappings;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -31,6 +32,7 @@ public class CustomerServiceTests
             Mock.Of<IServiceProvider>(),
             Mock.Of<ILogger<UserManager<ApplicationUser>>>()
         );
+        MappingConfig.Configure();
         _sut = new CustomerService(_userManagerMock.Object);
     }
 
