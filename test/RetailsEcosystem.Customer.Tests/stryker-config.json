@@ -1,0 +1,40 @@
+{
+  "stryker-config": {
+    "project": "RetailsEcosystem.Customer.Application.csproj",
+
+    "mutate": [
+      "Services/**/*.cs",
+      "Validators/**/*.cs"
+    ],
+
+    "mutation-level": "Standard",
+
+    "reporters": [
+      "html",
+      "progress",
+      "cleartext"
+    ],
+
+    "thresholds": {
+      "high": 80,
+      "low": 65,
+      "break": 50
+    },
+
+    "coverage-analysis": "perTest",
+
+    "verbosity": "info",
+
+    "since": {
+      "enabled": false,
+      "target": "main",
+      "ignore-changes-in": [
+        "**/*.md",
+        "**/*.yml",
+        "**/*.json",
+        "**/*.config",
+        "**/Migrations/**"
+      ]
+    }
+  }
+}

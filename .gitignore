@@ -588,3 +588,8 @@ CLAUDE.md
 
 coveragereport/
 .rtk/
+# Stryker mutation testing output
+StrykerOutput/
+
+# Local environment secrets
+.env

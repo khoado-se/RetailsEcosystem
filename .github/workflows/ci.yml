@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore
+        run: dotnet restore src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.slnx
+
+      - name: Build
+        run: dotnet build src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.slnx --no-restore --configuration Release
+
+      - name: Unit tests
+        run: |
+          dotnet test test/RetailsEcosystem.Customer.Tests/RetailsEcosystem.Customer.Tests.csproj \
+            --no-build \
+            --configuration Release \
+            --settings test/RetailsEcosystem.Customer.Tests/coverlet.runsettings \
+            --results-directory TestResults
+
+      - name: Integration tests
+        run: |
+          dotnet test test/RetailsEcosystem.Customer.IntegrationTests/RetailsEcosystem.Customer.IntegrationTests.csproj \
+            --no-build \
+            --configuration Release \
+            --results-directory TestResults
+
+      - name: Coverage gate (Application layer ≥ 80%)
+        run: |
+          python3 - <<'EOF'
+          import xml.etree.ElementTree as ET
+          import glob, sys
+
+          files = glob.glob('TestResults/**/coverage.cobertura.xml', recursive=True)
+          if not files:
+              print('No coverage file found')
+              sys.exit(1)
+
+          tree = ET.parse(files[0])
+          root = tree.getroot()
+
+          for pkg in root.iter('package'):
+              if 'Application' in pkg.get('name', ''):
+                  rate = float(pkg.get('line-rate', 0))
+                  pct = rate * 100
+                  print(f'Application line coverage: {pct:.1f}%')
+                  if rate < 0.80:
+                      print(f'FAIL: {pct:.1f}% < 80% threshold')
+                      sys.exit(1)
+                  print('PASS: coverage gate met')
+                  sys.exit(0)
+
+          print('Application package not found in coverage report')
+          sys.exit(1)
+          EOF
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/RetailsEcosystem.Admin
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: src/RetailsEcosystem.Admin/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test:run
