@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
@@ -13,11 +15,23 @@ namespace RetailsEcosystem.Customer.Tests.Controllers;
 public class ProductsControllerTests
 {
     private readonly Mock<IProductService> _productServiceMock = new();
+    private readonly Mock<IValidator<CreateProductDto>> _createValidatorMock = new();
+    private readonly Mock<IValidator<UpdateProductDto>> _updateValidatorMock = new();
     private readonly ProductsController _sut;
 
     public ProductsControllerTests()
     {
-        _sut = new ProductsController(_productServiceMock.Object);
+        _createValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateProductDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+        _updateValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<UpdateProductDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+
+        _sut = new ProductsController(
+            _productServiceMock.Object,
+            _createValidatorMock.Object,
+            _updateValidatorMock.Object);
     }
 
     [Fact]
@@ -66,6 +80,21 @@ public class ProductsControllerTests
     }
 
     [Fact]
+    public async Task PutProduct_InvalidDto_ReturnsBadRequest()
+    {
+        var dto = new UpdateProductDto { Id = 1, Name = "", Price = -1, CategoryId = 1 };
+        var failures = new[] { new ValidationFailure("Name", "Name is required.") };
+        _updateValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<UpdateProductDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult(failures));
+
+        var result = await _sut.PutProduct(1, dto);
+
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
+    }
+
+    [Fact]
     public async Task PutProduct_ValidRequest_ReturnsNoContent()
     {
         var dto = new UpdateProductDto { Id = 1, Name = "Updated", CategoryId = 1, Price = 10 };
@@ -74,6 +103,21 @@ public class ProductsControllerTests
         var result = await _sut.PutProduct(1, dto);
 
         result.Should().BeOfType<NoContentResult>();
+    }
+
+    [Fact]
+    public async Task PostProduct_InvalidDto_ReturnsBadRequest()
+    {
+        var dto = new CreateProductDto { Name = "", Price = -1, CategoryId = 1 };
+        var failures = new[] { new ValidationFailure("Name", "Name is required.") };
+        _createValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateProductDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult(failures));
+
+        var result = await _sut.PostProduct(dto);
+
+        result.Result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
     }
 
     [Fact]

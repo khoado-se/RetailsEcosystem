@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
@@ -13,11 +15,23 @@ namespace RetailsEcosystem.Customer.Tests.Controllers;
 public class CategoriesControllerTests
 {
     private readonly Mock<ICategoryService> _categoryServiceMock = new();
+    private readonly Mock<IValidator<CreateCategoryDto>> _createValidatorMock = new();
+    private readonly Mock<IValidator<UpdateCategoryDto>> _updateValidatorMock = new();
     private readonly CategoriesController _sut;
 
     public CategoriesControllerTests()
     {
-        _sut = new CategoriesController(_categoryServiceMock.Object);
+        _createValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateCategoryDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+        _updateValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<UpdateCategoryDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+
+        _sut = new CategoriesController(
+            _categoryServiceMock.Object,
+            _createValidatorMock.Object,
+            _updateValidatorMock.Object);
     }
 
     [Fact]
@@ -42,6 +56,21 @@ public class CategoriesControllerTests
     }
 
     [Fact]
+    public async Task UpdateCategory_InvalidDto_ReturnsBadRequest()
+    {
+        var dto = new UpdateCategoryDto { Id = 3, Name = "" };
+        var failures = new[] { new ValidationFailure("Name", "Name is required.") };
+        _updateValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<UpdateCategoryDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult(failures));
+
+        var result = await _sut.UpdateCategory(3, dto);
+
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
+    }
+
+    [Fact]
     public async Task UpdateCategory_ValidRequest_ReturnsOk()
     {
         var dto = new UpdateCategoryDto { Id = 3, Name = "Updated" };
@@ -62,6 +91,21 @@ public class CategoriesControllerTests
         var result = await _sut.DeleteCategory(1);
 
         result.Should().BeOfType<NoContentResult>();
+    }
+
+    [Fact]
+    public async Task CreateCategory_InvalidDto_ReturnsBadRequest()
+    {
+        var dto = new CreateCategoryDto { Name = "" };
+        var failures = new[] { new ValidationFailure("Name", "Name is required.") };
+        _createValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateCategoryDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult(failures));
+
+        var result = await _sut.CreateCategory(dto);
+
+        result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
     }
 
     [Fact]

@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.Application.Exceptions;
@@ -13,10 +14,17 @@ namespace RetailsEcosystem.Customer.API.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IValidator<CreateCategoryDto> _createValidator;
+        private readonly IValidator<UpdateCategoryDto> _updateValidator;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(
+            ICategoryService categoryService,
+            IValidator<CreateCategoryDto> createValidator,
+            IValidator<UpdateCategoryDto> updateValidator)
         {
             _categoryService = categoryService;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -36,6 +44,10 @@ namespace RetailsEcosystem.Customer.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto dto)
         {
+            var validation = await _createValidator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return BadRequest(new { errors = validation.Errors.Select(e => e.ErrorMessage) });
+
             var created = await _categoryService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetCategories), new { }, created);
         }
@@ -46,6 +58,10 @@ namespace RetailsEcosystem.Customer.API.Controllers
         {
             if (id != dto.Id)
                 return BadRequest();
+
+            var validation = await _updateValidator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return BadRequest(new { errors = validation.Errors.Select(e => e.ErrorMessage) });
 
             var updated = await _categoryService.UpdateAsync(dto);
             return Ok(updated);

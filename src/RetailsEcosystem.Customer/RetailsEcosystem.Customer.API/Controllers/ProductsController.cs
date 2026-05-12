@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.Application.Exceptions;
@@ -13,9 +14,17 @@ namespace RetailsEcosystem.Customer.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
-        public ProductsController(IProductService productService)
+        private readonly IValidator<CreateProductDto> _createValidator;
+        private readonly IValidator<UpdateProductDto> _updateValidator;
+
+        public ProductsController(
+            IProductService productService,
+            IValidator<CreateProductDto> createValidator,
+            IValidator<UpdateProductDto> updateValidator)
         {
             _productService = productService;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -61,6 +70,10 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 return BadRequest();
             }
 
+            var validation = await _updateValidator.ValidateAsync(productDto);
+            if (!validation.IsValid)
+                return BadRequest(new { errors = validation.Errors.Select(e => e.ErrorMessage) });
+
             try
             {
                 await _productService.UpdateProductAsync(productDto);
@@ -76,6 +89,10 @@ namespace RetailsEcosystem.Customer.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto product)
         {
+            var validation = await _createValidator.ValidateAsync(product);
+            if (!validation.IsValid)
+                return BadRequest(new { errors = validation.Errors.Select(e => e.ErrorMessage) });
+
             var createdProductId = await _productService.CreateProductAsync(product);
 
             return CreatedAtAction("GetProduct", new { productId = createdProductId }, new { id = createdProductId });

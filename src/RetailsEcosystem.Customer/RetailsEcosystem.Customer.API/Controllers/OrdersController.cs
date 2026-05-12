@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.Application.Exceptions;
@@ -16,10 +17,12 @@ namespace RetailsEcosystem.Customer.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IValidator<CreateOrderDto> _createOrderValidator;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IValidator<CreateOrderDto> createOrderValidator)
         {
             _orderService = orderService;
+            _createOrderValidator = createOrderValidator;
         }
 
         // GET /api/orders/stats
@@ -35,6 +38,10 @@ namespace RetailsEcosystem.Customer.API.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderDto>> CreateOrder([FromBody] CreateOrderDto dto)
         {
+            var validation = await _createOrderValidator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return BadRequest(new { errors = validation.Errors.Select(e => e.ErrorMessage) });
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             try
             {

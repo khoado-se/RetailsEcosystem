@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -17,11 +19,16 @@ namespace RetailsEcosystem.Customer.Tests.Controllers;
 public class OrdersControllerTests
 {
     private readonly Mock<IOrderService> _orderServiceMock = new();
+    private readonly Mock<IValidator<CreateOrderDto>> _createOrderValidatorMock = new();
     private readonly OrdersController _sut;
 
     public OrdersControllerTests()
     {
-        _sut = new OrdersController(_orderServiceMock.Object);
+        _createOrderValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateOrderDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+
+        _sut = new OrdersController(_orderServiceMock.Object, _createOrderValidatorMock.Object);
         _sut.ControllerContext = new ControllerContext
         {
             HttpContext = new DefaultHttpContext
@@ -50,9 +57,24 @@ public class OrdersControllerTests
     }
 
     [Fact]
+    public async Task CreateOrder_InvalidDto_ReturnsBadRequest()
+    {
+        var dto = new CreateOrderDto { ShippingAddress = "" };
+        var failures = new[] { new ValidationFailure("ShippingAddress", "Shipping address is required.") };
+        _createOrderValidatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateOrderDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult(failures));
+
+        var result = await _sut.CreateOrder(dto);
+
+        result.Result.Should().BeOfType<BadRequestObjectResult>()
+            .Which.StatusCode.Should().Be(400);
+    }
+
+    [Fact]
     public async Task CreateOrder_ServiceThrowsInvalidOperation_ReturnsBadRequest()
     {
-        var dto = new CreateOrderDto();
+        var dto = new CreateOrderDto { ShippingAddress = "123 St" };
         _orderServiceMock.Setup(s => s.CreateOrderAsync("user-123", dto))
             .ThrowsAsync(new InvalidOperationException("Cart is empty."));
 
