@@ -7,8 +7,21 @@ using RetailsEcosystem.Customer.API.Middleware;
 using RetailsEcosystem.Customer.API.Options;
 using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Infrastructure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, cfg) =>
+{
+    cfg.Enrich.FromLogContext()
+       .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+       .WriteTo.File(
+           "logs/api-.log",
+           rollingInterval: RollingInterval.Day,
+           retainedFileCountLimit: 30,
+           outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+       .ReadFrom.Configuration(ctx.Configuration);
+});
 
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -52,6 +65,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseSerilogRequestLogging();
 app.UseResponseCompression();
 
 if (app.Environment.IsDevelopment())
