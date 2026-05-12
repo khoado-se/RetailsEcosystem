@@ -17,17 +17,20 @@ namespace RetailsEcosystem.Customer.Infrastructure.Identity
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenRepository _refreshTokenRepo;
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             ITokenService tokenService,
             IRefreshTokenRepository refreshTokenRepo,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _refreshTokenRepo = refreshTokenRepo;
             _configuration = configuration;
+            _unitOfWork = unitOfWork;
         }
 
         // ── Register ─────────────────────────────────────────────────────────
@@ -86,7 +89,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Identity
 
             // Rotate: revoke the old token
             storedToken.IsRevoked = true;
-            await _refreshTokenRepo.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             var user = await _userManager.FindByIdAsync(storedToken.UserId)
                 ?? throw new UnauthorizedAccessException("User not found.");
@@ -106,7 +109,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Identity
 
             // Revoke ALL tokens for this user (logout from all devices)
             await _refreshTokenRepo.RevokeAllForUserAsync(storedToken.UserId);
-            await _refreshTokenRepo.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
 
         // ── GetMe ─────────────────────────────────────────────────────────────
@@ -146,7 +149,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Identity
             };
 
             await _refreshTokenRepo.AddAsync(refreshTokenEntity);
-            await _refreshTokenRepo.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             var accessTokenExpiry = DateTime.UtcNow.AddMinutes(
                 int.Parse(_configuration["JwtSettings:AccessTokenExpiryMinutes"] ?? "15"));

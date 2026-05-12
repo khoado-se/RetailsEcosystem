@@ -1,6 +1,8 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
+using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Shared.DTOs;
 using RetailsEcosystem.Customer.Shared.DTOs.Category;
@@ -11,11 +13,13 @@ namespace RetailsEcosystem.Customer.Tests.Services;
 public class CategoryServiceTests
 {
     private readonly Mock<ICategoryRepository> _categoryRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly CategoryService _sut;
 
     public CategoryServiceTests()
     {
-        _sut = new CategoryService(_categoryRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        _sut = new CategoryService(_categoryRepoMock.Object, _unitOfWorkMock.Object);
     }
 
     // ── GetAllAsync ───────────────────────────────────────────────────────────
@@ -55,7 +59,9 @@ public class CategoryServiceTests
     public async Task CreateAsync_ValidDto_ReturnsCreatedCategoryDto()
     {
         var dto = new CreateCategoryDto { Name = "Electronics", Description = "Devices" };
-        _categoryRepoMock.Setup(r => r.CreateAsync(It.IsAny<Domain.Entities.Category>())).ReturnsAsync(10);
+        _categoryRepoMock.Setup(r => r.CreateAsync(It.IsAny<Category>()))
+            .Callback<Category>(c => c.Id = 10)
+            .Returns(Task.CompletedTask);
 
         var result = await _sut.CreateAsync(dto);
 
@@ -94,7 +100,9 @@ public class CategoryServiceTests
     public async Task CreateAsync_NullDescription_MapsToEmptyString()
     {
         var dto = new CreateCategoryDto { Name = "Empty Desc", Description = null };
-        _categoryRepoMock.Setup(r => r.CreateAsync(It.IsAny<Domain.Entities.Category>())).ReturnsAsync(1);
+        _categoryRepoMock.Setup(r => r.CreateAsync(It.IsAny<Category>()))
+            .Callback<Category>(c => c.Id = 1)
+            .Returns(Task.CompletedTask);
 
         var result = await _sut.CreateAsync(dto);
 

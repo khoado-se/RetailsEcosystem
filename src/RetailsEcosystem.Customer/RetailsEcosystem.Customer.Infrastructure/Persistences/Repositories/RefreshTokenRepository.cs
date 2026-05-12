@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
-using RetailsEcosystem.Customer.Infrastructure.Persistences;
 
 namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 {
@@ -14,9 +13,10 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(RefreshToken refreshToken)
+        public Task AddAsync(RefreshToken refreshToken)
         {
-            await _context.RefreshTokens.AddAsync(refreshToken);
+            _context.RefreshTokens.Add(refreshToken);
+            return Task.CompletedTask;
         }
 
         public async Task<RefreshToken?> GetByTokenAsync(string token)
@@ -36,11 +36,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             {
                 token.IsRevoked = true;
             }
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }

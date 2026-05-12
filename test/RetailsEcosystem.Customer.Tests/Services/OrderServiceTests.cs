@@ -17,6 +17,7 @@ public class OrderServiceTests
     private readonly Mock<ICartRepository>           _cartRepoMock    = new();
     private readonly Mock<IPaymentAttemptRepository> _attemptRepoMock = new();
     private readonly Mock<IVnpayService>             _vnpayServiceMock = new();
+    private readonly Mock<IUnitOfWork>               _unitOfWorkMock  = new();
     private readonly OrderService _sut;
 
     public OrderServiceTests()
@@ -25,11 +26,14 @@ public class OrderServiceTests
             .Setup(v => v.BuildPaymentUrl(It.IsAny<OrderDto>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns("https://sandbox.vnpay.vn/pay?mock=1");
 
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
         _sut = new OrderService(
             _orderRepoMock.Object,
             _cartRepoMock.Object,
             _attemptRepoMock.Object,
-            _vnpayServiceMock.Object);
+            _vnpayServiceMock.Object,
+            _unitOfWorkMock.Object);
     }
 
     // ── CreateOrderAsync ─────────────────────────────────────────────────────
@@ -114,7 +118,7 @@ public class OrderServiceTests
         await _sut.CreateOrderAsync(userId, new CreateOrderDto());
 
         cart.Items.Should().BeEmpty();
-        _cartRepoMock.Verify(r => r.SaveAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     // ── GetOrderByIdAsync ─────────────────────────────────────────────────────
@@ -186,7 +190,7 @@ public class OrderServiceTests
         var result = await _sut.UpdateOrderStatusAsync(1, new UpdateOrderStatusDto { Status = OrderStatus.Confirmed });
 
         result.Status.Should().Be(OrderStatus.Confirmed);
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     // ── CancelOrderAsync ──────────────────────────────────────────────────────

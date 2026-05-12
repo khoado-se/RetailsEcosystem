@@ -6,6 +6,5 @@ namespace RetailsEcosystem.Customer.Domain.Interface
     {
         Task AddAsync(PaymentAttempt attempt);
         Task<PaymentAttempt?> GetByTxnRefAsync(string txnRef);
-        Task SaveAsync();
     }
 }

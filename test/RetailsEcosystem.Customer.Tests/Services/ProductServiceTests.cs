@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -14,11 +15,13 @@ public class ProductServiceTests
 {
     private readonly Mock<IProductRepository> _productRepoMock = new();
     private readonly Mock<ICategoryRepository> _categoryRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly ProductService _sut;
 
     public ProductServiceTests()
     {
-        _sut = new ProductService(_productRepoMock.Object, _categoryRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        _sut = new ProductService(_productRepoMock.Object, _categoryRepoMock.Object, _unitOfWorkMock.Object);
     }
 
     // ── GetAllProductAsync ────────────────────────────────────────────────────

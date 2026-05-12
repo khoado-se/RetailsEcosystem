@@ -7,6 +7,5 @@ namespace RetailsEcosystem.Customer.Domain.Interface
         Task<Cart?> GetByUserIdAsync(string userId);
         Task<Cart> GetOrCreateAsync(string userId);
         Task<CartItem?> GetItemAsync(int cartItemId);
-        Task SaveAsync();
     }
 }

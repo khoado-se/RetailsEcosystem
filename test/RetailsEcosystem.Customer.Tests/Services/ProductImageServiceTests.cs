@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using RetailsEcosystem.Customer.Application.Exceptions;
+using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -11,11 +12,13 @@ namespace RetailsEcosystem.Customer.Tests.Services;
 public class ProductImageServiceTests
 {
     private readonly Mock<IProductImageRepository> _imageRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly ProductImageService _sut;
 
     public ProductImageServiceTests()
     {
-        _sut = new ProductImageService(_imageRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        _sut = new ProductImageService(_imageRepoMock.Object, _unitOfWorkMock.Object);
     }
 
     [Fact]

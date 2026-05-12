@@ -17,6 +17,7 @@ public class OrderServicePaymentTests
     private readonly Mock<ICartRepository>           _cartRepoMock    = new();
     private readonly Mock<IPaymentAttemptRepository> _attemptRepoMock = new();
     private readonly Mock<IVnpayService>             _vnpayServiceMock = new();
+    private readonly Mock<IUnitOfWork>               _unitOfWorkMock  = new();
     private readonly OrderService _sut;
 
     public OrderServicePaymentTests()
@@ -25,11 +26,14 @@ public class OrderServicePaymentTests
             .Setup(v => v.BuildPaymentUrl(It.IsAny<OrderDto>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns("https://sandbox.vnpay.vn/pay?mock=1");
 
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
         _sut = new OrderService(
             _orderRepoMock.Object,
             _cartRepoMock.Object,
             _attemptRepoMock.Object,
-            _vnpayServiceMock.Object);
+            _vnpayServiceMock.Object,
+            _unitOfWorkMock.Object);
     }
 
     // ── InitiateVnpayPaymentAsync ────────────────────────────────────────────
@@ -107,7 +111,7 @@ public class OrderServicePaymentTests
             .WithMessage("*maximum number of payment attempts*");
 
         order.Status.Should().Be(OrderStatus.Cancelled);
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -125,7 +129,7 @@ public class OrderServicePaymentTests
         var act = () => _sut.InitiateVnpayPaymentAsync(1, "user-123", "127.0.0.1");
 
         await act.Should().ThrowAsync<InvalidOperationException>();
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -175,7 +179,7 @@ public class OrderServicePaymentTests
         order.PaymentAttemptCount.Should().Be(1);
         order.PaymentStatus.Should().Be(PaymentStatus.AwaitingPayment);
         _attemptRepoMock.Verify(r => r.AddAsync(It.IsAny<PaymentAttempt>()), Times.Once);
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     // ── ConfirmVnpayPaymentAsync ─────────────────────────────────────────────
@@ -201,7 +205,7 @@ public class OrderServicePaymentTests
 
         await _sut.ConfirmVnpayPaymentAsync(1, "txnno-123", "1-20260101");
 
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         _cartRepoMock.Verify(r => r.GetByUserIdAsync(It.IsAny<string>()), Times.Never);
     }
 
@@ -235,7 +239,7 @@ public class OrderServicePaymentTests
         cart.Items.Should().BeEmpty();
         attempt.Status.Should().Be(PaymentAttemptStatus.Succeeded);
         attempt.VnpayTxnNo.Should().Be("vnpay-txn-001");
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -289,7 +293,7 @@ public class OrderServicePaymentTests
 
         await _sut.RecordPaymentOutcomeAsync(1, "1-20260101", "00", PaymentAttemptStatus.Succeeded);
 
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -385,7 +389,7 @@ public class OrderServicePaymentTests
         result.PaymentStatus.Should().Be(PaymentStatus.Expired);
         attempt.Status.Should().Be(PaymentAttemptStatus.Expired);
         attempt.ResolvedAt.Should().NotBeNull();
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -402,7 +406,7 @@ public class OrderServicePaymentTests
         var result = await _sut.GetOrderByIdAsync(1, "user-123", "Customer");
 
         result.PaymentStatus.Should().Be(PaymentStatus.AwaitingPayment);
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -418,7 +422,7 @@ public class OrderServicePaymentTests
 
         await _sut.GetOrderByIdAsync(1, "user-123", "Customer");
 
-        _orderRepoMock.Verify(r => r.SaveAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         _attemptRepoMock.Verify(r => r.GetByTxnRefAsync(It.IsAny<string>()), Times.Never);
     }
 }

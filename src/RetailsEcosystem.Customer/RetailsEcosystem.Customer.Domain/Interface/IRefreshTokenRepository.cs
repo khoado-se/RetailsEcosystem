@@ -6,10 +6,6 @@ namespace RetailsEcosystem.Customer.Domain.Interface
     {
         Task AddAsync(RefreshToken refreshToken);
         Task<RefreshToken?> GetByTokenAsync(string token);
-
-        /// <summary>Revokes ALL refresh tokens for a user — used on logout.</summary>
         Task RevokeAllForUserAsync(string userId);
-
-        Task SaveChangesAsync();
     }
 }

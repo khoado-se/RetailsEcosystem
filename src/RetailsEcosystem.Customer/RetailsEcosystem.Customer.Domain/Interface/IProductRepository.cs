@@ -1,4 +1,4 @@
-﻿using RetailsEcosystem.Customer.Domain.Entities;
+using RetailsEcosystem.Customer.Domain.Entities;
 
 namespace RetailsEcosystem.Customer.Domain.Interface
 {
@@ -10,7 +10,7 @@ namespace RetailsEcosystem.Customer.Domain.Interface
             bool? isFeatured = null,
             string? sortBy = null, bool sortDesc = true);
         Task<Product?> GetProductByIdAsync(int productId);
-        Task<int> AddProductAsync(Product product);
+        Task AddProductAsync(Product product);
         Task EditProductAsync(Product product);
         Task RemoveProductAsync(int productId);
 

@@ -10,9 +10,12 @@ namespace RetailsEcosystem.Customer.Application.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        public CategoryService(ICategoryRepository categoryRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CategoryService(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
         {
             _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<PagedResult<CategoryDto>> GetAllAsync(PagedRequest pagedRequest)
@@ -43,11 +46,12 @@ namespace RetailsEcosystem.Customer.Application.Services
                 Description = dto.Description ?? string.Empty
             };
 
-            var id = await _categoryRepository.CreateAsync(category);
+            await _categoryRepository.CreateAsync(category);
+            await _unitOfWork.SaveChangesAsync();
 
             return new CategoryDto
             {
-                Id = id,
+                Id = category.Id,
                 Name = category.Name,
                 Description = category.Description
             };
@@ -63,6 +67,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             };
 
             await _categoryRepository.UpdateAsync(category);
+            await _unitOfWork.SaveChangesAsync();
 
             return new CategoryDto
             {
@@ -75,6 +80,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task DeleteAsync(int id)
         {
             await _categoryRepository.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 
@@ -12,12 +11,11 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
         {
             _context = context;
         }
-        public async Task<int> AddProductAsync(Product product)
+
+        public Task AddProductAsync(Product product)
         {
             _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            return product.Id;
+            return Task.CompletedTask;
         }
 
         public async Task EditProductAsync(Product product)
@@ -32,8 +30,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             tracked.IsFeatured = product.IsFeatured;
             tracked.UpdatedDate = product.UpdatedDate;
             tracked.CategoryId = product.CategoryId;
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAllProductAsync(
@@ -95,7 +91,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             var product = await _context.Products.FindAsync(productId)
                 ?? throw new KeyNotFoundException($"Product {productId} not found.");
             _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> CheckExist(int productId)

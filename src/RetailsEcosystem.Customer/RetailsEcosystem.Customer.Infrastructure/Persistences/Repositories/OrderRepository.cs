@@ -12,11 +12,10 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public OrderRepository(AppDbContext context) => _context = context;
 
-        public async Task<Order> CreateOrderAsync(Order order)
+        public Task<Order> CreateOrderAsync(Order order)
         {
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-            return order;
+            return Task.FromResult(order);
         }
 
         public async Task<Order?> GetOrderByIdAsync(int orderId)
@@ -109,7 +108,5 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                     Revenue = revenueByDate.GetValueOrDefault(date, 0m)
                 });
         }
-
-        public Task SaveAsync() => _context.SaveChangesAsync();
     }
 }

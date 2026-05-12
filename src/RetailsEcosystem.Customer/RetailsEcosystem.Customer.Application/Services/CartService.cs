@@ -10,11 +10,13 @@ namespace RetailsEcosystem.Customer.Application.Services
     {
         private readonly ICartRepository _cartRepo;
         private readonly IProductRepository _productRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CartService(ICartRepository cartRepo, IProductRepository productRepo)
+        public CartService(ICartRepository cartRepo, IProductRepository productRepo, IUnitOfWork unitOfWork)
         {
             _cartRepo = cartRepo;
             _productRepo = productRepo;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CartDto> GetCartAsync(string userId)
@@ -56,7 +58,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 });
             }
 
-            await _cartRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
             return MapToDto(cart);
         }
 
@@ -79,7 +81,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                     $"Insufficient stock. Available: {product.StockQuantity}.");
 
             item.Quantity = dto.Quantity;
-            await _cartRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
             return MapToDto(item.Cart);
         }
 
@@ -93,7 +95,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             var cart = item.Cart;
             cart.Items.Remove(item);
-            await _cartRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
             return MapToDto(cart);
         }
 
@@ -103,7 +105,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             if (cart == null) return;
 
             cart.Items.Clear();
-            await _cartRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
 
         private static CartDto MapToDto(Cart cart) => new()

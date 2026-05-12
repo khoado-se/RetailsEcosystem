@@ -29,7 +29,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
             cart = new Cart { UserId = userId };
             _context.Carts.Add(cart);
-            await _context.SaveChangesAsync();
             return cart;
         }
 
@@ -44,7 +43,5 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                     .ThenInclude(p => p.Images)
                 .FirstOrDefaultAsync(i => i.Id == cartItemId);
         }
-
-        public Task SaveAsync() => _context.SaveChangesAsync();
     }
 }

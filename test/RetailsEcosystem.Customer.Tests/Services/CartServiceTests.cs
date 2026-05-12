@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using RetailsEcosystem.Customer.Application.Exceptions;
+using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -13,11 +14,13 @@ public class CartServiceTests
 {
     private readonly Mock<ICartRepository> _cartRepoMock = new();
     private readonly Mock<IProductRepository> _productRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly CartService _sut;
 
     public CartServiceTests()
     {
-        _sut = new CartService(_cartRepoMock.Object, _productRepoMock.Object);
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        _sut = new CartService(_cartRepoMock.Object, _productRepoMock.Object, _unitOfWorkMock.Object);
     }
 
     // ── AddItemAsync ──────────────────────────────────────────────────────────
@@ -161,7 +164,7 @@ public class CartServiceTests
         var act = () => _sut.ClearCartAsync("user1");
 
         await act.Should().NotThrowAsync();
-        _cartRepoMock.Verify(r => r.SaveAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     // ── GetCartAsync ──────────────────────────────────────────────────────────

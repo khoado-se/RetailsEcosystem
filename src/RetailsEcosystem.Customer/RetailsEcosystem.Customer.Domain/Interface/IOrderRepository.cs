@@ -16,6 +16,5 @@ namespace RetailsEcosystem.Customer.Domain.Interface
         Task<decimal> GetRevenueThisMonthAsync();
         Task<int> GetPendingOrderCountAsync();
         Task<IEnumerable<DailyRevenueDto>> GetDailyRevenueAsync(int days);
-        Task SaveAsync();
     }
 }

@@ -15,17 +15,20 @@ namespace RetailsEcosystem.Customer.Application.Services
         private readonly ICartRepository            _cartRepo;
         private readonly IPaymentAttemptRepository  _attemptRepo;
         private readonly IVnpayService              _vnpayService;
+        private readonly IUnitOfWork                _unitOfWork;
 
         public OrderService(
             IOrderRepository orderRepo,
             ICartRepository cartRepo,
             IPaymentAttemptRepository attemptRepo,
-            IVnpayService vnpayService)
+            IVnpayService vnpayService,
+            IUnitOfWork unitOfWork)
         {
             _orderRepo    = orderRepo;
             _cartRepo     = cartRepo;
             _attemptRepo  = attemptRepo;
             _vnpayService = vnpayService;
+            _unitOfWork   = unitOfWork;
         }
 
         public async Task<OrderDto> CreateOrderAsync(string userId, CreateOrderDto dto)
@@ -79,10 +82,9 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             // COD: clear cart immediately. VNPay: defer until payment confirmed.
             if (!isVnpay)
-            {
                 cart.Items.Clear();
-                await _cartRepo.SaveAsync();
-            }
+
+            await _unitOfWork.SaveChangesAsync();
 
             return await GetOrderByIdAsync(order.Id, userId, "Customer");
         }
@@ -115,7 +117,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 {
                     order.Status      = OrderStatus.Cancelled;
                     order.UpdatedDate = DateTime.UtcNow;
-                    await _orderRepo.SaveAsync();
+                    await _unitOfWork.SaveChangesAsync();
                 }
                 throw new InvalidOperationException("This order has reached the maximum number of payment attempts (3).");
             }
@@ -152,7 +154,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             order.LastPaymentAttemptAt = DateTime.UtcNow;
             order.PaymentExpiresAt     = expires.ToUniversalTime();
             order.UpdatedDate          = DateTime.UtcNow;
-            await _orderRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             var orderDto   = MapToDto(order);
             var paymentUrl = _vnpayService.BuildPaymentUrl(orderDto, txnRef, ipAddress);
@@ -204,7 +206,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                     attempt.ResolvedAt = DateTime.UtcNow;
                 }
 
-                await _orderRepo.SaveAsync();
+                await _unitOfWork.SaveChangesAsync();
             }
 
             return MapToDto(order);
@@ -220,7 +222,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             order.Status      = dto.Status;
             order.UpdatedDate = DateTime.UtcNow;
-            await _orderRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
             return MapToDto(order);
         }
 
@@ -247,7 +249,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             order.Status      = OrderStatus.Cancelled;
             order.UpdatedDate = DateTime.UtcNow;
-            await _orderRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
             return MapToDto(order);
         }
 
@@ -290,10 +292,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             // Clear the cart
             var cart = await _cartRepo.GetByUserIdAsync(order.UserId);
             if (cart != null)
-            {
                 cart.Items.Clear();
-                await _cartRepo.SaveAsync();
-            }
 
             // Resolve the attempt record
             var attempt = await _attemptRepo.GetByTxnRefAsync(txnRef);
@@ -307,7 +306,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             order.PaymentStatus      = PaymentStatus.Paid;
             order.VnpayTransactionNo = vnpayTransactionNo;
             order.UpdatedDate        = DateTime.UtcNow;
-            await _orderRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task RecordPaymentOutcomeAsync(int orderId, string txnRef, string responseCode, PaymentAttemptStatus attemptStatus)
@@ -336,7 +335,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             if (order.PaymentAttemptCount >= 3 && order.Status == OrderStatus.Pending)
                 order.Status = OrderStatus.Cancelled;
 
-            await _orderRepo.SaveAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public Task<PaymentAttempt?> GetPaymentAttemptByTxnRefAsync(string txnRef) =>

@@ -9,15 +9,18 @@ namespace RetailsEcosystem.Customer.Application.Services
     public class ProductImageService : IProductImageService
     {
         private readonly IProductImageRepository _productImageRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductImageService(IProductImageRepository productImageRepo)
+        public ProductImageService(IProductImageRepository productImageRepo, IUnitOfWork unitOfWork)
         {
             _productImageRepo = productImageRepo;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task AddImageRangeAsync(int productId, List<string> imageUrls)
         {
             await _productImageRepo.AddImageRangeAsync(productId, imageUrls);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ProductImageItemDto>> GetByProductIdAsync(int productId) =>
@@ -31,6 +34,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             var publicId = ExtractPublicId(image.Url);
             await _productImageRepo.DeleteAsync(imageId);
+            await _unitOfWork.SaveChangesAsync();
             return publicId;
         }
 

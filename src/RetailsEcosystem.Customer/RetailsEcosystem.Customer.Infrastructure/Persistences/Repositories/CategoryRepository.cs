@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 
@@ -12,12 +12,10 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             _context = context;
         }
 
-        public async Task<int> CreateAsync(Category category)
+        public Task CreateAsync(Category category)
         {
             _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-
-            return category.Id;
+            return Task.CompletedTask;
         }
 
         public async Task UpdateAsync(Category category)
@@ -27,36 +25,29 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
             tracked.Name = category.Name;
             tracked.Description = category.Description;
-
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int cateogryId)
+        public async Task DeleteAsync(int categoryId)
         {
-            var category = await _context.Categories.FindAsync(cateogryId) 
-                ?? throw new KeyNotFoundException($"Category {cateogryId} not found.");
-            
+            var category = await _context.Categories.FindAsync(categoryId)
+                ?? throw new KeyNotFoundException($"Category {categoryId} not found.");
+
             _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var categories = await _context.Categories
+            return await _context.Categories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .AsNoTracking()
                 .ToListAsync();
-
-            return categories;
         }
 
         public async Task<Category?> GetCategoryByIdAsync(int categoryId)
         {
-            var category = await _context.Categories
+            return await _context.Categories
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
-
-            return category;
         }
 
         public async Task<int> GetTotalCategoriesAsync()

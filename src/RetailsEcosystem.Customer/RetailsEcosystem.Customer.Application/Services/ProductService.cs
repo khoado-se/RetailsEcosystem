@@ -12,13 +12,16 @@ namespace RetailsEcosystem.Customer.Application.Services
     {
         private readonly IProductRepository _productRepo;
         private readonly ICategoryRepository _categoryRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ProductService(
             IProductRepository productRepo,
-            ICategoryRepository categoryRepo)
+            ICategoryRepository categoryRepo,
+            IUnitOfWork unitOfWork)
         {
             _productRepo = productRepo;
             _categoryRepo = categoryRepo;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> CreateProductAsync(CreateProductDto productDto)
@@ -36,9 +39,10 @@ namespace RetailsEcosystem.Customer.Application.Services
                 Category = category
             };
 
-            var productId = await _productRepo.AddProductAsync(createProduct);
+            await _productRepo.AddProductAsync(createProduct);
+            await _unitOfWork.SaveChangesAsync();
 
-            return productId;
+            return createProduct.Id;
         }
 
         public async Task DeleteProductAsync(int productId)
@@ -51,6 +55,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             }
 
             await _productRepo.RemoveProductAsync(productId);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<ProductDto?> FindProductByIdAsync(int productId)
@@ -174,6 +179,7 @@ namespace RetailsEcosystem.Customer.Application.Services
             };
 
             await _productRepo.EditProductAsync(updateProduct);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

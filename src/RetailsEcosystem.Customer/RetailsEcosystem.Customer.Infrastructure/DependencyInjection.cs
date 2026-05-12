@@ -74,6 +74,9 @@ namespace RetailsEcosystem.Customer.Infrastructure
                 };
             });
 
+            // ── Unit of Work ──────────────────────────────────────────────────
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             // ── Existing domain services ──────────────────────────────────────
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();

@@ -10,7 +10,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
 
         public ProductImageRepository(AppDbContext db) => _db = db;
 
-        public async Task AddImageRangeAsync(int productId, List<string> imageUrls)
+        public Task AddImageRangeAsync(int productId, List<string> imageUrls)
         {
             _db.ProductImages.AddRange(imageUrls.Select(url => new ProductImage
             {
@@ -18,8 +18,7 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
                     ?? throw new KeyNotFoundException($"Product {productId} not found."),
                 Url = url
             }));
-
-            await _db.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
         public async Task<ProductImage?> GetByIdAsync(int imageId) =>
@@ -30,7 +29,6 @@ namespace RetailsEcosystem.Customer.Infrastructure.Persistences.Repositories
             var image = await _db.ProductImages.FindAsync(imageId)
                 ?? throw new KeyNotFoundException($"Image {imageId} not found.");
             _db.ProductImages.Remove(image);
-            await _db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ProductImage>> GetByProductIdAsync(int productId) =>
