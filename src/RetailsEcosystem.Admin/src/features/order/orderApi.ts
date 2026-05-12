@@ -1,6 +1,6 @@
 import apiClient from "../../services/apiClient";
 
-export const getOrders = ({ pageNumber = 1, pageSize = 10, status } = {}) =>
+export const getOrders = ({ pageNumber = 1, pageSize = 10, status }: { pageNumber?: number; pageSize?: number; status?: number | null } = {}) =>
   apiClient.get("/orders", {
     params: { pageNumber, pageSize, ...(status != null ? { status } : {}) },
   });

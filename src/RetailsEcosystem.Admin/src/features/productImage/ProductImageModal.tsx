@@ -46,8 +46,8 @@ export default function ProductImageModal({ productId, productName, onClose, onC
     return () => urls.forEach((u) => URL.revokeObjectURL(u));
   }, [files]);
 
-  const handleFileChange = (e) => {
-    const selected = Array.from(e.target.files);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files ?? []);
     const allowed = [".jpg", ".jpeg", ".png", ".webp"];
     const invalid = selected.filter(
       (f) => !allowed.some((ext) => f.name.toLowerCase().endsWith(ext))
@@ -100,7 +100,7 @@ export default function ProductImageModal({ productId, productName, onClose, onC
       className="modal fade"
       id="productImageModal"
       ref={modalRef}
-      tabIndex="-1"
+      tabIndex={-1}
       aria-labelledby="productImageModalLabel"
       aria-hidden="true"
     >

@@ -24,7 +24,7 @@ export default function ConfirmModal({ title, message, confirmLabel = "Delete", 
   };
 
   return (
-    <div className="modal fade" ref={modalRef} tabIndex="-1" aria-hidden="true">
+    <div className="modal fade" ref={modalRef} tabIndex={-1} aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content rounded-3 shadow">
           <div className="modal-header border-0 pb-0">

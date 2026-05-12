@@ -64,8 +64,8 @@ export default function CreateProductModal({ isOpen, onSuccess, onClose }) {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const selected = Array.from(e.target.files);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files ?? []);
     const invalid = selected.filter(
       (f) => !ALLOWED_EXTS.some((ext) => f.name.toLowerCase().endsWith(ext))
     );
@@ -164,7 +164,7 @@ export default function CreateProductModal({ isOpen, onSuccess, onClose }) {
   );
 
   return (
-    <div className="modal fade" id="createProductModal" ref={modalRef} tabIndex="-1" aria-hidden="true">
+    <div className="modal fade" id="createProductModal" ref={modalRef} tabIndex={-1} aria-hidden="true">
       <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header">

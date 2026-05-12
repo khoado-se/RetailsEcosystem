@@ -1,5 +1,5 @@
-import { shouldShowLeftDots, shouldShowRightDots } from "../../utils/getPaginationPages.js";
-import { getPaginationPages } from "../../utils/getPaginationPages.js";
+﻿import { shouldShowLeftDots, shouldShowRightDots } from "../../utils/getPaginationPages";
+import { getPaginationPages } from "../../utils/getPaginationPages";
 
 export default function Pagination({pageNumber, setPageNumber, totalPage}) {
     const pages = getPaginationPages(pageNumber, totalPage);

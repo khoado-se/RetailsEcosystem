@@ -1,14 +1,23 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import axios from "axios";
 import { tokenService } from "../services/tokenService";
 import { login as loginApi, logout as logoutApi } from "../features/auth/authApi";
 import { ENV } from "../configs/env";
+import type { AuthUser, LoginCredentials } from "../types";
 
-export const AuthContext = createContext();
+interface AuthContextValue {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
-export function AuthProvider({ children }) {
+export const AuthContext = createContext<AuthContextValue>({} as AuthContextValue);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   // Synchronously restore from localStorage — prevents redirect-to-login flash on reload.
-  const [user, setUser] = useState(() => tokenService.getUser());
+  const [user, setUser] = useState<AuthUser | null>(() => tokenService.getUser());
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!tokenService.getUser());
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +52,7 @@ export function AuthProvider({ children }) {
     initAuth();
   }, []);
 
-  const login = async (credentials) => {
+  const login = async (credentials: LoginCredentials) => {
     const data = await loginApi(credentials);
     tokenService.setToken(data.accessToken);
     tokenService.setUser(data.user);

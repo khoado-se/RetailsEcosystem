@@ -1,11 +1,11 @@
-import { useProducts } from "../../features/product/useProducts.js";
+﻿import { useProducts } from "../../features/product/useProducts";
 import { useState, useEffect } from "react";
-import CategorySelect from "../../features/category/CategorySelect.jsx";
-import PageSizeSelector from "../../components/ui/PageSizeSelector.jsx";
-import CreateProductModal from "../../features/product/CreateProductModal.jsx";
-import EditProductModal from "../../features/product/EditProductModal.jsx";
-import ProductTable from "../../features/product/ProductTable.jsx";
-import ProductImageModal from "../../features/productImage/ProductImageModal.jsx";
+import CategorySelect from "../../features/category/CategorySelect";
+import PageSizeSelector from "../../components/ui/PageSizeSelector";
+import CreateProductModal from "../../features/product/CreateProductModal";
+import EditProductModal from "../../features/product/EditProductModal";
+import ProductTable from "../../features/product/ProductTable";
+import ProductImageModal from "../../features/productImage/ProductImageModal";
 
 export default function ProductsPage() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -26,7 +26,7 @@ export default function ProductsPage() {
     featuredOnly || undefined, sortBy, sortDesc
   );
 
-  // Debounce search input — waits 300ms after last keystroke
+  // Debounce search input â€” waits 300ms after last keystroke
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchInput);

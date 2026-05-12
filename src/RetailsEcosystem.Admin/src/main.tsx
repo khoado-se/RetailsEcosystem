@@ -1,9 +1,9 @@
-import { StrictMode } from "react";
+﻿import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
-import AppRoute from "./routes/AppRoute.jsx";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
+import AppRoute from "./routes/AppRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
