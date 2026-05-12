@@ -98,7 +98,7 @@ export default function ProductTable({ products, pageNumber, setPageNumber, tota
                       src={product.imageUrl || ENV.PRODUCT_PLACEHOLDER_IMAGE}
                       alt="Product"
                       width={50}
-                      style={{ borderRadius: "6px" }}
+                      className="rounded-badge"
                     />
                   </td>
                   <td className="text-muted small">{product.createdDate}</td>

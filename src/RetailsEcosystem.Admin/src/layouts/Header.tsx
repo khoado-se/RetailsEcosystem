@@ -21,8 +21,8 @@ export default function Header({ onToggleSidebar }) {
         {user && (
           <div className="d-flex align-items-center gap-2">
             <div
-              className="rounded-circle bg-primary-tint text-primary-brand d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
-              style={{ width: "32px", height: "32px", fontSize: "0.875rem" }}
+              className="rounded-circle bg-primary-tint text-primary-brand d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-body-sm"
+              style={{ width: "32px", height: "32px" }}
             >
               {user?.fullName?.[0]?.toUpperCase() ?? "?"}
             </div>

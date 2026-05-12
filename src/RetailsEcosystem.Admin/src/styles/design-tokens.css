@@ -39,6 +39,7 @@
   --bs-focus-ring-color: rgba(74, 144, 217, 0.25);
 
   /* ── Radius ───────────────────────────────────── */
+  --radius-xs:  4px;
   --radius-sm:  6px;
   --radius-md:  10px;
   --radius-lg:  14px;
@@ -55,10 +56,15 @@
   /* ── Typography scale ─────────────────────────── */
   --fs-page-title:    1.75rem;
   --fs-section-title: 1.25rem;
+  --fs-brand-name:    1.1rem;
   --fs-label:         0.875rem;
   --fs-body:          0.875rem;
   --fs-caption:       0.75rem;
 }
+
+/* ── Border utilities ─────────────────────────────────────────────────────── */
+.border-dashed  { border-style: dashed !important; }
+.cursor-pointer { cursor: pointer; }
 
 /* ── Select width utilities (replaces inline style={{}} on native selects) ─── */
 .select-auto { width: auto !important; }
@@ -169,6 +175,7 @@
 /* -- Typography -- */
 .text-page-title    { font-size: var(--fs-page-title);    font-weight: 700; color: var(--clr-neutral-900); }
 .text-section-title { font-size: var(--fs-section-title); font-weight: 600; color: var(--clr-neutral-900); }
+.text-brand-name    { font-size: var(--fs-brand-name); }
 .text-label         { font-size: var(--fs-label);         font-weight: 600; }
 .text-body-sm       { font-size: var(--fs-body); }
 .text-caption       { font-size: var(--fs-caption); }
@@ -189,6 +196,7 @@
 .icon-badge-md { width: 48px; height: 48px; }
 
 /* -- Border radius (override Bootstrap where needed) -- */
+.rounded-xs    { border-radius: var(--radius-xs) !important; }
 .rounded-badge  { border-radius: var(--radius-sm) !important; }
 .rounded-input  { border-radius: var(--radius-md) !important; }
 .rounded-card   { border-radius: var(--radius-lg) !important; }

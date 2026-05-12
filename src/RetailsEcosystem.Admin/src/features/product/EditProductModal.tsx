@@ -191,7 +191,8 @@ export default function EditProductModal({ productId, onSuccess, onClose }) {
               <img
                 src={img.url}
                 alt=""
-                style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 6 }}
+                className="rounded-badge"
+                style={{ width: 72, height: 72, objectFit: "cover" }}
               />
               <button
                 type="button"
@@ -222,7 +223,8 @@ export default function EditProductModal({ productId, onSuccess, onClose }) {
               <img
                 src={src}
                 alt=""
-                style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 6, opacity: 0.85 }}
+                className="rounded-badge"
+                style={{ width: 72, height: 72, objectFit: "cover", opacity: 0.85 }}
               />
               <button
                 type="button"

@@ -136,11 +136,11 @@ export default function ProductImageModal({ productId, productName, onClose, onC
                   <img
                     src={img.url}
                     alt=""
+                    className="rounded-badge"
                     style={{
                       width: 100,
                       height: 100,
                       objectFit: "cover",
-                      borderRadius: 6,
                     }}
                   />
                   <button
@@ -164,7 +164,6 @@ export default function ProductImageModal({ productId, productName, onClose, onC
             {/* Upload zone */}
             <div
               className="border border-dashed rounded p-3"
-              style={{ borderStyle: "dashed" }}
             >
               <p className="text-muted small mb-2">
                 Select images to upload (.jpg, .jpeg, .png, .webp)
@@ -185,11 +184,11 @@ export default function ProductImageModal({ productId, productName, onClose, onC
                       key={i}
                       src={src}
                       alt=""
-                      style={{
+                      className="rounded-xs"
+                    style={{
                         width: 80,
                         height: 80,
                         objectFit: "cover",
-                        borderRadius: 4,
                         opacity: 0.85,
                       }}
                     />

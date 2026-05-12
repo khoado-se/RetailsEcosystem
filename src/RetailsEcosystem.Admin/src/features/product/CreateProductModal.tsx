@@ -146,7 +146,8 @@ export default function CreateProductModal({ isOpen, onSuccess, onClose }) {
               <img
                 src={src}
                 alt=""
-                style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 6 }}
+                className="rounded-badge"
+                style={{ width: 72, height: 72, objectFit: "cover" }}
               />
               <button
                 type="button"

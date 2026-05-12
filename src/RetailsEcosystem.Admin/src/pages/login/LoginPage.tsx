@@ -81,7 +81,7 @@ export default function LoginPage() {
             <div className="brand-logo-badge-sm rounded-circle d-inline-flex align-items-center justify-content-center mb-2 overflow-hidden">
               <img src="/brand/logo-icon.svg" alt="RetailsEcosystem" style={{ width: "60%", height: "60%" }} />
             </div>
-            <div className="fw-bold text-white" style={{ fontSize: "1.1rem" }}>
+            <div className="fw-bold text-white text-brand-name">
               RetailsEcosystem
             </div>
           </div>
