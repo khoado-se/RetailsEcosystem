@@ -7,7 +7,9 @@ using RetailsEcosystem.Customer.API.Middleware;
 using RetailsEcosystem.Customer.API.Options;
 using RetailsEcosystem.Customer.API.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Threading.RateLimiting;
 using RetailsEcosystem.Customer.Infrastructure;
 using RetailsEcosystem.Customer.Infrastructure.Persistences;
 using Serilog;
@@ -55,6 +57,24 @@ builder.Services.AddControllers();
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AppDbContext>();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddSlidingWindowLimiter("auth", o =>
+    {
+        o.PermitLimit          = 10;
+        o.Window               = TimeSpan.FromMinutes(1);
+        o.SegmentsPerWindow    = 6;
+        o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        o.QueueLimit           = 0;
+    });
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (ctx, token) =>
+    {
+        ctx.HttpContext.Response.Headers.RetryAfter = "60";
+        await ctx.HttpContext.Response.WriteAsync("Too many requests. Retry after 60 seconds.", token);
+    };
+});
+
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -73,6 +93,7 @@ var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSerilogRequestLogging();
 app.UseResponseCompression();
+app.UseRateLimiter();
 
 if (app.Environment.IsDevelopment())
 {
