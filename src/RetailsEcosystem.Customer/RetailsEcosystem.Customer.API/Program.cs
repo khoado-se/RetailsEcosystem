@@ -6,7 +6,10 @@ using RetailsEcosystem.Customer.API.Extensions;
 using RetailsEcosystem.Customer.API.Middleware;
 using RetailsEcosystem.Customer.API.Options;
 using RetailsEcosystem.Customer.API.Services;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RetailsEcosystem.Customer.Infrastructure;
+using RetailsEcosystem.Customer.Infrastructure.Persistences;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +52,9 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
+
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -86,6 +92,22 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (ctx, report) =>
+    {
+        ctx.Response.ContentType = "application/json";
+        await ctx.Response.WriteAsync(
+            System.Text.Json.JsonSerializer.Serialize(new { status = report.Status.ToString() }));
+    },
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy]   = StatusCodes.Status200OK,
+        [HealthStatus.Degraded]  = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+    }
+});
 
 await app.SeedIdentityAsync();
 
