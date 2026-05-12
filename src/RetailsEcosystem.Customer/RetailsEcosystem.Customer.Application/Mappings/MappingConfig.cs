@@ -8,8 +8,13 @@ namespace RetailsEcosystem.Customer.Application.Mappings
 {
     public static class MappingConfig
     {
+        private static bool _configured;
+
         public static void Configure()
         {
+            if (_configured) return;
+            _configured = true;
+
             var config = TypeAdapterConfig.GlobalSettings;
 
             config.NewConfig<Category, CategoryDto>()
