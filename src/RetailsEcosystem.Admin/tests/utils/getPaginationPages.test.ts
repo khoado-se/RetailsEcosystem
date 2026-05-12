@@ -3,7 +3,7 @@ import {
   getPaginationPages,
   shouldShowLeftDots,
   shouldShowRightDots,
-} from "@utils/getPaginationPages.js";
+} from "@utils/getPaginationPages";
 
 describe("getPaginationPages", () => {
   it("returns empty array when totalPages is zero", () => {

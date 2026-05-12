@@ -138,6 +138,7 @@ export default function CreateProductModal({ isOpen, onSuccess, onClose }) {
         multiple
         accept=".jpg,.jpeg,.png,.webp"
         onChange={handleFileChange}
+        data-testid="file-input"
       />
       {previews.length > 0 && (
         <div className="d-flex flex-wrap gap-2 mt-2">

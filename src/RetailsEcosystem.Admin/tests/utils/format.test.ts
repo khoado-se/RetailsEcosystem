@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatCurrency, formatDate, formatDateTime } from "@utils/format.js";
+import { formatCurrency, formatDate, formatDateTime } from "@utils/format";
 
 describe("formatCurrency", () => {
   it("formats a positive number as VND currency string", () => {
