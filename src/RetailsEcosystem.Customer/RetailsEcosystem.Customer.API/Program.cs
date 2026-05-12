@@ -133,3 +133,5 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 await app.SeedIdentityAsync();
 
 app.Run();
+
+public partial class Program { }
