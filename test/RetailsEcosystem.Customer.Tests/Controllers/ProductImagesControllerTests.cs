@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared.DTOs.ProductImage;
@@ -74,7 +75,7 @@ public class ProductImagesControllerTests
     public async Task DeleteImage_WhenNotFound_Returns404()
     {
         _imageServiceMock.Setup(s => s.DeleteImageAsync(99))
-            .ThrowsAsync(new KeyNotFoundException("Image 99 not found."));
+            .ThrowsAsync(new NotFoundException("Image 99 not found."));
 
         var result = await _sut.DeleteImage(99);
 

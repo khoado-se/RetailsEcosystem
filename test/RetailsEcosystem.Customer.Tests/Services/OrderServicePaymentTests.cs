@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
@@ -34,13 +35,13 @@ public class OrderServicePaymentTests
     // ── InitiateVnpayPaymentAsync ────────────────────────────────────────────
 
     [Fact]
-    public async Task InitiateVnpayPayment_OrderNotFound_ThrowsKeyNotFoundException()
+    public async Task InitiateVnpayPayment_OrderNotFound_ThrowsNotFoundException()
     {
         _orderRepoMock.Setup(r => r.GetOrderByIdAsync(99)).ReturnsAsync((Order?)null);
 
         var act = () => _sut.InitiateVnpayPaymentAsync(99, "user-123", "127.0.0.1");
 
-        await act.Should().ThrowAsync<KeyNotFoundException>().WithMessage("*99*");
+        await act.Should().ThrowAsync<NotFoundException>().WithMessage("*99*");
     }
 
     [Fact]
@@ -180,13 +181,13 @@ public class OrderServicePaymentTests
     // ── ConfirmVnpayPaymentAsync ─────────────────────────────────────────────
 
     [Fact]
-    public async Task ConfirmVnpayPayment_OrderNotFound_ThrowsKeyNotFoundException()
+    public async Task ConfirmVnpayPayment_OrderNotFound_ThrowsNotFoundException()
     {
         _orderRepoMock.Setup(r => r.GetOrderByIdAsync(99)).ReturnsAsync((Order?)null);
 
         var act = () => _sut.ConfirmVnpayPaymentAsync(99, "txnno-123", "99-20260101");
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -119,13 +120,13 @@ public class OrderServiceTests
     // ── GetOrderByIdAsync ─────────────────────────────────────────────────────
 
     [Fact]
-    public async Task GetOrderByIdAsync_NotFound_ThrowsKeyNotFoundException()
+    public async Task GetOrderByIdAsync_NotFound_ThrowsNotFoundException()
     {
         _orderRepoMock.Setup(r => r.GetOrderByIdAsync(99)).ReturnsAsync((Domain.Entities.Order?)null);
 
         var act = () => _sut.GetOrderByIdAsync(99, "user1", "Customer");
 
-        await act.Should().ThrowAsync<KeyNotFoundException>()
+        await act.Should().ThrowAsync<NotFoundException>()
             .WithMessage("*99*");
     }
 
@@ -155,13 +156,13 @@ public class OrderServiceTests
     // ── UpdateOrderStatusAsync ────────────────────────────────────────────────
 
     [Fact]
-    public async Task UpdateOrderStatusAsync_NotFound_ThrowsKeyNotFoundException()
+    public async Task UpdateOrderStatusAsync_NotFound_ThrowsNotFoundException()
     {
         _orderRepoMock.Setup(r => r.GetOrderByIdAsync(99)).ReturnsAsync((Domain.Entities.Order?)null);
 
         var act = () => _sut.UpdateOrderStatusAsync(99, new UpdateOrderStatusDto { Status = OrderStatus.Confirmed });
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]

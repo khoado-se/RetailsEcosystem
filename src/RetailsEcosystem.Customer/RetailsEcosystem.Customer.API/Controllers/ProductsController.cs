@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -65,7 +66,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 await _productService.UpdateProductAsync(productDto);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -89,7 +90,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 await _productService.DeleteProductAsync(productId);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }

@@ -1,3 +1,4 @@
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -89,7 +90,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<InitiatePaymentResult> InitiateVnpayPaymentAsync(int orderId, string userId, string ipAddress)
         {
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order {orderId} not found.");
+                ?? throw new NotFoundException($"Order {orderId} not found.");
 
             if (order.UserId != userId)
                 throw new UnauthorizedAccessException("Access denied.");
@@ -181,7 +182,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<OrderDto> GetOrderByIdAsync(int orderId, string userId, string role)
         {
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order {orderId} not found.");
+                ?? throw new NotFoundException($"Order {orderId} not found.");
 
             if (role != "Admin" && order.UserId != userId)
                 throw new UnauthorizedAccessException("Access denied.");
@@ -212,7 +213,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<OrderDto> UpdateOrderStatusAsync(int orderId, UpdateOrderStatusDto dto)
         {
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order {orderId} not found.");
+                ?? throw new NotFoundException($"Order {orderId} not found.");
 
             if (!IsValidTransition(order.Status, dto.Status))
                 throw new InvalidOperationException($"Cannot transition order from {order.Status} to {dto.Status}.");
@@ -236,7 +237,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<OrderDto> CancelOrderAsync(int orderId, string userId)
         {
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order {orderId} not found.");
+                ?? throw new NotFoundException($"Order {orderId} not found.");
 
             if (order.UserId != userId)
                 throw new UnauthorizedAccessException("Access denied.");
@@ -269,7 +270,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task ConfirmVnpayPaymentAsync(int orderId, string vnpayTransactionNo, string txnRef)
         {
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order {orderId} not found.");
+                ?? throw new NotFoundException($"Order {orderId} not found.");
 
             // Idempotency: already confirmed
             if (order.PaymentStatus == PaymentStatus.Paid)
@@ -312,7 +313,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task RecordPaymentOutcomeAsync(int orderId, string txnRef, string responseCode, PaymentAttemptStatus attemptStatus)
         {
             var order = await _orderRepo.GetOrderByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order {orderId} not found.");
+                ?? throw new NotFoundException($"Order {orderId} not found.");
 
             // Idempotency: already resolved
             if (order.PaymentStatus != PaymentStatus.AwaitingPayment)

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -50,13 +51,13 @@ public class CustomerServiceTests
     }
 
     [Fact]
-    public async Task GetByIdAsync_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task GetByIdAsync_UserNotFound_ThrowsNotFoundException()
     {
         _userManagerMock.Setup(m => m.FindByIdAsync("unknown")).ReturnsAsync((ApplicationUser?)null);
 
         var act = () => _sut.GetByIdAsync("unknown");
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     // ── UpdateProfileAsync ────────────────────────────────────────────────────
@@ -76,13 +77,13 @@ public class CustomerServiceTests
     }
 
     [Fact]
-    public async Task UpdateProfileAsync_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task UpdateProfileAsync_UserNotFound_ThrowsNotFoundException()
     {
         _userManagerMock.Setup(m => m.FindByIdAsync("unknown")).ReturnsAsync((ApplicationUser?)null);
 
         var act = () => _sut.UpdateProfileAsync("unknown", new UpdateProfileDto { FullName = "Test" });
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]
@@ -115,13 +116,13 @@ public class CustomerServiceTests
     }
 
     [Fact]
-    public async Task ChangePasswordAsync_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task ChangePasswordAsync_UserNotFound_ThrowsNotFoundException()
     {
         _userManagerMock.Setup(m => m.FindByIdAsync("unknown")).ReturnsAsync((ApplicationUser?)null);
 
         var act = () => _sut.ChangePasswordAsync("unknown", new ChangePasswordDto { CurrentPassword = "Old", NewPassword = "New" });
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]
@@ -219,13 +220,13 @@ public class CustomerServiceTests
     }
 
     [Fact]
-    public async Task UpdateStatusAsync_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task UpdateStatusAsync_UserNotFound_ThrowsNotFoundException()
     {
         _userManagerMock.Setup(m => m.FindByIdAsync("unknown")).ReturnsAsync((ApplicationUser?)null);
 
         var act = () => _sut.UpdateStatusAsync("unknown", true);
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]
@@ -256,13 +257,13 @@ public class CustomerServiceTests
     }
 
     [Fact]
-    public async Task UpdateAvatarAsync_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task UpdateAvatarAsync_UserNotFound_ThrowsNotFoundException()
     {
         _userManagerMock.Setup(m => m.FindByIdAsync("unknown")).ReturnsAsync((ApplicationUser?)null);
 
         var act = () => _sut.UpdateAvatarAsync("unknown", "https://cdn.example.com/avatar.jpg");
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]

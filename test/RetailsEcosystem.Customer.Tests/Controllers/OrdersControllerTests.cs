@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -67,7 +68,7 @@ public class OrdersControllerTests
     public async Task GetOrder_NotFound_Returns404()
     {
         _orderServiceMock.Setup(s => s.GetOrderByIdAsync(99, "user-123", It.IsAny<string>()))
-            .ThrowsAsync(new KeyNotFoundException("Order 99 not found."));
+            .ThrowsAsync(new NotFoundException("Order 99 not found."));
 
         var result = await _sut.GetOrder(99);
 
@@ -91,7 +92,7 @@ public class OrdersControllerTests
     public async Task UpdateStatus_NotFound_Returns404()
     {
         _orderServiceMock.Setup(s => s.UpdateOrderStatusAsync(99, It.IsAny<UpdateOrderStatusDto>()))
-            .ThrowsAsync(new KeyNotFoundException());
+            .ThrowsAsync(new NotFoundException("Not found."));
 
         var result = await _sut.UpdateStatus(99, new UpdateOrderStatusDto { Status = OrderStatus.Confirmed });
 
@@ -118,7 +119,7 @@ public class OrdersControllerTests
     public async Task CancelOrder_NotFound_Returns404()
     {
         _orderServiceMock.Setup(s => s.CancelOrderAsync(99, "user-123"))
-            .ThrowsAsync(new KeyNotFoundException());
+            .ThrowsAsync(new NotFoundException("Not found."));
 
         var result = await _sut.CancelOrder(99);
 
@@ -197,7 +198,7 @@ public class OrdersControllerTests
     public async Task InitiatePayment_OrderNotFound_ReturnsNotFound()
     {
         _orderServiceMock.Setup(s => s.InitiateVnpayPaymentAsync(99, "user-123", It.IsAny<string>()))
-            .ThrowsAsync(new KeyNotFoundException());
+            .ThrowsAsync(new NotFoundException("Not found."));
 
         var result = await _sut.InitiatePayment(99);
 

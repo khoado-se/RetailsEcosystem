@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -18,13 +19,13 @@ public class ProductImageServiceTests
     }
 
     [Fact]
-    public async Task DeleteImageAsync_NotFound_ThrowsKeyNotFoundException()
+    public async Task DeleteImageAsync_NotFound_ThrowsNotFoundException()
     {
         _imageRepoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((ProductImage?)null);
 
         var act = () => _sut.DeleteImageAsync(99);
 
-        await act.Should().ThrowAsync<KeyNotFoundException>()
+        await act.Should().ThrowAsync<NotFoundException>()
             .WithMessage("*99*");
     }
 

@@ -1,3 +1,4 @@
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -28,7 +29,7 @@ namespace RetailsEcosystem.Customer.Application.Services
                 throw new ArgumentException("Quantity must be greater than 0.");
 
             var product = await _productRepo.GetProductByIdAsync(dto.ProductId)
-                ?? throw new KeyNotFoundException($"Product {dto.ProductId} not found.");
+                ?? throw new NotFoundException($"Product {dto.ProductId} not found.");
 
             if (product.StockQuantity < dto.Quantity)
                 throw new InvalidOperationException(
@@ -65,13 +66,13 @@ namespace RetailsEcosystem.Customer.Application.Services
                 throw new ArgumentException("Quantity must be greater than 0.");
 
             var item = await _cartRepo.GetItemAsync(cartItemId)
-                ?? throw new KeyNotFoundException($"Cart item {cartItemId} not found.");
+                ?? throw new NotFoundException($"Cart item {cartItemId} not found.");
 
             if (item.Cart.UserId != userId)
                 throw new UnauthorizedAccessException("Cart item does not belong to this user.");
 
             var product = await _productRepo.GetProductByIdAsync(item.ProductId)
-                ?? throw new KeyNotFoundException($"Product {item.ProductId} not found.");
+                ?? throw new NotFoundException($"Product {item.ProductId} not found.");
 
             if (product.StockQuantity < dto.Quantity)
                 throw new InvalidOperationException(
@@ -85,7 +86,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<CartDto> RemoveItemAsync(string userId, int cartItemId)
         {
             var item = await _cartRepo.GetItemAsync(cartItemId)
-                ?? throw new KeyNotFoundException($"Cart item {cartItemId} not found.");
+                ?? throw new NotFoundException($"Cart item {cartItemId} not found.");
 
             if (item.Cart.UserId != userId)
                 throw new UnauthorizedAccessException("Cart item does not belong to this user.");

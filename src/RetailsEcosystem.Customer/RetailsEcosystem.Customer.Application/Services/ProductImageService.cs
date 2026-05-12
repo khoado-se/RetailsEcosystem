@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Shared.DTOs.ProductImage;
@@ -26,7 +27,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<string> DeleteImageAsync(int imageId)
         {
             var image = await _productImageRepo.GetByIdAsync(imageId)
-                ?? throw new KeyNotFoundException($"Image {imageId} not found.");
+                ?? throw new NotFoundException($"Image {imageId} not found.");
 
             var publicId = ExtractPublicId(image.Url);
             await _productImageRepo.DeleteAsync(imageId);

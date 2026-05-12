@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -72,7 +73,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var order = await _orderService.GetOrderByIdAsync(id, userId, role);
                 return Ok(order);
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -92,7 +93,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var order = await _orderService.UpdateOrderStatusAsync(id, dto);
                 return Ok(order);
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -113,7 +114,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var result = await _orderService.InitiateVnpayPaymentAsync(id, userId, ipAddress);
                 return Ok(result);
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -137,7 +138,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var order = await _orderService.CancelOrderAsync(id, userId);
                 return Ok(order);
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }

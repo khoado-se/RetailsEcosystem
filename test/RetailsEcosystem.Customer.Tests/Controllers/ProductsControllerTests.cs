@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -100,7 +101,7 @@ public class ProductsControllerTests
     public async Task DeleteProduct_WhenNotFound_Returns404()
     {
         _productServiceMock.Setup(s => s.DeleteProductAsync(99))
-            .ThrowsAsync(new KeyNotFoundException("Product is not found!"));
+            .ThrowsAsync(new NotFoundException("Product is not found!"));
 
         var result = await _sut.DeleteProduct(99);
 
@@ -112,7 +113,7 @@ public class ProductsControllerTests
     {
         var dto = new UpdateProductDto { Id = 99, Name = "X", CategoryId = 1, Price = 10 };
         _productServiceMock.Setup(s => s.UpdateProductAsync(dto))
-            .ThrowsAsync(new KeyNotFoundException("Product is not found!"));
+            .ThrowsAsync(new NotFoundException("Product is not found!"));
 
         var result = await _sut.PutProduct(99, dto);
 

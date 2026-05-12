@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared.DTOs.Cart;
 using System.Security.Claims;
@@ -36,7 +37,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var cart = await _cartService.AddItemAsync(userId, dto);
                 return Ok(cart);
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -56,7 +57,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var cart = await _cartService.UpdateItemAsync(userId, itemId, dto);
                 return Ok(cart);
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -80,7 +81,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 var cart = await _cartService.RemoveItemAsync(userId, itemId);
                 return Ok(cart);
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }

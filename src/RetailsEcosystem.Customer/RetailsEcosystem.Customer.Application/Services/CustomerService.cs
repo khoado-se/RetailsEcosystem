@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Shared;
@@ -19,7 +20,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task<CustomerDto> GetByIdAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new KeyNotFoundException($"User {userId} not found.");
+                ?? throw new NotFoundException($"User {userId} not found.");
 
             var roles = await _userManager.GetRolesAsync(user);
             return MapToDto(user, roles);
@@ -28,7 +29,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task UpdateProfileAsync(string userId, UpdateProfileDto dto)
         {
             var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new KeyNotFoundException($"User {userId} not found.");
+                ?? throw new NotFoundException($"User {userId} not found.");
 
             user.FullName = dto.FullName;
             user.AvatarUrl = dto.AvatarUrl;
@@ -44,7 +45,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task ChangePasswordAsync(string userId, ChangePasswordDto dto)
         {
             var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new KeyNotFoundException($"User {userId} not found.");
+                ?? throw new NotFoundException($"User {userId} not found.");
 
             var result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
             if (!result.Succeeded)
@@ -84,7 +85,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task UpdateStatusAsync(string userId, bool isActive)
         {
             var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new KeyNotFoundException($"User {userId} not found.");
+                ?? throw new NotFoundException($"User {userId} not found.");
 
             user.IsActive = isActive;
             var result = await _userManager.UpdateAsync(user);
@@ -95,7 +96,7 @@ namespace RetailsEcosystem.Customer.Application.Services
         public async Task UpdateAvatarAsync(string userId, string avatarUrl)
         {
             var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new KeyNotFoundException($"User {userId} not found.");
+                ?? throw new NotFoundException($"User {userId} not found.");
 
             user.AvatarUrl = avatarUrl;
 

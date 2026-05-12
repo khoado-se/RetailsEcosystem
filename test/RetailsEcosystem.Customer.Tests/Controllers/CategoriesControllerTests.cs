@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
 using RetailsEcosystem.Customer.Shared.DTOs;
@@ -80,7 +81,7 @@ public class CategoriesControllerTests
     public async Task DeleteCategory_WhenNotFound_Returns404()
     {
         _categoryServiceMock.Setup(s => s.DeleteAsync(99))
-            .ThrowsAsync(new KeyNotFoundException("Category not found."));
+            .ThrowsAsync(new NotFoundException("Category not found."));
 
         var result = await _sut.DeleteCategory(99);
 

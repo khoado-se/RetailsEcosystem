@@ -1,15 +1,9 @@
 using System.Net;
 using System.Text.Json;
+using RetailsEcosystem.Customer.Application.Exceptions;
 
 namespace RetailsEcosystem.Customer.API.Middleware
 {
-    /// <summary>
-    /// Catches all unhandled exceptions and converts them to a consistent
-    /// RFC 7807 ProblemDetails JSON response.
-    /// 
-    /// Design: keeps stack traces server-side only in production, while
-    /// exposing them in development for easier debugging.
-    /// </summary>
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
@@ -47,23 +41,28 @@ namespace RetailsEcosystem.Customer.API.Middleware
 
             var (statusCode, title) = exception switch
             {
+                NotFoundException           => (HttpStatusCode.NotFound, "Not Found"),
+                ConflictException           => (HttpStatusCode.Conflict, "Conflict"),
                 UnauthorizedAccessException => (HttpStatusCode.Unauthorized, "Unauthorized"),
-                InvalidOperationException => (HttpStatusCode.BadRequest, "Bad Request"),
-                KeyNotFoundException => (HttpStatusCode.NotFound, "Not Found"),
-                _ => (HttpStatusCode.InternalServerError, "Internal Server Error")
+                InvalidOperationException   => (HttpStatusCode.BadRequest, "Bad Request"),
+                ArgumentException           => (HttpStatusCode.BadRequest, "Bad Request"),
+                KeyNotFoundException        => (HttpStatusCode.NotFound, "Not Found"),
+                _                           => (HttpStatusCode.InternalServerError, "Internal Server Error")
             };
 
             context.Response.StatusCode = (int)statusCode;
+
+            var isDev = _env.IsDevelopment();
+            var isServerError = statusCode == HttpStatusCode.InternalServerError;
 
             var problem = new
             {
                 type = $"https://httpstatuses.com/{(int)statusCode}",
                 title,
                 status = (int)statusCode,
-                detail = exception.Message,
-                // Only expose the full trace in development
+                detail = isServerError && !isDev ? "An unexpected error occurred." : exception.Message,
                 traceId = context.TraceIdentifier,
-                stackTrace = _env.IsDevelopment() ? exception.StackTrace : null
+                stackTrace = isDev ? exception.StackTrace : null
             };
 
             var json = JsonSerializer.Serialize(problem, new JsonSerializerOptions

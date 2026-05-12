@@ -1,4 +1,5 @@
-﻿using RetailsEcosystem.Customer.Application.Interfaces;
+﻿using RetailsEcosystem.Customer.Application.Exceptions;
+using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
 using RetailsEcosystem.Customer.Shared;
@@ -46,7 +47,7 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             if (!isExist)
             {
-                throw new KeyNotFoundException("Product is not found!");
+                throw new NotFoundException("Product is not found!");
             }
 
             await _productRepo.RemoveProductAsync(productId);
@@ -153,11 +154,11 @@ namespace RetailsEcosystem.Customer.Application.Services
 
             if (!isExist)
             {
-                throw new KeyNotFoundException("Product is not found!");
+                throw new NotFoundException("Product is not found!");
             }
 
             var category = await _categoryRepo.GetCategoryByIdAsync(productDto.CategoryId)
-                ?? throw new KeyNotFoundException($"Category {productDto.CategoryId} not found.");
+                ?? throw new NotFoundException($"Category {productDto.CategoryId} not found.");
 
             var updateProduct = new Product
             {

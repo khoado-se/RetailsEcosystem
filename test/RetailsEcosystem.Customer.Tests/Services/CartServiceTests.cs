@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Services;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Domain.Interface;
@@ -33,13 +34,13 @@ public class CartServiceTests
     }
 
     [Fact]
-    public async Task AddItemAsync_ProductNotFound_ThrowsKeyNotFoundException()
+    public async Task AddItemAsync_ProductNotFound_ThrowsNotFoundException()
     {
         _productRepoMock.Setup(r => r.GetProductByIdAsync(99)).ReturnsAsync((Product?)null);
 
         var act = () => _sut.AddItemAsync("user1", new AddCartItemDto { ProductId = 99, Quantity = 1 });
 
-        await act.Should().ThrowAsync<KeyNotFoundException>()
+        await act.Should().ThrowAsync<NotFoundException>()
             .WithMessage("*99*");
     }
 

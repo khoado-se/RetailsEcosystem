@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared.DTOs.Cart;
 using System.Security.Claims;
@@ -62,7 +63,7 @@ public class CartsControllerTests
     public async Task AddItem_ProductNotFound_Returns404()
     {
         _cartServiceMock.Setup(s => s.AddItemAsync("user-123", It.IsAny<AddCartItemDto>()))
-            .ThrowsAsync(new KeyNotFoundException("Product 99 not found."));
+            .ThrowsAsync(new NotFoundException("Product 99 not found."));
 
         var result = await _sut.AddItem(new AddCartItemDto { ProductId = 99, Quantity = 1 });
 
@@ -101,7 +102,7 @@ public class CartsControllerTests
     public async Task RemoveItem_NotFound_Returns404()
     {
         _cartServiceMock.Setup(s => s.RemoveItemAsync("user-123", 5))
-            .ThrowsAsync(new KeyNotFoundException("Cart item 5 not found."));
+            .ThrowsAsync(new NotFoundException("Cart item 5 not found."));
 
         var result = await _sut.RemoveItem(5);
 

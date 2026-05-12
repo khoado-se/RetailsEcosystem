@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Shared.Enums;
@@ -139,7 +140,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 await _orderService.GetOrderByIdAsync(orderId, userId, "Customer");
             }
             catch (UnauthorizedAccessException) { return Forbid(); }
-            catch (KeyNotFoundException)        { return NotFound(); }
+            catch (NotFoundException)        { return NotFound(); }
 
             try
             {
@@ -155,7 +156,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                     await _orderService.RecordPaymentOutcomeAsync(orderId, txnRef, rspCode, attemptStatus);
                 }
             }
-            catch (KeyNotFoundException) { return NotFound(); }
+            catch (NotFoundException) { return NotFound(); }
 
             var updated = await _orderService.GetOrderByIdAsync(orderId, userId, "Customer");
             return Ok(new { orderId, paymentStatus = (int)updated.PaymentStatus });

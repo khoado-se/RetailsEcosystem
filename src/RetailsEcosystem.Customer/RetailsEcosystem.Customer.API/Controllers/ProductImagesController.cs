@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailsEcosystem.Customer.API.Services;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared.DTOs.ProductImage;
 
@@ -46,7 +47,7 @@ namespace RetailsEcosystem.Customer.API.Controllers
                 await _fileService.DeleteFileAsync(publicId);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (NotFoundException)
             {
                 return NotFound();
             }

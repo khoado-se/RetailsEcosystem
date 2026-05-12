@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.API.Services;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Shared;
@@ -48,14 +49,14 @@ public class CustomersControllerTests
     }
 
     [Fact]
-    public async Task GetMe_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task GetMe_UserNotFound_ThrowsNotFoundException()
     {
         _customerServiceMock.Setup(s => s.GetByIdAsync("user-123"))
-            .ThrowsAsync(new KeyNotFoundException("User not found."));
+            .ThrowsAsync(new NotFoundException("User not found."));
 
         var act = () => _sut.GetMe();
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     // ── UpdateMe ──────────────────────────────────────────────────────────────
@@ -72,14 +73,14 @@ public class CustomersControllerTests
     }
 
     [Fact]
-    public async Task UpdateMe_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task UpdateMe_UserNotFound_ThrowsNotFoundException()
     {
         _customerServiceMock.Setup(s => s.UpdateProfileAsync("user-123", It.IsAny<UpdateProfileDto>()))
-            .ThrowsAsync(new KeyNotFoundException("User not found."));
+            .ThrowsAsync(new NotFoundException("User not found."));
 
         var act = () => _sut.UpdateMe(new UpdateProfileDto { FullName = "Test" });
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     // ── ChangePassword ────────────────────────────────────────────────────────
@@ -145,14 +146,14 @@ public class CustomersControllerTests
     }
 
     [Fact]
-    public async Task UpdateStatus_UserNotFound_ThrowsKeyNotFoundException()
+    public async Task UpdateStatus_UserNotFound_ThrowsNotFoundException()
     {
         _customerServiceMock.Setup(s => s.UpdateStatusAsync("unknown", It.IsAny<bool>()))
-            .ThrowsAsync(new KeyNotFoundException("User not found."));
+            .ThrowsAsync(new NotFoundException("User not found."));
 
         var act = () => _sut.UpdateStatus("unknown", new UpdateCustomerStatusDto { IsActive = false });
 
-        await act.Should().ThrowAsync<KeyNotFoundException>();
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     // ── UploadAvatar ──────────────────────────────────────────────────────────

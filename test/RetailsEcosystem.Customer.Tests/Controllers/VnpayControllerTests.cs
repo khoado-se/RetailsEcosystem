@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RetailsEcosystem.Customer.API.Controllers;
+using RetailsEcosystem.Customer.Application.Exceptions;
 using RetailsEcosystem.Customer.Application.Interfaces;
 using RetailsEcosystem.Customer.Domain.Entities;
 using RetailsEcosystem.Customer.Shared.DTOs.Order;
@@ -304,7 +305,7 @@ public class VnpayControllerTests
         _vnpayServiceMock.Setup(v => v.ValidateSignature(It.IsAny<IDictionary<string, string>>())).Returns(true);
         _orderServiceMock
             .Setup(s => s.GetOrderByIdAsync(1, "user-123", "Customer"))
-            .ThrowsAsync(new KeyNotFoundException());
+            .ThrowsAsync(new NotFoundException("Order not found."));
 
         var result = await _sut.ConfirmReturn(new Dictionary<string, string>
         {
