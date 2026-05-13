@@ -1,26 +1,21 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RetailsEcosystem.Customer.Domain.Entities;
 
 namespace RetailsEcosystem.Customer.Infrastructure.Identity.DataSeed
 {
-    /// <summary>
-    /// Seeds roles and the default admin account at application startup.
-    /// 
-    /// Design rationale: Identity passwords are hashed at runtime using a salted
-    /// algorithm that changes with each run, so they CANNOT be seeded via
-    /// modelBuilder.HasData(). Instead, we seed via UserManager after the app starts.
-    /// </summary>
     public static class IdentitySeed
     {
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
+            var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             await SeedRolesAsync(roleManager);
-            await SeedAdminUserAsync(userManager);
+            await SeedAdminUserAsync(userManager, config);
         }
 
         private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -30,19 +25,17 @@ namespace RetailsEcosystem.Customer.Infrastructure.Identity.DataSeed
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
-                {
                     await roleManager.CreateAsync(new IdentityRole(role));
-                }
             }
         }
 
-        private static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager)
+        private static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, IConfiguration config)
         {
-            const string adminEmail = "admin@retailsecosystem.com";
-            const string adminPassword = "Admin@123456";
+            var adminEmail = config["AdminSettings:Email"] ?? "admin@retailsecosystem.com";
+            var adminPassword = config["AdminSettings:Password"] ?? "Admin@123456";
 
             var existing = await userManager.FindByEmailAsync(adminEmail);
-            if (existing is not null) return; // Already seeded
+            if (existing is not null) return;
 
             var admin = new ApplicationUser
             {

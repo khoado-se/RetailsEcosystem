@@ -49,6 +49,8 @@ services:
       VnpaySettings__PaymentUrl: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
       VnpaySettings__QueryDrUrl: "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"
       VnpaySettings__ReturnUrl: "${VNPAY_RETURN_URL:-http://localhost:8081/vnpay/return}"
+      AdminSettings__Email: "${ADMIN_EMAIL:-admin@retailsecosystem.com}"
+      AdminSettings__Password: "${ADMIN_PASSWORD:-Admin@123456}"
     depends_on:
       sqlserver:
         condition: service_healthy

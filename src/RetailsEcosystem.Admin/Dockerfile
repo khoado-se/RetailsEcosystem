@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-ARG VITE_HOST_URL=http://localhost:8080/api
+ARG VITE_HOST_URL=/api
 ARG VITE_PRODUCT_PLACEHOLDER_IMAGE=http://localhost:8080/images/products/product-placeholder-image.jpg
 ENV VITE_HOST_URL=$VITE_HOST_URL
 ENV VITE_PRODUCT_PLACEHOLDER_IMAGE=$VITE_PRODUCT_PLACEHOLDER_IMAGE
