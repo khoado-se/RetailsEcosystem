@@ -10,6 +10,7 @@ A multi-client eCommerce platform built with **ASP.NET Core 10** and **React 19*
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
+- [Docker](#docker)
 - [Getting Started](#getting-started)
   - [1. Clone the Repository](#1-clone-the-repository)
   - [2. Configure the API](#2-configure-the-api)
@@ -101,6 +102,52 @@ Domain → Application → Infrastructure → API / Web
 - [Node.js 20+](https://nodejs.org/) with npm
 - SQL Server 2019+ (local instance or Docker)
 - A [Cloudinary](https://cloudinary.com/) account (free tier works)
+
+---
+
+## Docker
+
+Run the full stack (API + Web + Admin + SQL Server) with Docker — no SDK or database installation required.
+
+### Local Development (build from source)
+
+```bash
+cp .env.example .env        # fill in SA_PASSWORD and JWT_SECRET_KEY
+./scripts/start.sh          # Linux/macOS
+.\scripts\start.ps1         # Windows
+```
+
+Stop:
+
+```bash
+./scripts/down.sh
+.\scripts\down.ps1
+```
+
+### DockerHub Pull Mode (pre-built images)
+
+Pull and run images published to DockerHub — no source code needed.
+
+```bash
+cp .env.example .env        # fill in SA_PASSWORD, JWT_SECRET_KEY, DOCKERHUB_USERNAME
+./scripts/start.pull.sh     # Linux/macOS
+.\scripts\start.pull.ps1    # Windows
+```
+
+Stop:
+
+```bash
+./scripts/down.pull.sh
+.\scripts\down.pull.ps1
+```
+
+Once running:
+
+| Service | URL |
+|---------|-----|
+| API | http://localhost:8080 |
+| Web storefront | http://localhost:8081 |
+| Admin SPA | http://localhost:3000 |
 
 ---
 

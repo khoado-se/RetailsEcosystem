@@ -1,3 +1,12 @@
+# Pull pre-built images from DockerHub — no source or build toolchain needed.
+#
+# Setup:
+#   cp .env.example .env
+#   # Fill in: SA_PASSWORD, JWT_SECRET_KEY, DOCKERHUB_USERNAME
+#
+# Usage:
+#   docker compose -f docker-compose.pull.yml up
+
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -16,9 +25,7 @@ services:
       start_period: 30s
 
   api:
-    build:
-      context: ./src/RetailsEcosystem.Customer
-      dockerfile: RetailsEcosystem.Customer.API/Dockerfile
+    image: "${DOCKERHUB_USERNAME}/retailsecosystem-api:latest"
     ports:
       - "8080:8080"
     environment:
@@ -51,9 +58,7 @@ services:
       start_period: 60s
 
   web:
-    build:
-      context: ./src/RetailsEcosystem.Customer
-      dockerfile: RetailsEcosystem.Customer.Web/Dockerfile
+    image: "${DOCKERHUB_USERNAME}/retailsecosystem-web:latest"
     ports:
       - "8081:8081"
     environment:
@@ -68,11 +73,7 @@ services:
         condition: service_healthy
 
   admin:
-    build:
-      context: ./src/RetailsEcosystem.Admin
-      args:
-        VITE_HOST_URL: "${VITE_HOST_URL:-http://localhost:8080/api}"
-        VITE_PRODUCT_PLACEHOLDER_IMAGE: "${VITE_PRODUCT_PLACEHOLDER_IMAGE:-http://localhost:8080/images/products/product-placeholder-image.jpg}"
+    image: "${DOCKERHUB_USERNAME}/retailsecosystem-admin:latest"
     ports:
       - "3000:80"
     depends_on:

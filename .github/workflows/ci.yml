@@ -91,3 +91,69 @@ jobs:
 
       - name: Test
         run: npm run test:run
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: API metadata
+        id: meta-api
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/retailsecosystem-api
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=short
+
+      - name: Web metadata
+        id: meta-web
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/retailsecosystem-web
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=short
+
+      - name: Admin metadata
+        id: meta-admin
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/retailsecosystem-admin
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=short
+
+      - name: Build and push API
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/RetailsEcosystem.Customer
+          file: ./src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.API/Dockerfile
+          push: true
+          tags: ${{ steps.meta-api.outputs.tags }}
+
+      - name: Build and push Web
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/RetailsEcosystem.Customer
+          file: ./src/RetailsEcosystem.Customer/RetailsEcosystem.Customer.Web/Dockerfile
+          push: true
+          tags: ${{ steps.meta-web.outputs.tags }}
+
+      - name: Build and push Admin
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/RetailsEcosystem.Admin
+          push: true
+          tags: ${{ steps.meta-admin.outputs.tags }}
+          build-args: |
+            VITE_HOST_URL=${{ secrets.VITE_HOST_URL }}
