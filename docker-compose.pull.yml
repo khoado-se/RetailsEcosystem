@@ -25,7 +25,8 @@ services:
       start_period: 30s
 
   api:
-    image: "${DOCKERHUB_USERNAME}/retailsecosystem-api:latest"
+    image: "${DOCKERHUB_USERNAME}/retailsecosystem-api:${API_TAG:-latest}"
+    restart: unless-stopped
     ports:
       - "8080:8080"
     environment:
@@ -58,7 +59,8 @@ services:
       start_period: 60s
 
   web:
-    image: "${DOCKERHUB_USERNAME}/retailsecosystem-web:latest"
+    image: "${DOCKERHUB_USERNAME}/retailsecosystem-web:${WEB_TAG:-latest}"
+    restart: unless-stopped
     ports:
       - "8081:8081"
     environment:
@@ -73,7 +75,8 @@ services:
         condition: service_healthy
 
   admin:
-    image: "${DOCKERHUB_USERNAME}/retailsecosystem-admin:latest"
+    image: "${DOCKERHUB_USERNAME}/retailsecosystem-admin:${ADMIN_TAG:-latest}"
+    restart: unless-stopped
     ports:
       - "3000:80"
     depends_on:
