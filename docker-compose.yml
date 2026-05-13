@@ -35,6 +35,7 @@ services:
       Cloudinary__CloudName: "${CLOUDINARY_CLOUD_NAME:-}"
       Cloudinary__ApiKey: "${CLOUDINARY_API_KEY:-}"
       Cloudinary__ApiSecret: "${CLOUDINARY_API_SECRET:-}"
+      Cloudinary__Folder: "${CLOUDINARY_FOLDER:-products}"
       VnpaySettings__TmnCode: "${VNPAY_TMN_CODE:-}"
       VnpaySettings__HashSecret: "${VNPAY_HASH_SECRET:-}"
       VnpaySettings__PaymentUrl: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"

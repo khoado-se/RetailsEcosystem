@@ -1,16 +1,20 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Options;
+using RetailsEcosystem.Customer.API.Options;
 
 namespace RetailsEcosystem.Customer.API.Services
 {
     public class CloudinaryStorageService : IFileStorageService
     {
         private readonly Cloudinary _cloudinary;
+        private readonly string _folder;
         private static readonly string[] AllowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
 
-        public CloudinaryStorageService(Cloudinary cloudinary)
+        public CloudinaryStorageService(Cloudinary cloudinary, IOptions<CloudinaryOptions> options)
         {
             _cloudinary = cloudinary;
+            _folder = options.Value.Folder;
         }
 
         public async Task<List<string>> SaveFilesAsync(List<IFormFile> files)
@@ -31,7 +35,7 @@ namespace RetailsEcosystem.Customer.API.Services
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    Folder = "products",
+                    Folder = _folder,
                     UniqueFilename = true,
                     Overwrite = false
                 };
