@@ -123,6 +123,30 @@ public class OrderServiceTests
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Fact]
+    public async Task CreateOrderAsync_VNPayOrder_DoesNotDecrementStockOrClearCart()
+    {
+        const string userId = "user1";
+        var cart = new CartBuilder()
+            .WithUserId(userId)
+            .WithItem(productId: 1, quantity: 2, unitPrice: 10m, stock: 10)
+            .Build();
+
+        var trackedProduct = cart.Items.First().Product!;
+        var createdOrder = new OrderBuilder().WithId(1).WithUserId(userId).WithItem().Build();
+
+        _cartRepoMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync(cart);
+        _orderRepoMock.Setup(r => r.CreateOrderAsync(It.IsAny<Domain.Entities.Order>()))
+            .ReturnsAsync(createdOrder);
+        _orderRepoMock.Setup(r => r.GetOrderByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(createdOrder);
+
+        await _sut.CreateOrderAsync(userId, new CreateOrderDto { PaymentMethod = PaymentMethod.VNPay });
+
+        trackedProduct.StockQuantity.Should().Be(10);
+        cart.Items.Should().NotBeEmpty();
+    }
+
     // ── GetOrderByIdAsync ─────────────────────────────────────────────────────
 
     [Fact]
@@ -193,6 +217,50 @@ public class OrderServiceTests
 
         result.Status.Should().Be(OrderStatus.Confirmed);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateOrderStatusAsync_PendingToCancelled_Succeeds()
+    {
+        var order = new OrderBuilder().WithStatus(OrderStatus.Pending).Build();
+        _orderRepoMock.Setup(r => r.GetOrderByIdAsync(1)).ReturnsAsync(order);
+
+        var result = await _sut.UpdateOrderStatusAsync(1, new UpdateOrderStatusDto { Status = OrderStatus.Cancelled });
+
+        result.Status.Should().Be(OrderStatus.Cancelled);
+    }
+
+    [Fact]
+    public async Task UpdateOrderStatusAsync_ConfirmedToShipped_Succeeds()
+    {
+        var order = new OrderBuilder().WithStatus(OrderStatus.Confirmed).Build();
+        _orderRepoMock.Setup(r => r.GetOrderByIdAsync(1)).ReturnsAsync(order);
+
+        var result = await _sut.UpdateOrderStatusAsync(1, new UpdateOrderStatusDto { Status = OrderStatus.Shipped });
+
+        result.Status.Should().Be(OrderStatus.Shipped);
+    }
+
+    [Fact]
+    public async Task UpdateOrderStatusAsync_ConfirmedToCancelled_Succeeds()
+    {
+        var order = new OrderBuilder().WithStatus(OrderStatus.Confirmed).Build();
+        _orderRepoMock.Setup(r => r.GetOrderByIdAsync(1)).ReturnsAsync(order);
+
+        var result = await _sut.UpdateOrderStatusAsync(1, new UpdateOrderStatusDto { Status = OrderStatus.Cancelled });
+
+        result.Status.Should().Be(OrderStatus.Cancelled);
+    }
+
+    [Fact]
+    public async Task UpdateOrderStatusAsync_ShippedToDelivered_Succeeds()
+    {
+        var order = new OrderBuilder().WithStatus(OrderStatus.Shipped).Build();
+        _orderRepoMock.Setup(r => r.GetOrderByIdAsync(1)).ReturnsAsync(order);
+
+        var result = await _sut.UpdateOrderStatusAsync(1, new UpdateOrderStatusDto { Status = OrderStatus.Delivered });
+
+        result.Status.Should().Be(OrderStatus.Delivered);
     }
 
     // ── CancelOrderAsync ──────────────────────────────────────────────────────

@@ -191,6 +191,39 @@ public class VnpayServiceTests
     }
 
     [Fact]
+    public async Task QueryTransactionAsync_AmountNotParseable_ReturnsZeroAmount()
+    {
+        var json = """{"vnp_ResponseCode":"00","vnp_Amount":"not-a-number"}""";
+        var sut  = BuildSutWithHttp(new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+        });
+
+        var result = await sut.QueryTransactionAsync("1-20260101", "20260101120000", "127.0.0.1");
+
+        result.ResponseCode.Should().Be("00");
+        result.Amount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task QueryTransactionAsync_AllFieldsAbsent_ReturnsDefaults()
+    {
+        var json = """{}""";
+        var sut  = BuildSutWithHttp(new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+        });
+
+        var result = await sut.QueryTransactionAsync("1-20260101", "20260101120000", "127.0.0.1");
+
+        result.ResponseCode.Should().BeEmpty();
+        result.TransactionStatus.Should().BeEmpty();
+        result.TransactionNo.Should().BeEmpty();
+        result.Amount.Should().Be(0);
+        result.Message.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task QueryTransactionAsync_MissingFields_ReturnsEmptyStrings()
     {
         var json = """{"vnp_ResponseCode":"01"}""";

@@ -4,28 +4,22 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
-          <!-- Include -->
-          <Include>
-            [RetailsEcosystem.Customer.Application]*
-            ,[RetailsEcosystem.Customer.API]*
-          </Include>
-
-          <!-- Exclude assemblies/namespaces -->
+          <!-- Exclude test assemblies, Program entry-point, and Razor compiler-generated view classes -->
           <Exclude>
             [*Tests*]*
-            ,[*Infrastructure*]*
             ,[*]Program
-            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Extensions.*
-            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Filters.*
-            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Options.*
-            ,[RetailsEcosystem.Customer.API]RetailsEcosystem.Customer.API.Services.*
+            ,[*]*AspNetCoreGeneratedDocument*
           </Exclude>
 
-          <!-- Optional: exclude files -->
+          <!-- Exclude generated / bootstrap-only files with no testable logic -->
           <ExcludeByFile>
             **/Migrations/*.cs
             ,**/obj/**/*.cs
             ,**/bin/**/*.cs
+            ,**/DataSeed/ModelBuilderExtensions.cs
+            ,**/DataSeed/IdentitySeed.cs
+            ,**/Infrastructure/DependencyInjection.cs
+            ,**/Persistences/AppDbContext.cs
           </ExcludeByFile>
 
           <Format>cobertura</Format>

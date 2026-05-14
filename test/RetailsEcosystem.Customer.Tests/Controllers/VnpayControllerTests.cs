@@ -232,6 +232,72 @@ public class VnpayControllerTests
     }
 
     [Fact]
+    public async Task Ipn_GetAttemptThrows_ReturnsRspCode01()
+    {
+        _vnpayServiceMock.Setup(v => v.ValidateSignature(It.IsAny<IDictionary<string, string>>())).Returns(true);
+        _orderServiceMock.Setup(s => s.GetPaymentAttemptByTxnRefAsync(It.IsAny<string>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        SetIpnQueryString(new() { ["vnp_TxnRef"] = "1-20260101" });
+
+        var result = await _sut.Ipn();
+
+        var ok   = result.Should().BeOfType<OkObjectResult>().Subject;
+        var body = ok.Value!.ToString()!;
+        body.Should().Contain("01");
+    }
+
+    [Fact]
+    public async Task Ipn_AmountNotParseable_SkipsAmountValidationProceedsNormally()
+    {
+        var attempt = new PaymentAttempt { TxnRef = "1-20260101", Status = PaymentAttemptStatus.Initiated };
+        var order   = new OrderBuilder().WithTotalAmount(500m).Build();
+
+        _vnpayServiceMock.Setup(v => v.ValidateSignature(It.IsAny<IDictionary<string, string>>())).Returns(true);
+        _orderServiceMock.Setup(s => s.GetPaymentAttemptByTxnRefAsync("1-20260101")).ReturnsAsync(attempt);
+        _orderServiceMock.Setup(s => s.GetOrderByIdAsync(1, string.Empty, "Admin")).ReturnsAsync(MapToDto(order));
+
+        SetIpnQueryString(new()
+        {
+            ["vnp_TxnRef"]            = "1-20260101",
+            ["vnp_ResponseCode"]      = "00",
+            ["vnp_TransactionStatus"] = "00",
+            ["vnp_Amount"]            = "notanumber",
+            ["vnp_TransactionNo"]     = "vnp-001",
+        });
+
+        await _sut.Ipn();
+
+        _orderServiceMock.Verify(
+            s => s.ConfirmVnpayPaymentAsync(1, "vnp-001", "1-20260101"),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task Ipn_GetOrderThrowsInAmountCheck_ReturnsRspCode01()
+    {
+        var attempt = new PaymentAttempt { TxnRef = "1-20260101", Status = PaymentAttemptStatus.Initiated };
+
+        _vnpayServiceMock.Setup(v => v.ValidateSignature(It.IsAny<IDictionary<string, string>>())).Returns(true);
+        _orderServiceMock.Setup(s => s.GetPaymentAttemptByTxnRefAsync("1-20260101")).ReturnsAsync(attempt);
+        _orderServiceMock.Setup(s => s.GetOrderByIdAsync(1, string.Empty, "Admin"))
+            .ThrowsAsync(new Exception("Order fetch failed"));
+
+        SetIpnQueryString(new()
+        {
+            ["vnp_TxnRef"]       = "1-20260101",
+            ["vnp_ResponseCode"] = "00",
+            ["vnp_Amount"]       = "50000",
+        });
+
+        var result = await _sut.Ipn();
+
+        var ok   = result.Should().BeOfType<OkObjectResult>().Subject;
+        var body = ok.Value!.ToString()!;
+        body.Should().Contain("01");
+    }
+
+    [Fact]
     public async Task Ipn_ConcurrencyException_ReturnsRspCode00()
     {
         var attempt = new PaymentAttempt { TxnRef = "1-20260101", Status = PaymentAttemptStatus.Initiated };
