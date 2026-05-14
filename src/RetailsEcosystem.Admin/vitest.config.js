@@ -7,32 +7,42 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
+
   resolve: {
     alias: {
-      "@features":   resolve(__dirname, "src/features"),
-      "@services":   resolve(__dirname, "src/services"),
-      "@utils":      resolve(__dirname, "src/utils"),
-      "@hooks":      resolve(__dirname, "src/hooks"),
+      "@features": resolve(__dirname, "src/features"),
+      "@services": resolve(__dirname, "src/services"),
+      "@utils": resolve(__dirname, "src/utils"),
+      "@hooks": resolve(__dirname, "src/hooks"),
       "@components": resolve(__dirname, "src/components"),
-      "@contexts":   resolve(__dirname, "src/contexts"),
-      "@configs":    resolve(__dirname, "src/configs"),
+      "@contexts": resolve(__dirname, "src/contexts"),
+      "@configs": resolve(__dirname, "src/configs"),
+      "@pages": resolve(__dirname, "src/pages"),
+      "@routes": resolve(__dirname, "src/routes"),
+      "@layouts": resolve(__dirname, "src/layouts"),
     },
   },
+
   test: {
     environment: "jsdom",
-    globals:     true,
-    setupFiles:  ["./tests/setup.ts"],
+    globals: true,
+    setupFiles: ["./tests/setup.ts"],
+
     coverage: {
-      provider:         "v8",
-      reporter:         ["text", "html", "lcov"],
-      include:          ["src/**/*.{js,jsx,ts,tsx}"],
+      provider: "v8",
+
+      reporter: ["text", "html", "lcov"],
+
+      include: ["src/**/*.{js,jsx,ts,tsx}"],
+
       exclude: [
-        "src/**/*Api.ts",
-        "src/features/auth/**",
         "src/main.tsx",
         "src/configs/**",
+        "src/**/*.d.ts",
       ],
-      all:              false,
+
+      all: true,
+
       reportsDirectory: "./coverage",
     },
   },
